@@ -20,7 +20,7 @@ What flux measures is movement. An account that moved needs to be understood. An
 
 The accountant's tool for this is the flux analysis. It sits between the trial balance and the controller's sign-off. It is the surface on which the question "does every material movement in the balance sheet have support?" gets answered. Before the recipe, this was manual work: someone pulled two trial balances, computed the deltas in a spreadsheet, sorted by magnitude, and started asking questions. The recipe does the computational part of that. The asking-questions part remains human.
 
-![A close workflow runs to a green status milestone, then a visible adequacy gap, before the controller gate and sign-off; status and adequacy are shown as distinct questions.](images/09-close-flux-analysis-and-balance-sheet-review-fig-01.png)
+![A close workflow runs to a green status milestone, then a visible adequacy gap, before the controller gate and sign-off; status and adequacy are shown as distinct questions.](../images/09-close-flux-analysis-and-balance-sheet-review-fig-01.png)
 *Figure 9.1 — Close status is not close adequacy*
 
 <!-- → [DIAGRAM: Timeline showing close workflow — left to right: period end → journals posted, reconciliations submitted, intercompany done (close tasks complete → status: green) → trial balance extracted → flux analysis computed (material movements ranked, support checked) → gate: controller reviews (support adequate? unexplained items resolved?) → sign-off and release. The "status: green" and "gate: controller reviews" are visually distinct, with a gap between them labeled "adequacy gap." Caption: the dashboard measures task completion; the flux review measures account adequacy — these are not the same question.] -->
@@ -57,7 +57,7 @@ The recipe can check support coverage. It can look for whether a support file ex
 
 The recipe's output on support coverage is therefore binary: supported or unsupported. A material account movement with an attached, current-dated support file is flagged as supported — it still needs human review, but the surface is there. A material movement with no attached support, or with support from a prior period that has not been updated, is flagged as unsupported. Unsupported material movements stop the close review. They do not get carried past the gate by the recipe. They wait for human resolution.
 
-![A decision tree for a flagged material flux: supported, stale, and unsupported branches all converge at the human-review gate, but only the current-dated supported path can exit to sign-off.](images/09-close-flux-analysis-and-balance-sheet-review-fig-02.png)
+![A decision tree for a flagged material flux: supported, stale, and unsupported branches all converge at the human-review gate, but only the current-dated supported path can exit to sign-off.](../images/09-close-flux-analysis-and-balance-sheet-review-fig-02.png)
 *Figure 9.2 — The support coverage decision tree: the recipe routes, the controller decides*
 
 <!-- → [DIAGRAM: Support coverage decision tree for a flagged account movement — starting node: material flux detected. Branch 1: support file exists, current-dated → flagged "supported, needs review." Branch 2: support file exists, prior-period dated → flagged "stale support, needs update." Branch 3: no support file → flagged "unsupported, blocks gate." All three branches flow to the human review gate. Only "supported, needs review" can exit to sign-off after review; the other two require additional human action before the gate can be cleared. Caption: the recipe routes; the controller decides.] -->
@@ -92,7 +92,7 @@ Verification: what would make a flagged item defensible? For a material movement
 
 *Table 2 — In a close workflow, the gate is the controller's sign-off, not the dashboard's green light.*
 
-![The three supervision questions applied to the close — scope, approval, verification — each paired with the failure that follows from leaving it unasked.](images/09-close-flux-analysis-and-balance-sheet-review-fig-04.png)
+![The three supervision questions applied to the close — scope, approval, verification — each paired with the failure that follows from leaving it unasked.](../images/09-close-flux-analysis-and-balance-sheet-review-fig-04.png)
 *Figure 9.3 — Supervision questions in the close context*
 
 ---
@@ -173,13 +173,13 @@ That is the workflow. Not slower — more reliable. The dashboard was never the 
 ## Prompts
 
 ### Figure 9.1 — Close status is not close adequacy
-**Files:** images/09-close-flux-analysis-and-balance-sheet-review-fig-01.svg · d3/09-close-flux-analysis-and-balance-sheet-review-fig-01.html
+**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-01.svg · ../d3/09-close-flux-analysis-and-balance-sheet-review-fig-01.html
 **Prompt:** A vertical brutalist close workflow on white: green status milestones at the top, a dashed red adequacy-gap line, then the controller-gate band and sign-off below. Ink-on-fill stage boxes, Inter labels, mono gap caption; the single red accent marks the gap between "complete" and "ready."
 
 ### Figure 9.2 — The support coverage decision tree: the recipe routes, the controller decides
-**Files:** images/09-close-flux-analysis-and-balance-sheet-review-fig-02.svg · d3/09-close-flux-analysis-and-balance-sheet-review-fig-02.html
+**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-02.svg · ../d3/09-close-flux-analysis-and-balance-sheet-review-fig-02.html
 **Prompt:** A brutalist decision tree: a material-flux root branches into supported, stale, and unsupported nodes that converge at a solid ink human-review gate; only the supported path exits to sign-off. White canvas, grey arrowheads, dashed stale node; the unsupported branch and its blocking stop-mark carry the single red accent.
 
 ### Figure 9.3 — Supervision questions in the close context
-**Files:** images/09-close-flux-analysis-and-balance-sheet-review-fig-04.svg
+**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-04.svg
 **Prompt:** Three stacked brutalist rows — scope, approval, verification — each paired with the failure that follows if it is left unasked. Uniform ink-on-fill cells on white, neutral grey failure text; a single red accent flags the verification row where a "supported" label can be mistaken for a reviewed one.

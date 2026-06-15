@@ -29,7 +29,7 @@ These two customers have genuinely different needs. A well-formed log entry — 
 
 Most recipes serve one customer accidentally and ignore the other entirely. The JSON log serves the machine that was never built. The polished memo serves the executive who can't trace it back to source.
 
-![A two-column comparison: an agent contract column listing file-path inputs, deterministic steps, output schema, stop conditions, and run log, beside a human report card column listing purpose, evidence summary, caveats, decisions, and gate, with the gap labeled what most recipes skip.](images/04-two-customers-fig-01.png)
+![A two-column comparison: an agent contract column listing file-path inputs, deterministic steps, output schema, stop conditions, and run log, beside a human report card column listing purpose, evidence summary, caveats, decisions, and gate, with the gap labeled what most recipes skip.](../images/04-two-customers-fig-01.png)
 *Figure 4.1 — The two customers: the agent and the reviewer have genuinely different needs.*
 
 <!-- → [DIAGRAM: Two-column visual. Left: "Agent Contract" — file path inputs, deterministic steps, output schema, stop conditions, run log. Right: "Human Report Card" — purpose statement, evidence summary, explicit caveats, decisions named, gate visible. Gap between them labeled "What most recipes skip." Caption: The two customers have genuinely different needs. Designing for one is not designing for both.] -->
@@ -62,7 +62,7 @@ Fifth, the run log: a machine-readable record of every input consumed, every tra
 
 *Table 1 — The agent contract is what makes a run auditable. Missing any component makes the run a black box.*
 
-![An anatomy diagram of the agent contract showing its five stacked components — inputs, steps, output schema, stop conditions, and run log — each labeled as a layer that makes the run reproducible.](images/04-two-customers-fig-02.png)
+![An anatomy diagram of the agent contract showing its five stacked components — inputs, steps, output schema, stop conditions, and run log — each labeled as a layer that makes the run reproducible.](../images/04-two-customers-fig-02.png)
 *Figure 4.2 — Anatomy of the agent contract: five components that answer one question — can this run be reproduced?*
 
 ---
@@ -93,7 +93,7 @@ Gate: who approves, and what does approval mean? The gate is the moment when an 
 
 *Table 2 — The human report card is not a summary of the log. It is a translation that makes the run legible to someone who carries accountability for the conclusion.*
 
-![An anatomy diagram of the human report card showing its five stacked components — purpose, evidence summary, caveats, decisions, and gate — each labeled as a layer that makes the run legible to a reviewer.](images/04-two-customers-fig-03.png)
+![An anatomy diagram of the human report card showing its five stacked components — purpose, evidence summary, caveats, decisions, and gate — each labeled as a layer that makes the run legible to a reviewer.](../images/04-two-customers-fig-03.png)
 *Figure 4.3 — Anatomy of the human report card: five components that make the run legible to an accountable reviewer.*
 
 ---
@@ -110,7 +110,7 @@ There is a third failure mode that is subtler and more common: the recipe was wr
 
 This is the maintainability problem, and it is where the two-customer design pays off in ways that are not immediately obvious. A recipe designed for two customers is also, necessarily, designed for a future maintainer. The agent contract documents the run in enough detail that someone else can reproduce it. The human report card explains the purpose and scope in enough detail that someone else can evaluate it. The two-customer design is not just about the current run. It is about whether the work survives the person who built it.
 
-![Three columns of recipe failure types — written for machines, written for humans, written for the builder — each with its own gap, all converging downward on a single outcome: both customers unserved.](images/04-two-customers-fig-04.png)
+![Three columns of recipe failure types — written for machines, written for humans, written for the builder — each with its own gap, all converging downward on a single outcome: both customers unserved.](../images/04-two-customers-fig-04.png)
 *Figure 4.4 — Three ways a recipe serves neither customer, all sharing one cause: no second customer in mind.*
 
 <!-- → [DIAGRAM: Three-column visual showing three recipe types. Left: "Written for machines" — full agent contract, no human report, log readable by no reviewer. Center: "Written for humans" — polished output, no agent contract, irreproducible. Right: "Written for the builder" — implicit knowledge, neither customer served when builder leaves. Arrow pointing down from all three to: "Both customers unserved." Caption: The three failure modes all share a common cause: the recipe was not designed with a second customer in mind.] -->
@@ -200,17 +200,17 @@ The two-customer recipe note is clear as a structure. What is less clear is how 
 ## Prompts
 
 ### Figure 4.1 — The two customers
-**Files:** images/04-two-customers-fig-01.svg · d3/04-two-customers-fig-01.html
+**Files:** ../images/04-two-customers-fig-01.svg · ../d3/04-two-customers-fig-01.html
 **Prompt:** A brutalist two-column comparison on white — an agent contract column (file-path inputs, deterministic steps, output schema, stop conditions, run log) beside a human report card column (purpose, evidence summary, caveats, decisions, gate) — with the gate row in red and the gap between columns labeled "what most recipes skip." Hairline borders, one red accent.
 
 ### Figure 4.2 — Anatomy of the agent contract
-**Files:** images/04-two-customers-fig-02.svg · d3/04-two-customers-fig-02.html
+**Files:** ../images/04-two-customers-fig-02.svg · ../d3/04-two-customers-fig-02.html
 **Prompt:** A brutalist vertical stack of five labeled layers on white — inputs, steps, output schema, stop conditions, run log — neutral fills with the run-log layer outlined in red, and a side arrow labeled reproducibility. Hairline borders, one red accent.
 
 ### Figure 4.3 — Anatomy of the human report card
-**Files:** images/04-two-customers-fig-03.svg · d3/04-two-customers-fig-03.html
+**Files:** ../images/04-two-customers-fig-03.svg · ../d3/04-two-customers-fig-03.html
 **Prompt:** A brutalist vertical stack of five labeled layers on white — purpose, evidence summary, caveats, decisions, gate — neutral fills with the gate layer in solid red, and a side arrow labeled legibility. Hairline borders, one red accent.
 
 ### Figure 4.4 — Three ways a recipe serves neither
-**Files:** images/04-two-customers-fig-04.svg · d3/04-two-customers-fig-04.html
+**Files:** ../images/04-two-customers-fig-04.svg · ../d3/04-two-customers-fig-04.html
 **Prompt:** A brutalist three-column diagram on white — written for machines, written for humans, written for the builder — with neutral converging lines dropping to a single red outcome bar reading "both customers unserved." Hairline borders, one red accent for the outcome.

@@ -35,7 +35,7 @@ A full Mycroft finance recipe run produces four outputs, and each one has a spec
 
 **The gate record** is the documentation of every human decision in the run. For each gate: who cleared it, when, with what information, and on what basis. Not a checkbox — a record. If the gate was cleared conditionally — "approved pending resolution of the stale screenshot in control 7B" — that condition appears in the gate record. If the gate was not cleared because the evidence was insufficient, that appears too. The gate record is the proof that the workflow functioned as designed: that the preparation layer prepared and the judgment layer judged, and that the two were not collapsed into each other.
 
-![Four-component run output in a 2x2 grid — run log, human report, evidence appendix, and gate record — with a note that the four together constitute the honest run and any one missing degrades the whole.](images/16-the-build-and-the-honest-run-fig-01.png)
+![Four-component run output in a 2x2 grid — run log, human report, evidence appendix, and gate record — with a note that the four together constitute the honest run and any one missing degrades the whole.](../images/16-the-build-and-the-honest-run-fig-01.png)
 *Figure 16.1 — Four-component run output*
 
 <!-- → [DIAGRAM: Four-component run output — four boxes arranged in a 2x2 grid: top-left "Run log" (machine-readable, every source and transformation, reconstruction record); top-right "Human report" (decision-organized, warranted language, no gate-crossing conclusions); bottom-left "Evidence appendix" (source traceable, every finding pointed to a file and timestamp); bottom-right "Gate record" (every decision documented, conditions recorded, non-approvals visible) — a label below the grid: "The four outputs together constitute the honest run. Any one missing degrades the whole."] -->
@@ -63,7 +63,7 @@ It also means writing down what is not included and why. This is the part that t
 
 *Scope is defined before the run starts. Changes to scope after the run require a documented amendment.*
 
-![Scope definition template laid out as a stack of fields — entities, period, source systems, recipes to run, stop conditions, and the did-not-test list — all fixed before the run starts.](images/16-the-build-and-the-honest-run-fig-02.png)
+![Scope definition template laid out as a stack of fields — entities, period, source systems, recipes to run, stop conditions, and the did-not-test list — all fixed before the run starts.](../images/16-the-build-and-the-honest-run-fig-02.png)
 *Figure 16.2 — Scope definition template*
 
 ---
@@ -98,7 +98,7 @@ What the gate record should not contain is a conclusion on any question that was
 
 *No gate clears a scope beyond the artifact it was designed to review.*
 
-![Gate record structure showing one row per gate with approver, time, evidence surface, and a three-state decision — approved, conditional, not approved — so that non-approvals stay visible.](images/16-the-build-and-the-honest-run-fig-03.png)
+![Gate record structure showing one row per gate with approver, time, evidence surface, and a three-state decision — approved, conditional, not approved — so that non-approvals stay visible.](../images/16-the-build-and-the-honest-run-fig-03.png)
 *Figure 16.3 — Gate record structure with three decision states*
 
 ---
@@ -138,7 +138,7 @@ The open risks list is the accounting of unresolved questions that the run surfa
 
 *AI cannot certify the run as adequate. The run certification is signed by the finance professional who cleared the final gate.*
 
-![Run completion record in three sections — did-not-test list, open risks, and run certification — with the certification signed by a human, not the recipe.](images/16-the-build-and-the-honest-run-fig-04.png)
+![Run completion record in three sections — did-not-test list, open risks, and run certification — with the certification signed by a human, not the recipe.](../images/16-the-build-and-the-honest-run-fig-04.png)
 *Figure 16.4 — Run completion record: three sections*
 
 The run certification at the bottom of the completion record is the human's statement that the run was conducted as described, that the scope was as defined, and that the gate decisions were made on the basis of the evidence produced. It is not a statement that the run covered everything. It is not a statement that the underlying evidence is conclusive. It is a statement that this run, as described, was conducted honestly.
@@ -216,17 +216,17 @@ This is partly a design problem and partly a culture problem. The design can mak
 ## Prompts
 
 ### Figure 16.1 — Four-component run output
-**Files:** images/16-the-build-and-the-honest-run-fig-01.svg · d3/16-the-build-and-the-honest-run-fig-01.html
+**Files:** ../images/16-the-build-and-the-honest-run-fig-01.svg · ../d3/16-the-build-and-the-honest-run-fig-01.html
 **Prompt:** A 2x2 card grid — run log, human report, evidence appendix, gate record — each card an ink-bordered panel with an ochre top rule. A red note beneath reads that the four together constitute the honest run and any one missing degrades the whole. Restrained, ink on white.
 
 ### Figure 16.2 — Scope definition template
-**Files:** images/16-the-build-and-the-honest-run-fig-02.svg
+**Files:** ../images/16-the-build-and-the-honest-run-fig-02.svg
 **Prompt:** A stacked-field template — entities, period, source systems, recipes to run, stop conditions, did-not-test list — fixed before the run begins. Plain rows, ink on white, one ochre marker on the did-not-test row to flag the field most often omitted.
 
 ### Figure 16.3 — Gate record structure with three decision states
-**Files:** images/16-the-build-and-the-honest-run-fig-03.svg
+**Files:** ../images/16-the-build-and-the-honest-run-fig-03.svg
 **Prompt:** A gate-record grid, one row per gate, columns for approver, time, evidence surface, and a three-state decision. Approved / conditional / not-approved each read distinctly; non-approvals stay visible rather than hidden. Ink on white, one accent for the not-approved state.
 
 ### Figure 16.4 — Run completion record: three sections
-**Files:** images/16-the-build-and-the-honest-run-fig-04.svg
+**Files:** ../images/16-the-build-and-the-honest-run-fig-04.svg
 **Prompt:** A three-section completion record — did-not-test list, open risks, run certification — the certification block signed by a human, with a clear mark that the recipe cannot sign it. Flat, ink on white, one accent on the certification signature line.

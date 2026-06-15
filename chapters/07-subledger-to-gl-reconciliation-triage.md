@@ -23,7 +23,7 @@ The reconciliation process is the systematic search for which of those things ha
 
 This is exactly the kind of work where automation adds value: matching at scale, applying consistent rules, flagging exceptions without tiring. And it is exactly the kind of work where the output requires a human before it becomes actionable, because the exception classifications are hypotheses until an accountant confirms them.
 
-![The AR subledger detail and the GL control-account balance feed a reconciliation process that splits into matched (cleared) items and an exception queue requiring accountant judgment.](images/07-subledger-to-gl-reconciliation-triage-fig-01.png)
+![The AR subledger detail and the GL control-account balance feed a reconciliation process that splits into matched (cleared) items and an exception queue requiring accountant judgment.](../images/07-subledger-to-gl-reconciliation-triage-fig-01.png)
 *Figure 7.1 — Subledger, GL, and the reconciliation split*
 
 <!-- → [DIAGRAM: Flow showing AR subledger (individual invoices, payments, credits, adjustments) and GL control account (single balance) with a reconciliation process in the middle. The reconciliation produces two outputs: "Matched items — clear" and "Exception queue — requires accountant judgment." The GL control account has a note: "Should equal sum of all open subledger items." Caption: The subledger holds the detail. The GL holds the summary. The reconciliation finds where they diverge.] -->
@@ -67,7 +67,7 @@ The output of fuzzy matching is a suggested classification, not a confirmed one.
 
 The recipe should make this distinction explicit in the exception queue. Each item gets: the unmatched record from the subledger, the unmatched record from the GL (if any), the deterministic match result (no match found), the fuzzy match suggestion (if applicable), the suggested exception class, and the status: unreviewed. The accountant's job is to change that status to confirmed or reclassified, with a note. Until that happens, the exception is a hypothesis.
 
-![A two-stage funnel: deterministic matching clears items with certainty, the residue passes to fuzzy matching which produces hypotheses, and an accountant must confirm before any status changes.](images/07-subledger-to-gl-reconciliation-triage-fig-02.png)
+![A two-stage funnel: deterministic matching clears items with certainty, the residue passes to fuzzy matching which produces hypotheses, and an accountant must confirm before any status changes.](../images/07-subledger-to-gl-reconciliation-triage-fig-02.png)
 *Figure 7.2 — Deterministic before fuzzy: the matching funnel*
 
 <!-- → [DIAGRAM: Two-stage funnel. Stage 1 "Deterministic matching" — all items in, matched items exit as "Cleared — no judgment needed." Remaining items pass to Stage 2 "Fuzzy matching" — produces "Suggested classification" for each item, labeled explicitly as hypothesis. Exception queue output shows items with status "Unreviewed." Arrow from exception queue to "Accountant review" with label "Confirmation required before status changes." Caption: Deterministic matching produces certainty. Fuzzy matching produces hypotheses. The accountant converts hypotheses into conclusions.] -->
@@ -98,7 +98,7 @@ The exception queue organizes unmatched items into five classes. The classes are
 
 *Table 2 — The five exception classes map to five different actions. The classification is a hypothesis; the accountant confirms.*
 
-![Five mutually exclusive exception classes ordered by ascending urgency — timing difference, mapping error, duplicate, missing support, unexplained — each paired with its own resolution.](images/07-subledger-to-gl-reconciliation-triage-fig-04.png)
+![Five mutually exclusive exception classes ordered by ascending urgency — timing difference, mapping error, duplicate, missing support, unexplained — each paired with its own resolution.](../images/07-subledger-to-gl-reconciliation-triage-fig-04.png)
 *Figure 7.3 — The five exception classes, ordered by urgency*
 
 ---
@@ -122,7 +122,7 @@ The carry-forward also catches a failure mode that is more common than it should
 
 *Table 3 — Aged items are a different kind of finding. A timing difference that has been open for three periods is not a timing difference.*
 
-![A single exception item tracked across periods, its meaning escalating from a routine timing difference when new to an escalation requiring controller sign-off once it has aged.](images/07-subledger-to-gl-reconciliation-triage-fig-05.png)
+![A single exception item tracked across periods, its meaning escalating from a routine timing difference when new to an escalation requiring controller sign-off once it has aged.](../images/07-subledger-to-gl-reconciliation-triage-fig-05.png)
 *Figure 7.4 — Aging the exception queue changes what an item means*
 
 ---
@@ -184,17 +184,17 @@ The five exception classes are designed to be mutually exclusive, and in most ca
 ## Prompts
 
 ### Figure 7.1 — Subledger, GL, and the reconciliation split
-**Files:** images/07-subledger-to-gl-reconciliation-triage-fig-01.svg · d3/07-subledger-to-gl-reconciliation-triage-fig-01.html
+**Files:** ../images/07-subledger-to-gl-reconciliation-triage-fig-01.svg · ../d3/07-subledger-to-gl-reconciliation-triage-fig-01.html
 **Prompt:** A brutalist systems diagram on white: an AR subledger detail node and a GL control-account node feed a central reconciliation process that diverges into matched (cleared) and exception-queue outputs. Ink boxes, grey connectors, JetBrains Mono for the sum-equals-balance bracket; the exception-queue node carries the single red border to mark where judgment is required.
 
 ### Figure 7.2 — Deterministic before fuzzy: the matching funnel
-**Files:** images/07-subledger-to-gl-reconciliation-triage-fig-02.svg · d3/07-subledger-to-gl-reconciliation-triage-fig-02.html
+**Files:** ../images/07-subledger-to-gl-reconciliation-triage-fig-02.svg · ../d3/07-subledger-to-gl-reconciliation-triage-fig-02.html
 **Prompt:** A vertical brutalist funnel: a wide deterministic-matching trapezoid clears items to a neutral cleared node, the residue narrows into a fuzzy-matching trapezoid, then a dashed hypothesis box and an unreviewed exception queue. EB Garamond title, ink strokes, grey arrowheads; the red accent marks the fuzzy stage and the accountant-review gate where confirmation is required.
 
 ### Figure 7.3 — The five exception classes, ordered by urgency
-**Files:** images/07-subledger-to-gl-reconciliation-triage-fig-04.svg
+**Files:** ../images/07-subledger-to-gl-reconciliation-triage-fig-04.svg
 **Prompt:** Five stacked brutalist class rows — timing difference, mapping error, duplicate, missing support, unexplained — ordered by ascending urgency, each with its resolution token. Uniform ink-on-fill cells on white; the highest-urgency unexplained row carries the single red accent.
 
 ### Figure 7.4 — Aging the exception queue changes what an item means
-**Files:** images/07-subledger-to-gl-reconciliation-triage-fig-05.svg
+**Files:** ../images/07-subledger-to-gl-reconciliation-triage-fig-05.svg
 **Prompt:** A horizontal brutalist timeline of one exception item across successive periods, its label shifting from a routine timing difference to an escalation. Neutral ink markers on white with mono period stamps; the final aged state is marked in the single red accent to signal controller sign-off.

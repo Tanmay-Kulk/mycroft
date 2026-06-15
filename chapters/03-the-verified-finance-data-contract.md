@@ -26,7 +26,7 @@ The word "verifiable" is doing real work there. A number is verifiable if someon
 
 Without that path, you have an assertion. An assertion can be correct. It can even be useful. But it is not evidence. And in finance — where the artifacts produced affect reporting, cash, controls, compliance, and the trust of external parties — the difference between a correct assertion and defensible evidence is the difference between a number you can stand behind and a number you are standing in front of.
 
-![A two-column comparison: an assertion column listing a fluent summary, model output, and missing source, version, and owner, beside an evidence column listing source file, period, entity, version, owner, control total, and logged transformation.](images/03-the-verified-finance-data-contract-fig-01.png)
+![A two-column comparison: an assertion column listing a fluent summary, model output, and missing source, version, and owner, beside an evidence column listing source file, period, entity, version, owner, control total, and logged transformation.](../images/03-the-verified-finance-data-contract-fig-01.png)
 *Figure 3.1 — Assertion versus evidence: the contract is what converts the left column into the right.*
 
 <!-- → [DIAGRAM: Two-column diagram showing "Assertion" vs. "Evidence" — left column lists: fluent summary, model output, no source path, no version, no owner; right column lists: source file, period, entity, version, owner, control total, logged transformation. Caption: the contract is what converts the left column into the right.] -->
@@ -92,7 +92,7 @@ A data contract is a structured record of where a number came from and who is re
 
 *Table 1 — The data contract field inventory. Every field is a verification handle; missing fields are missing accountability.*
 
-![An inventory diagram of twelve data-contract fields — source, period, entity, version, owner, freshness, schema, control total, transformation, log, report, approval record — arranged as labeled cells, each a handle on verification.](images/03-the-verified-finance-data-contract-fig-02.png)
+![An inventory diagram of twelve data-contract fields — source, period, entity, version, owner, freshness, schema, control total, transformation, log, report, approval record — arranged as labeled cells, each a handle on verification.](../images/03-the-verified-finance-data-contract-fig-02.png)
 *Figure 3.2 — The data contract field inventory: each field is a handle the next reviewer can grab.*
 
 ---
@@ -107,7 +107,7 @@ The scope parameters that make a recipe trustworthy are simple to state. What pe
 
 A recipe with clear scope parameters is a recipe that can be supervised. A recipe that reaches beyond its scope — that decides its own entity coverage, that generates its own period definitions, that takes action on data without a gate — is a recipe where the accountable layer has been hollowed out without anyone explicitly deciding to hollow it out.
 
-![A boundary diagram: preparation-layer tasks (file tracing, schema comparison, control total check, version logging, report generation) on the left, separated by a vertical gate from accountable-layer tasks (materiality, adequacy, treatment, release) on the right.](images/03-the-verified-finance-data-contract-fig-03.png)
+![A boundary diagram: preparation-layer tasks (file tracing, schema comparison, control total check, version logging, report generation) on the left, separated by a vertical gate from accountable-layer tasks (materiality, adequacy, treatment, release) on the right.](../images/03-the-verified-finance-data-contract-fig-03.png)
 *Figure 3.3 — The recipe boundary: the recipe stops at the gate; the finance professional crosses it.*
 
 <!-- → [DIAGRAM: Recipe boundary diagram — left side shows "preparation layer" tasks: file tracing, schema comparison, control total check, version logging, report generation; right side shows "accountable layer" tasks: materiality judgment, adequacy assessment, accounting treatment, release decision; a vertical gate line separates them with the label "human approval required before crossing." Caption: the recipe stops at the gate; the finance professional crosses it.] -->
@@ -170,7 +170,7 @@ AI cannot answer that question. The model cannot assess its own adequacy. It can
 
 The gate is where the recipe ends and the finance professional begins. It is not a formality. It is the point of the whole system.
 
-![A linear flow from source files through AI preparation to a gate where a human checks scope, approval, and verification, then on to the accountable layer; a stop-condition branch loops back to preparation while an adequate path continues right.](images/03-the-verified-finance-data-contract-fig-04.png)
+![A linear flow from source files through AI preparation to a gate where a human checks scope, approval, and verification, then on to the accountable layer; a stop-condition branch loops back to preparation while an adequate path continues right.](../images/03-the-verified-finance-data-contract-fig-04.png)
 *Figure 3.4 — The phase gate flow: the gate is not overhead — it is what makes automation trustworthy.*
 
 <!-- → [DIAGRAM: Phase gate flow — linear sequence: source files → AI preparation (tracing, schema check, control total, log) → gate (human reviews: scope confirmed? approval identified? verification possible?) → accountable layer (materiality, treatment, release). Gate shown as a vertical bar with "stop conditions" branching left back to preparation and "adequate" continuing right to accountable layer. Caption: the gate is not overhead — it is the mechanism that makes automation trustworthy.] -->
@@ -227,17 +227,17 @@ The data contract is how you tell the difference. Not by reading the numbers. By
 ## Prompts
 
 ### Figure 3.1 — Assertion versus evidence
-**Files:** images/03-the-verified-finance-data-contract-fig-01.svg · d3/03-the-verified-finance-data-contract-fig-01.html
+**Files:** ../images/03-the-verified-finance-data-contract-fig-01.svg · ../d3/03-the-verified-finance-data-contract-fig-01.html
 **Prompt:** A brutalist two-column comparison on white — an assertion column of unsupported claims (fluent summary, model output, no source, no version, no owner) beside an evidence column (source, period, entity, version, owner, control total, logged transformation) — joined by a single red arrow labeled "contract." Hairline borders, one red accent for the arrow.
 
 ### Figure 3.2 — The data contract field inventory
-**Files:** images/03-the-verified-finance-data-contract-fig-02.svg · d3/03-the-verified-finance-data-contract-fig-02.html
+**Files:** ../images/03-the-verified-finance-data-contract-fig-02.svg · ../d3/03-the-verified-finance-data-contract-fig-02.html
 **Prompt:** A brutalist grid of twelve monospaced data-contract field cells on white — source, period, entity, version, owner, freshness, schema, control total, transformation, log, report, approval record — neutral fills with the approval-record cell outlined in red as the gate field. JetBrains Mono labels, one red accent.
 
 ### Figure 3.3 — The recipe boundary
-**Files:** images/03-the-verified-finance-data-contract-fig-03.svg · d3/03-the-verified-finance-data-contract-fig-03.html
+**Files:** ../images/03-the-verified-finance-data-contract-fig-03.svg · ../d3/03-the-verified-finance-data-contract-fig-03.html
 **Prompt:** A brutalist boundary diagram on white — a preparation-layer column of recipe tasks on the left, a tall red gate down the middle, and an accountable-layer column of judgment tasks on the right — with neutral arrows entering and leaving the gate. Hairline borders, single red accent for the gate.
 
 ### Figure 3.4 — The phase gate flow
-**Files:** images/03-the-verified-finance-data-contract-fig-04.svg · d3/03-the-verified-finance-data-contract-fig-04.html
+**Files:** ../images/03-the-verified-finance-data-contract-fig-04.svg · ../d3/03-the-verified-finance-data-contract-fig-04.html
 **Prompt:** A brutalist left-to-right flow on white — source files, AI preparation, a red gate carrying three checks (scope, approval, verify), then the accountable layer — with a dashed neutral stop-condition loop returning to preparation. Inter labels, JetBrains Mono annotations, one red accent for the gate.

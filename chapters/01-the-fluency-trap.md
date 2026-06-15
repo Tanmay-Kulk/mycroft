@@ -25,7 +25,7 @@ The problem is that "sounds like finished work" and "is finished work" are two c
 
 This is not a subtle failure mode. It is the central failure mode of AI-assisted finance work, and it shows up at every level — in junior analysts who paste model output into decks without checking sources, in managers who approve language that sounds right without asking what it's grounded in, and in workflows that were built for human review but didn't account for the possibility that the draft would arrive already polished.
 
-![Two side-by-side panels with near-identical outer shapes: the left labeled fluent output, the right labeled finished work, with a single arrow crossing the gap between them marking what is missing.](images/01-the-fluency-trap-fig-01.png)
+![Two side-by-side panels with near-identical outer shapes: the left labeled fluent output, the right labeled finished work, with a single arrow crossing the gap between them marking what is missing.](../images/01-the-fluency-trap-fig-01.png)
 *Figure 1.1 — Fluent output versus finished work: the trap is that the left column looks like the right.*
 
 <!-- → [DIAGRAM: Two-column visual showing "Fluent Output" on the left (polished paragraph, confident claim, ready-looking deck) vs. "Finished Work" on the right (source file, period label, owner confirmation, approval gate). Arrow between them labeled "What's Missing." Caption: The fluency trap is that the left column looks like the right column.] -->
@@ -54,7 +54,7 @@ When fluent output crosses that boundary without a gate — when the prepared su
 
 *Table 1 — Finance work is a stack. AI operates in the preparation layer; judgment requires a human who carries accountability.*
 
-![A vertical three-tier stack — Data at the bottom, Preparation in the middle, Judgment at the top — with a single heavy gate-line on the boundary between Preparation and Judgment and a side arrow marking rising accountability.](images/01-the-fluency-trap-fig-02.png)
+![A vertical three-tier stack — Data at the bottom, Preparation in the middle, Judgment at the top — with a single heavy gate-line on the boundary between Preparation and Judgment and a side arrow marking rising accountability.](../images/01-the-fluency-trap-fig-02.png)
 *Figure 1.2 — The finance work stack: the fluency trap lives on the gate between preparation and judgment.*
 
 ---
@@ -71,7 +71,7 @@ This produces a specific artifact failure: a document that is organized, fluent,
 
 There is a compounding problem. Once the language is polished, it is harder to question. The organizational reflex when a deck looks ready is to move forward, not to interrogate sources. A rough draft invites revision. A clean draft invites approval. Fluency raises the bar for pushback at exactly the moment when pushback is most needed.
 
-![A left-to-right pipeline of six stages from model generates explanation through to explanation enters record unchecked, with the final failure node and the polished-to-unchecked segment marked in red.](images/01-the-fluency-trap-fig-03.png)
+![A left-to-right pipeline of six stages from model generates explanation through to explanation enters record unchecked, with the final failure node and the polished-to-unchecked segment marked in red.](../images/01-the-fluency-trap-fig-03.png)
 *Figure 1.3 — How fluency defeats pushback: the danger segment runs from polished output to the missing source check.*
 
 <!-- → [DIAGRAM: Pipeline with stages: Model generates explanation → Output arrives polished → Reviewer reads fluent language → Organizational reflex is approval → No one checks source → Explanation enters record unchecked. Red highlight on the gap between "Output arrives polished" and "No one checks source." Caption: Fluency raises the bar for pushback at the exact moment it is most needed.] -->
@@ -144,7 +144,7 @@ This is Mycroft's finance rule: automate the preparation layer, preserve the acc
 
 The fluency trap is not primarily a technology failure. It is an organizational failure — a failure to maintain the gate between preparation and judgment when the preparation arrives looking polished enough to pass as the finished thing.
 
-![Two zones, a preparation layer on the left and an accountable layer on the right, separated by a tall central gate; a single arrow runs from the left zone through the gate into the right zone.](images/01-the-fluency-trap-fig-04.png)
+![Two zones, a preparation layer on the left and an accountable layer on the right, separated by a tall central gate; a single arrow runs from the left zone through the gate into the right zone.](../images/01-the-fluency-trap-fig-04.png)
 *Figure 1.4 — The gate between preparation and judgment: where accountability enters the artifact.*
 
 <!-- → [DIAGRAM: Two zones separated by a gate. Left zone: "Preparation Layer" — AI-assisted, auditable steps, source-linked, reviewable. Gate in the middle: named approver, adequacy decision, gate logged. Right zone: "Accountable Layer" — human judgment, materiality, cause, treatment, release. Arrow showing preparation work passing through the gate, not bypassing it. Caption: The gate is not a slow-down. It is where accountability enters the artifact.] -->
@@ -210,17 +210,17 @@ The supervision questions — scope, approval, verification — are clear as a f
 ## Prompts
 
 ### Figure 1.1 — Fluent output versus finished work
-**Files:** images/01-the-fluency-trap-fig-01.svg · d3/01-the-fluency-trap-fig-01.html
+**Files:** ../images/01-the-fluency-trap-fig-01.svg · ../d3/01-the-fluency-trap-fig-01.html
 **Prompt:** A brutalist two-panel comparison on white: a left panel of identical surface rectangles labeled fluent output and a right panel of grounded tokens (source, period, owner, gate) labeled finished work, the two near-identical in outline. A single red arrow crosses the gap labeled "what's missing." EB Garamond heading, Inter labels, JetBrains Mono annotation, one red accent only.
 
 ### Figure 1.2 — The finance work stack
-**Files:** images/01-the-fluency-trap-fig-02.svg · d3/01-the-fluency-trap-fig-02.html
+**Files:** ../images/01-the-fluency-trap-fig-02.svg · ../d3/01-the-fluency-trap-fig-02.html
 **Prompt:** A brutalist vertical three-tier stack on white — Data, Preparation, Judgment from bottom to top — with a single heavy red gate bar sitting on the Preparation–Judgment boundary and a neutral side arrow marking rising accountability. Neutral fills and hairlines throughout, one red accent reserved for the gate.
 
 ### Figure 1.3 — How fluency defeats pushback
-**Files:** images/01-the-fluency-trap-fig-03.svg · d3/01-the-fluency-trap-fig-03.html
+**Files:** ../images/01-the-fluency-trap-fig-03.svg · ../d3/01-the-fluency-trap-fig-03.html
 **Prompt:** A brutalist six-stage pipeline on white from "model generates explanation" to "explanation enters record unchecked," neutral nodes with the terminal failure node in red and a dashed red bracket marking the danger segment where the pushback bar rises. Inter node labels, JetBrains Mono annotation, single red accent.
 
 ### Figure 1.4 — The gate between preparation and judgment
-**Files:** images/01-the-fluency-trap-fig-04.svg · d3/01-the-fluency-trap-fig-04.html
+**Files:** ../images/01-the-fluency-trap-fig-04.svg · ../d3/01-the-fluency-trap-fig-04.html
 **Prompt:** A brutalist two-zone systems diagram on white — a neutral preparation layer on the left and an accountable layer on the right — separated by a tall red gate with a small notch, and one neutral arrow passing through the gate into the accountable zone. Hairline borders, one red accent for the gate.

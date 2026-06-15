@@ -19,7 +19,7 @@ The structural integrity of the file tells you nothing about this. The report co
 
 This is the core distinction I want to establish before anything else: structural integrity is a necessary condition for evidence, not a sufficient one. The artifact has to parse *and* be complete, fresh, correctly mapped, and logically coherent before the conclusions it supports are warranted.
 
-![A two-level stack: a structural integrity base (file parses, formulas return, no broken references) whose checkmark does not propagate up to the evidentiary adequacy level (complete, fresh, correctly mapped, coherent, conclusions warranted), with the link labeled necessary but not sufficient.](images/05-verifying-finance-evidence-fig-01.png)
+![A two-level stack: a structural integrity base (file parses, formulas return, no broken references) whose checkmark does not propagate up to the evidentiary adequacy level (complete, fresh, correctly mapped, coherent, conclusions warranted), with the link labeled necessary but not sufficient.](../images/05-verifying-finance-evidence-fig-01.png)
 *Figure 5.1 — Parsing versus proving: structural integrity is necessary for evidence, not sufficient.*
 
 <!-- → [DIAGRAM: Two-level stack — bottom level labeled "Structural integrity" (file parses, formulas return, no broken references) with a checkmark that does NOT propagate upward; top level labeled "Evidentiary adequacy" (complete, fresh, correctly mapped, logically coherent, conclusions warranted) — an arrow from bottom to top labeled "necessary but not sufficient"; the gap between levels is the focus of the chapter] -->
@@ -55,7 +55,7 @@ The control total question is: what is the number this should tie to, and does i
 
 *Table 1 — Six dimensions of evidence adequacy. Each one fails silently: the artifact looks fine even when the dimension is broken.*
 
-![A radial arrangement of six evidence-adequacy dimensions — completeness, freshness, control totals, mapping, threshold logic, contradiction — each shown as a checkpoint that can fail silently.](images/05-verifying-finance-evidence-fig-02.png)
+![A radial arrangement of six evidence-adequacy dimensions — completeness, freshness, control totals, mapping, threshold logic, contradiction — each shown as a checkpoint that can fail silently.](../images/05-verifying-finance-evidence-fig-02.png)
 *Figure 5.2 — Six dimensions of evidence adequacy, each a silent failure mode the recipe can surface.*
 
 **Mapping.** Are the categories consistent across the periods being compared? Account reclassifications, cost center restructurings, and product line redefinitions all change the basis of comparison without changing the format of the output. A trend that shows Q3 up 12% over Q3-prior might be a real increase, or it might be a reclassification that moved revenue from one line to another. Mapping problems are particularly hard to catch because they require knowledge that lives outside the file — organizational history, chart-of-accounts change logs, system migration records.
@@ -97,7 +97,7 @@ These four categories correspond to four families of verbs.
 
 *Table 2 — Warranted verbs by evidence level. The language should be calibrated to the evidence you actually have.*
 
-![A ladder of four evidence levels — can say, can suggest, cannot claim, needs review — each rung carrying its warranted verbs, ascending from strongest support to flagged ambiguity.](images/05-verifying-finance-evidence-fig-03.png)
+![A ladder of four evidence levels — can say, can suggest, cannot claim, needs review — each rung carrying its warranted verbs, ascending from strongest support to flagged ambiguity.](../images/05-verifying-finance-evidence-fig-03.png)
 *Figure 5.3 — Warranted verbs by evidence level: language climbs or descends with the strength of the evidence.*
 
 The warranted-verb discipline does something important beyond accurate language: it makes the gap between evidence and conclusion visible. A summary that uses "confirms" throughout signals that someone checked the evidence and it held up. A summary that uses "indicates" and "may reflect" signals that the pattern is real but the causal story needs a professional judgment. A summary with explicit "cannot claim" statements signals where the analysis has limits. These signals are useful to the reviewer — they tell you where to spend your attention.
@@ -116,7 +116,7 @@ The limit is not that the model cannot find gaps. The limit is that the model ca
 
 This is where the PCAOB's evidence standard becomes useful as a frame. AS 1105 defines evidence as sufficient and appropriate — sufficient in quantity, appropriate in relevance and reliability. Sufficiency and appropriateness are not properties that a recipe can assess in context. They depend on the purpose of the artifact, the stakes of the decision, and the standards that apply in this particular situation. Those are professional judgments, and they belong on the human side of the gate.
 
-![A pipeline: the recipe checks the six dimensions, then flags gaps, then a human adequacy gate, then the human judges sufficiency and appropriateness in context, then the artifact is released with warranted language.](images/05-verifying-finance-evidence-fig-04.png)
+![A pipeline: the recipe checks the six dimensions, then flags gaps, then a human adequacy gate, then the human judges sufficiency and appropriateness in context, then the artifact is released with warranted language.](../images/05-verifying-finance-evidence-fig-04.png)
 *Figure 5.4 — The verification pipeline: the recipe finds the gaps; the human decides whether they matter.*
 
 <!-- → [DIAGRAM: Verification pipeline — sequence of boxes: "Recipe checks completeness, freshness, control totals, mapping, threshold logic, contradictions" → "Recipe flags gaps and surfaces findings" → [GATE: human adequacy check] → "Human judges sufficiency and appropriateness in context" → "Artifact released with warranted language" — below the pipeline, a label: "The recipe finds the gaps. The human decides whether they matter."] -->
@@ -190,17 +190,17 @@ The threshold question is the one I find hardest to operationalize. I know that 
 ## Prompts
 
 ### Figure 5.1 — Parsing versus proving
-**Files:** images/05-verifying-finance-evidence-fig-01.svg · d3/05-verifying-finance-evidence-fig-01.html
+**Files:** ../images/05-verifying-finance-evidence-fig-01.svg · ../d3/05-verifying-finance-evidence-fig-01.html
 **Prompt:** A brutalist two-level stack on white — a structural integrity base (file parses, formulas return, no broken references) with a checkmark that stops, and an evidentiary adequacy level above (complete, fresh, mapped, coherent, warranted) — joined by a red arrow labeled "necessary but not sufficient." Hairline borders, one red accent for the arrow.
 
 ### Figure 5.2 — Six dimensions of evidence adequacy
-**Files:** images/05-verifying-finance-evidence-fig-02.svg · d3/05-verifying-finance-evidence-fig-02.html
+**Files:** ../images/05-verifying-finance-evidence-fig-02.svg · ../d3/05-verifying-finance-evidence-fig-02.html
 **Prompt:** A brutalist radial diagram on white — six neutral dimension nodes (completeness, freshness, control totals, mapping, threshold logic, contradiction) on hairline spokes around a central red evidence-adequacy hub. One red accent for the hub.
 
 ### Figure 5.3 — Warranted verbs by evidence level
-**Files:** images/05-verifying-finance-evidence-fig-03.svg · d3/05-verifying-finance-evidence-fig-03.html
+**Files:** ../images/05-verifying-finance-evidence-fig-03.svg · ../d3/05-verifying-finance-evidence-fig-03.html
 **Prompt:** A brutalist four-rung ladder on white — can say, can suggest, cannot claim, needs review — each rung listing its warranted verbs in monospace, with the needs-review rung outlined in red and a side rail marking strongest support to flagged. One red accent.
 
 ### Figure 5.4 — The verification pipeline
-**Files:** images/05-verifying-finance-evidence-fig-04.svg · d3/05-verifying-finance-evidence-fig-04.html
+**Files:** ../images/05-verifying-finance-evidence-fig-04.svg · ../d3/05-verifying-finance-evidence-fig-04.html
 **Prompt:** A brutalist pipeline on white — two neutral recipe boxes (checks six dimensions, flags gaps) feeding a tall red human adequacy gate, then two accountable boxes (judges sufficiency in context, releases with warranted language) — with neutral arrows. Hairline borders, one red accent for the gate.

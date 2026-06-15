@@ -20,7 +20,7 @@ A phase gate is the point where AI assistance stops and accountable human work b
 
 The gate is not mistrust of AI. It is respect for the human responsibility on the other side.
 
-![The phase gate shown across five recipe families — variance, reconciliation, liquidity, control evidence, and contract-versus-billing — with AI preparation on one side and accountable human judgment on the other.](images/97-fundamental-themes-fig-01.png)
+![The phase gate shown across five recipe families — variance, reconciliation, liquidity, control evidence, and contract-versus-billing — with AI preparation on one side and accountable human judgment on the other.](../images/97-fundamental-themes-fig-01.png)
 *Figure 97.1 — The phase gate across five recipe families*
 
 ## Theme 3: Provenance Beats Polish
@@ -35,7 +35,7 @@ Every recipe has two customers. The agent needs schemas, steps, logs, and stop c
 
 AI helps with extraction, normalization, comparison, matching, flagging, formatting, and drafting. Humans handle materiality, interpretation, accounting treatment, cash action, control conclusion, release, and accountability.
 
-![Division of labor between AI and humans — AI on extraction, normalization, comparison, matching, flagging, formatting, and drafting; humans on materiality, interpretation, accounting treatment, cash action, control conclusion, release, and accountability.](images/97-fundamental-themes-fig-02.png)
+![Division of labor between AI and humans — AI on extraction, normalization, comparison, matching, flagging, formatting, and drafting; humans on materiality, interpretation, accounting treatment, cash action, control conclusion, release, and accountability.](../images/97-fundamental-themes-fig-02.png)
 *Figure 97.2 — Humans plus AI: division of labor*
 
 ## Practitioner Doctrine
@@ -56,9 +56,9 @@ AI helps with extraction, normalization, comparison, matching, flagging, formatt
 ## Prompts
 
 ### Figure 97.1 — The phase gate across five recipe families
-**Files:** images/97-fundamental-themes-fig-01.svg
+**Files:** ../images/97-fundamental-themes-fig-01.svg
 **Prompt:** Five stacked recipe families — variance, reconciliation, liquidity, control evidence, contract-vs-billing — each crossing a single shared gate line that separates AI preparation from accountable human judgment. The gate is the loudest mark. Ink on white, one red accent.
 
 ### Figure 97.2 — Humans plus AI: division of labor
-**Files:** images/97-fundamental-themes-fig-02.svg
+**Files:** ../images/97-fundamental-themes-fig-02.svg
 **Prompt:** A two-column division of labor — AI tasks (extraction, normalization, comparison, matching, flagging, formatting, drafting) against human tasks (materiality, interpretation, accounting treatment, cash action, control conclusion, release, accountability). Neutral on the AI side, red-accented on the human side. Flat, ink on white.

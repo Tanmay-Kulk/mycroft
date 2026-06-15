@@ -19,7 +19,7 @@ This is why the treasury action boundary in this chapter is absolute. The recipe
 
 The question is not whether the recipe could be designed to initiate those actions — it obviously could. The question is whether it should, and the answer in any well-governed treasury function is no, for the same reason that a well-designed alarm system rings a bell rather than calling the fire department and authorizing a controlled burn.
 
-![Two zones divided by a hard boundary line: the recipe-scope zone lists ingestion, normalization, bucketing, comparison, flagging, and alerting; the treasury-action zone lists payment, sweep, draw, investment, and wire actions the recipe must never take.](images/08-daily-cash-position-and-liquidity-watch-fig-01.png)
+![Two zones divided by a hard boundary line: the recipe-scope zone lists ingestion, normalization, bucketing, comparison, flagging, and alerting; the treasury-action zone lists payment, sweep, draw, investment, and wire actions the recipe must never take.](../images/08-daily-cash-position-and-liquidity-watch-fig-01.png)
 *Figure 8.1 — Recipe scope vs. the treasury action boundary*
 
 <!-- → [DIAGRAM: Two-zone layout — left zone labeled "Recipe scope" containing: bank feed ingestion, balance normalization, availability bucketing, threshold comparison, breach flagging, escalation alert; right zone labeled "Treasury action boundary" containing: payment initiation, account sweeps, credit facility draws, investment placement or liquidation, wire transfers; a hard vertical line separating the two zones labeled "hard boundary — recipe stops here"] -->
@@ -50,7 +50,7 @@ The failure mode here is normalization that silently drops accounts. If the reci
 
 *Table 1 — Normalization converts heterogeneous feeds into one row per account; a field that fails its rule is flagged, never silently dropped.*
 
-![One normalized cash-position record broken into seven fields — entity, account, account type, currency, local balance, functional equivalent, as-of timestamp — each annotated with its validation rule.](images/08-daily-cash-position-and-liquidity-watch-fig-03.png)
+![One normalized cash-position record broken into seven fields — entity, account, account type, currency, local balance, functional equivalent, as-of timestamp — each annotated with its validation rule.](../images/08-daily-cash-position-and-liquidity-watch-fig-03.png)
 *Figure 8.3 — The normalized record and its validation rules*
 
 **Step three: bucket cash by availability.** Not all cash is the same. Operating account balances are available immediately. Restricted accounts — escrow, collateral, regulatory reserve — are not available for general use. Investment account balances may have same-day or next-day liquidity depending on the instrument. Credit facility availability depends on what is drawn versus what is committed. The cash position report should show each bucket separately, because the treasury decision about whether the position is adequate depends on which cash is actually accessible.
@@ -63,7 +63,7 @@ The failure mode here is suppression logic — rules that say "if the breach is 
 
 **Step five: escalate breaches.** When a breach is flagged, the recipe generates an alert to the designated treasury contact with enough information to act: which account, which entity, which threshold, what the current balance is, what the as-of timestamp is, and what the expected resolution time is if known. The alert is a preparation output. It is not a recommended action. It does not say "consider sweeping from account X" or "draw on the credit facility." It says "here is what the position shows and here is who needs to know."
 
-![A five-step pipeline — validate feed freshness, normalize, bucket by availability, compare to thresholds, escalate — ending in a deliberate stop where the recipe hands off to the treasury team.](images/08-daily-cash-position-and-liquidity-watch-fig-02.png)
+![A five-step pipeline — validate feed freshness, normalize, bucket by availability, compare to thresholds, escalate — ending in a deliberate stop where the recipe hands off to the treasury team.](../images/08-daily-cash-position-and-liquidity-watch-fig-02.png)
 *Figure 8.2 — The five-step cash position pipeline ends in a stop*
 
 <!-- → [DIAGRAM: Five-step pipeline — boxes in sequence: "1. Validate feed freshness (flag if late or stale)" → "2. Normalize by account / entity / currency (flag unknown accounts)" → "3. Bucket by availability (operating / restricted / investment / facility)" → "4. Compare to thresholds (flag breaches, never suppress)" → "5. Escalate to treasury team (information only, no recommended action)" — below the pipeline: "Recipe stops here. Treasury decides what happens next."] -->
@@ -105,7 +105,7 @@ The watch also includes a freshness summary at the top: which feeds arrived on t
 
 *Table 2 — The liquidity watch is a read-only position statement with provenance on every number; the coverage section tells the reader what the watch does not cover.*
 
-![The read-only liquidity watch in four sections — feed status first, then cash position, threshold alerts, and coverage notes — with every balance timestamped.](images/08-daily-cash-position-and-liquidity-watch-fig-04.png)
+![The read-only liquidity watch in four sections — feed status first, then cash position, threshold alerts, and coverage notes — with every balance timestamped.](../images/08-daily-cash-position-and-liquidity-watch-fig-04.png)
 *Figure 8.4 — The liquidity watch output, freshness first*
 
 ---
@@ -163,17 +163,17 @@ I know the threshold should be calibrated to the entity's cash flow cycle and up
 ## Prompts
 
 ### Figure 8.1 — Recipe scope vs. the treasury action boundary
-**Files:** images/08-daily-cash-position-and-liquidity-watch-fig-01.svg · d3/08-daily-cash-position-and-liquidity-watch-fig-01.html
+**Files:** ../images/08-daily-cash-position-and-liquidity-watch-fig-01.svg · ../d3/08-daily-cash-position-and-liquidity-watch-fig-01.html
 **Prompt:** Two brutalist zones on white split by one hard vertical boundary line in the single red accent: the left zone lists read-only recipe steps, the right zone lists money-moving treasury actions the recipe must never take. Ink-on-fill cells, Inter labels, JetBrains Mono boundary caption; the red line is the only color and reads as an absolute stop.
 
 ### Figure 8.2 — The five-step cash position pipeline ends in a stop
-**Files:** images/08-daily-cash-position-and-liquidity-watch-fig-02.svg · d3/08-daily-cash-position-and-liquidity-watch-fig-02.html
+**Files:** ../images/08-daily-cash-position-and-liquidity-watch-fig-02.svg · ../d3/08-daily-cash-position-and-liquidity-watch-fig-02.html
 **Prompt:** A vertical brutalist pipeline of five numbered step boxes — validate, normalize, bucket, compare, escalate — joined by grey connectors and terminating in a thick red stop bar captioned "recipe stops, treasury decides." White canvas, ink strokes, mono step numbers in the single red accent.
 
 ### Figure 8.3 — The normalized record and its validation rules
-**Files:** images/08-daily-cash-position-and-liquidity-watch-fig-03.svg
+**Files:** ../images/08-daily-cash-position-and-liquidity-watch-fig-03.svg
 **Prompt:** One brutalist cash-position record decomposed into seven labeled field rows, each paired with a validation-rule token on white. Uniform ink-on-fill cells, neutral grey rule text; the as-of-timestamp row carries the single red accent to mark freshness as load-bearing.
 
 ### Figure 8.4 — The liquidity watch output, freshness first
-**Files:** images/08-daily-cash-position-and-liquidity-watch-fig-04.svg
+**Files:** ../images/08-daily-cash-position-and-liquidity-watch-fig-04.svg
 **Prompt:** A four-section brutalist read-only watch — feed status, cash position, threshold alerts, coverage notes — stacked on white with freshness placed first. Ink section headers, mono timestamps; a single red accent marks the threshold-breach rows that are never suppressed.

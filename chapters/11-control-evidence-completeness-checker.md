@@ -19,7 +19,7 @@ The evidence for a control has to connect each element of that claim to somethin
 
 When any of these elements is missing or broken, the evidence does not support the claim, regardless of how complete the binder looks. A screenshot that shows the right process but from the wrong period proves the process existed, not that it ran when it was supposed to. An approval without a reviewer proves someone prepared something, not that someone with oversight responsibility signed off. A sample that covers ten transactions when the population was four hundred covers 2.5% of the risk, not the risk.
 
-![Radial decomposition of a control claim that risk was mitigated, with four conditional branches — period, population, people, and process — each ending in a node that the evidence must establish or the claim is unsupported.](images/11-control-evidence-completeness-checker-fig-01.png)
+![Radial decomposition of a control claim that risk was mitigated, with four conditional branches — period, population, people, and process — each ending in a node that the evidence must establish or the claim is unsupported.](../images/11-control-evidence-completeness-checker-fig-01.png)
 *Figure 11.1 — Control claim decomposition*
 
 <!-- → [DIAGRAM: Control claim decomposition — center node "Control claim: risk was mitigated" — four branches extending outward: "Period" (evidence timestamps fall within review window), "Population" (sample represents the full transaction set), "People" (preparer and reviewer identified and authorized), "Process" (required steps are documented and traceable) — each branch ends in a node labeled "Evidence must establish this or the claim is unsupported"] -->
@@ -53,7 +53,7 @@ A completeness checker for control evidence runs against a map: which controls a
 
 *The eight completeness checks a recipe can run against a control map — and the single condition that trips each into a flag.*
 
-![Eight-row comparison panel, one row per completeness check, with three aligned zones — the check, what the recipe examines, and the flag condition — and the flag-condition zone carrying a blocking accent.](images/11-control-evidence-completeness-checker-fig-02.png)
+![Eight-row comparison panel, one row per completeness check, with three aligned zones — the check, what the recipe examines, and the flag condition — and the flag-condition zone carrying a blocking accent.](../images/11-control-evidence-completeness-checker-fig-02.png)
 *Figure 11.3 — The eight completeness checks*
 
 **Sample coverage.** For controls that operate over a population of transactions, the recipe checks that the sample covers the required proportion or count. If the control standard requires 25 samples for a high-frequency control and the binder has 12, the recipe flags the gap. If the population size is not documented — if no one has established how many transactions the control was supposed to cover — that is itself a flag, because you cannot assess sample adequacy without knowing what you are sampling from.
@@ -82,7 +82,7 @@ What the ledger does not include is a column for ready or not-ready at the contr
 
 *Status values: PASS / FLAG / MISSING / N/A — no effectiveness conclusion is drawn from this ledger.*
 
-![Schematic of the evidence readiness ledger as a grid — rows are controls, columns are the eight check dimensions plus identifying fields, and body cells take one of four state swatches (pass, flag, missing, not applicable) with no control-level effectiveness column.](images/11-control-evidence-completeness-checker-fig-03.png)
+![Schematic of the evidence readiness ledger as a grid — rows are controls, columns are the eight check dimensions plus identifying fields, and body cells take one of four state swatches (pass, flag, missing, not applicable) with no control-level effectiveness column.](../images/11-control-evidence-completeness-checker-fig-03.png)
 *Figure 11.4 — Evidence readiness ledger structure*
 
 ---
@@ -97,7 +97,7 @@ The PCAOB's AS 1105 requires that audit evidence be not just sufficient but appr
 
 This is where the phase gate matters in its strongest form. The ledger is the preparation surface. The auditor or control owner looks at the ledger and then asks the reliability question — the question that requires professional judgment about the evidence, not just its presence. The recipe cannot do this. It should not try.
 
-![Two-column comparison divided by a vertical gate line. The left column lists structural readiness checks the recipe performs; the right column lists reliability judgments only a human can make.](images/11-control-evidence-completeness-checker-fig-04.png)
+![Two-column comparison divided by a vertical gate line. The left column lists structural readiness checks the recipe performs; the right column lists reliability judgments only a human can make.](../images/11-control-evidence-completeness-checker-fig-04.png)
 *Figure 11.2 — Readiness vs. reliability: the recipe boundary*
 
 <!-- → [DIAGRAM: Two-column layout — left column "Evidence readiness (recipe)" with bullet points: present, within period, authorized signatures, sufficient sample, no stale artifacts, prior exceptions documented; right column "Evidence reliability (human)" with bullet points: source is independent, evidence is direct not inferred, underlying systems are controlled, evidence is credible given the risk, design is adequate for the assertion — a vertical dividing line labeled "The gate: recipe stops here" between the two columns] -->
@@ -161,17 +161,17 @@ The cleaner answer is probably to build population documentation into the data c
 ## Prompts
 
 ### Figure 11.1 — Control claim decomposition
-**Files:** images/11-control-evidence-completeness-checker-fig-01.svg · d3/11-control-evidence-completeness-checker-fig-01.html
+**Files:** ../images/11-control-evidence-completeness-checker-fig-01.svg · ../d3/11-control-evidence-completeness-checker-fig-01.html
 **Prompt:** A radial hierarchy in the brutalist register: one red central claim node ("risk was mitigated") branching to four neutral element nodes — period, population, people, process — each dropping to an ochre-bordered terminal that the evidence must establish or the claim is unsupported. Ink strokes, white canvas, no decoration beyond the single red accent and one ochre conditional band.
 
 ### Figure 11.2 — Readiness vs. reliability: the recipe boundary
-**Files:** images/11-control-evidence-completeness-checker-fig-04.svg · d3/11-control-evidence-completeness-checker-fig-04.html
+**Files:** ../images/11-control-evidence-completeness-checker-fig-04.svg · ../d3/11-control-evidence-completeness-checker-fig-04.html
 **Prompt:** A two-column comparison split by one prominent red gate line. Left column (neutral) lists the structural readiness checks the recipe performs; right column (red-accented) lists the reliability judgments only a human makes. The gate is the loudest mark on the canvas — it says the recipe stops here.
 
 ### Figure 11.3 — The eight completeness checks
-**Files:** images/11-control-evidence-completeness-checker-fig-02.svg
+**Files:** ../images/11-control-evidence-completeness-checker-fig-02.svg
 **Prompt:** An eight-row comparison panel, one row per completeness check, three aligned zones each (check, what the recipe examines, flag condition). The flag-condition zone carries a single blocking accent; rows band subtly for legibility. Flat, ink on white, no icons.
 
 ### Figure 11.4 — Evidence readiness ledger structure
-**Files:** images/11-control-evidence-completeness-checker-fig-03.svg
+**Files:** ../images/11-control-evidence-completeness-checker-fig-03.svg
 **Prompt:** A schematic grid — rows are controls, columns are the eight check dimensions plus identifying fields. Body cells take one of four state swatches (pass, flag, missing, not applicable) shown as fills, with a legend strip and an emphasis band marking the deliberately absent effectiveness column.

@@ -21,7 +21,7 @@ The bridge is not an explanation. It is a disaggregation. Instead of one $1.1 mi
 
 The bridge's value is in what it separates. A $1.1 million variance that is mostly timing — payroll landed two days early, a large customer payment came in two days after period end — is a very different situation from a $1.1 million variance where $800,000 is unexplained after all known drivers are attached. The bridge makes that difference visible. A narrative paragraph buries it.
 
-![Waterfall chart bridging opening forecast balance to actual ending balance through category variances, with explained variances in solid fill and unexplained variances hatched, and the open gap marked for treasury and FP&A review.](images/13-cash-forecast-variance-explainer-fig-01.png)
+![Waterfall chart bridging opening forecast balance to actual ending balance through category variances, with explained variances in solid fill and unexplained variances hatched, and the open gap marked for treasury and FP&A review.](../images/13-cash-forecast-variance-explainer-fig-01.png)
 *Figure 13.1 — Variance bridge waterfall*
 
 <!-- → [DIAGRAM: Waterfall chart structure showing: Opening forecast balance → plus/minus each category variance (collections, payroll, vendor payments, tax, financing, other) → Actual ending balance. Categories split into two groups: "Explained — known driver attached" (solid fill) and "Unexplained — no source found" (hatched fill). Gap between total explained and total variance labeled "Open variance requiring treasury/FP&A review." Caption: The bridge disaggregates the total variance into explained and unexplained components. The unexplained portion is a finding, not a narrative opportunity.] -->
@@ -47,7 +47,7 @@ These are stop conditions. A version-ambiguous comparison and a period-misaligne
 
 *Version and period confirmation are not setup steps. They are the conditions under which the variance analysis is meaningful.*
 
-![Two confirmation gates — forecast version and period alignment — each with its check and the halt condition that stops the run until a human resolves it.](images/13-cash-forecast-variance-explainer-fig-02.png)
+![Two confirmation gates — forecast version and period alignment — each with its check and the halt condition that stops the run until a human resolves it.](../images/13-cash-forecast-variance-explainer-fig-02.png)
 *Figure 13.3 — Version and period confirmation gates*
 
 ---
@@ -88,7 +88,7 @@ The driver attachment produces four states for each category variance. Fully exp
 
 The timing category requires care. A timing classification is not a conclusion the recipe reaches on its own — it is a hypothesis based on dated records showing transactions near the period boundary. The recipe flags timing variances as "timing — verify" rather than "timing — confirmed." The treasury analyst confirms whether the transaction did in fact land in the adjacent period and whether it was a one-time occurrence or a systematic forecasting error.
 
-![Four-state classification for each category variance — fully explained, partially explained, timing (verify), and unexplained — showing which states close cleanly and which require human review before the variance is resolved.](images/13-cash-forecast-variance-explainer-fig-03.png)
+![Four-state classification for each category variance — fully explained, partially explained, timing (verify), and unexplained — showing which states close cleanly and which require human review before the variance is resolved.](../images/13-cash-forecast-variance-explainer-fig-03.png)
 *Figure 13.2 — Four-state driver classification*
 
 <!-- → [DIAGRAM: Four-state classification for each category variance. State 1: "Fully explained" — driver source matches full amount, source reference attached. State 2: "Partially explained" — driver source matches partial amount, residual flagged. State 3: "Timing — verify" — dated transaction near period boundary, requires treasury confirmation. State 4: "Unexplained" — no driver source found, escalation required if material. Caption: Driver attachment produces four states. States 3 and 4 require human review before the variance is resolved.] -->
@@ -113,7 +113,7 @@ The alternative — generating a plausible narrative for the unexplained varianc
 
 *The escalation record documents the search, not just the gap. The investigator knows exactly what was checked.*
 
-![Structure of an unexplained-variance escalation record — variance ID, category, amount, period, sources checked, residual after driver attachment, and escalation status — documenting the search rather than supplying a story.](images/13-cash-forecast-variance-explainer-fig-04.png)
+![Structure of an unexplained-variance escalation record — variance ID, category, amount, period, sources checked, residual after driver attachment, and escalation status — documenting the search rather than supplying a story.](../images/13-cash-forecast-variance-explainer-fig-04.png)
 *Figure 13.4 — Unexplained variance escalation record*
 
 ---
@@ -173,17 +173,17 @@ The timing category is the hardest to operationalize cleanly. A timing variance 
 ## Prompts
 
 ### Figure 13.1 — Variance bridge waterfall
-**Files:** images/13-cash-forecast-variance-explainer-fig-01.svg · d3/13-cash-forecast-variance-explainer-fig-01.html
+**Files:** ../images/13-cash-forecast-variance-explainer-fig-01.svg · ../d3/13-cash-forecast-variance-explainer-fig-01.html
 **Prompt:** A waterfall bridging opening forecast balance to actual ending balance through category steps. Explained steps in neutral gray, the unexplained step in red — the one mark that earns the accent. Zero baseline, mono axis ticks, ink on white, a legend separating explained from open.
 
 ### Figure 13.2 — Four-state driver classification
-**Files:** images/13-cash-forecast-variance-explainer-fig-03.svg · d3/13-cash-forecast-variance-explainer-fig-03.html
+**Files:** ../images/13-cash-forecast-variance-explainer-fig-03.svg · ../d3/13-cash-forecast-variance-explainer-fig-03.html
 **Prompt:** A four-panel card grid: fully explained, partially explained, timing-verify, unexplained. The two human-review states (timing, unexplained) carry a red accent edge; the recipe-closable states carry an ochre marker. Flat, restrained, ink on white.
 
 ### Figure 13.3 — Version and period confirmation gates
-**Files:** images/13-cash-forecast-variance-explainer-fig-02.svg
+**Files:** ../images/13-cash-forecast-variance-explainer-fig-02.svg
 **Prompt:** Two stacked gate rows — forecast version and period alignment — each pairing its check with a halt condition. The halt is the emphasized element: the run does not proceed until a human resolves it. Ink on white, one accent.
 
 ### Figure 13.4 — Unexplained variance escalation record
-**Files:** images/13-cash-forecast-variance-explainer-fig-04.svg
+**Files:** ../images/13-cash-forecast-variance-explainer-fig-04.svg
 **Prompt:** A single-row record schematic showing the escalation fields — variance ID, category, amount, period, sources checked, residual, escalation status. The "sources checked" zone reads as the substance: the record documents the search, not a story.

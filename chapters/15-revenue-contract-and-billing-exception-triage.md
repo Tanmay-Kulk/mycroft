@@ -25,7 +25,7 @@ The source chain is the ordered sequence of documents that constitutes the curre
 
 Verifying the source chain means checking that every amendment is present, that the amendments are in the correct chronological order, that each amendment references the prior document it modifies, and that there are no gaps — no evidence of a missing amendment, no reference in a later document to a change that does not appear in the chain. A missing amendment stops the run. The recipe cannot compare billing setup to a contract it does not fully have.
 
-![Linear contract source chain from master agreement through three amendments to the current billing configuration, with a parallel check track (executed? references prior? no gap? billing reflects this version?) and a stop signal where an amendment gap halts the run.](images/15-revenue-contract-and-billing-exception-triage-fig-01.png)
+![Linear contract source chain from master agreement through three amendments to the current billing configuration, with a parallel check track (executed? references prior? no gap? billing reflects this version?) and a stop signal where an amendment gap halts the run.](../images/15-revenue-contract-and-billing-exception-triage-fig-01.png)
 *Figure 15.1 — Contract source chain with stop signal*
 
 <!-- → [DIAGRAM: Contract source chain — linear sequence showing: "Master agreement (v1, executed date)" → "Amendment 1 (date, references master)" → "Amendment 2 (date, references amendment 1)" → "Amendment 3 (date, references amendment 2)" → "Current billing configuration" — below the chain, a parallel track showing what the recipe checks at each link: "executed?", "references prior document?", "no gap?", "billing reflects this version?" — a stop signal after any missing link labeled "amendment gap: run stops here"] -->
@@ -60,7 +60,7 @@ Normalization extracts five categories of information from the contract chain.
 
 *Normalization makes a lawyer's document and an operations team's configuration comparable field by field.*
 
-![Five field-category rows — dates, products, prices, milestones, modifications — each pairing the contract source against the billing-system field and the comparison logic that produces a match or a flag.](images/15-revenue-contract-and-billing-exception-triage-fig-02.png)
+![Five field-category rows — dates, products, prices, milestones, modifications — each pairing the contract source against the billing-system field and the comparison logic that produces a match or a flag.](../images/15-revenue-contract-and-billing-exception-triage-fig-02.png)
 *Figure 15.3 — Normalized contract data: five field categories*
 
 ---
@@ -77,7 +77,7 @@ These are ASC 606 questions. The recipe flags them. It does not resolve them.
 
 The practical test for which bucket an exception belongs in is this: can a billing operations team member resolve this by comparing the contract language to the billing setup, without making a judgment about accounting treatment? If yes, it is a factual mismatch. If the resolution requires an accounting interpretation, it is a policy question.
 
-![Triage funnel taking all flagged exceptions and splitting them into two outputs — factual mismatches routed to billing ops for correction, and accounting-policy questions routed to the accounting team for a policy memo — governed by the rule of whether billing ops can resolve it without an accounting interpretation.](images/15-revenue-contract-and-billing-exception-triage-fig-03.png)
+![Triage funnel taking all flagged exceptions and splitting them into two outputs — factual mismatches routed to billing ops for correction, and accounting-policy questions routed to the accounting team for a policy memo — governed by the rule of whether billing ops can resolve it without an accounting interpretation.](../images/15-revenue-contract-and-billing-exception-triage-fig-03.png)
 *Figure 15.2 — Two-bucket exception triage funnel*
 
 <!-- → [DIAGRAM: Exception triage — a funnel shape with two outputs; input at top labeled "All flagged exceptions from comparison"; two exit paths: left path "Factual mismatches" with examples (wrong price, wrong date, renamed SKU, missing amendment reflected in billing); right path "Accounting-policy questions" with examples (contract modification type, milestone timing, variable consideration, principal-versus-agent); below the left path: "Route to billing ops for correction"; below the right path: "Route to accounting team for policy memo"; between the two paths: "Triage rule: can billing ops resolve this without an accounting interpretation? Yes → left. No → right."] -->
@@ -117,7 +117,7 @@ The pack also includes a source-chain summary at the top: which contracts were r
 
 *Two reviewing teams, two sections — the recipe presents facts; the accounting memo presents conclusions.*
 
-![Two-section exception review pack — a factual-mismatch section with correction fields and an accounting-policy section with ASC 606 topic and facts-for-analysis — above a source-chain summary recording amendments verified and run status.](images/15-revenue-contract-and-billing-exception-triage-fig-04.png)
+![Two-section exception review pack — a factual-mismatch section with correction fields and an accounting-policy section with ASC 606 topic and facts-for-analysis — above a source-chain summary recording amendments verified and run status.](../images/15-revenue-contract-and-billing-exception-triage-fig-04.png)
 *Figure 15.4 — Exception review pack: two-section structure*
 
 ---
@@ -191,17 +191,17 @@ I know the mapping table needs to be maintained and versioned, with a change log
 ## Prompts
 
 ### Figure 15.1 — Contract source chain with stop signal
-**Files:** images/15-revenue-contract-and-billing-exception-triage-fig-01.svg · d3/15-revenue-contract-and-billing-exception-triage-fig-01.html
+**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-01.svg · ../d3/15-revenue-contract-and-billing-exception-triage-fig-01.html
 **Prompt:** A left-to-right chain — master agreement, three amendments, billing configuration — with single-headed connectors and a per-link check track beneath (executed? references prior? no gap? reflects this version?). One red stop block reads "amendment gap: run stops here." Ink on white, one red accent.
 
 ### Figure 15.2 — Two-bucket exception triage funnel
-**Files:** images/15-revenue-contract-and-billing-exception-triage-fig-03.svg · d3/15-revenue-contract-and-billing-exception-triage-fig-03.html
+**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-03.svg · ../d3/15-revenue-contract-and-billing-exception-triage-fig-03.html
 **Prompt:** One ink input node ("all flagged exceptions") splitting into two buckets: factual mismatches (neutral, to billing ops) and accounting-policy questions (red, to accounting). The red bucket marks where interpretation begins. Flat, ink on white, single accent.
 
 ### Figure 15.3 — Normalized contract data: five field categories
-**Files:** images/15-revenue-contract-and-billing-exception-triage-fig-02.svg
+**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-02.svg
 **Prompt:** Five rows — dates, products, prices, milestones, modifications — each aligning contract source, billing-system field, and comparison logic. The comparison-logic zone carries the accent that signals a match-or-flag decision. Restrained, ink on white.
 
 ### Figure 15.4 — Exception review pack: two-section structure
-**Files:** images/15-revenue-contract-and-billing-exception-triage-fig-04.svg
+**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-04.svg
 **Prompt:** A two-section pack schematic — a factual-mismatch table over an accounting-policy table — topped by a source-chain summary band recording amendments verified and run status. The two sections are visibly distinct; the policy section never carries a proposed treatment.

@@ -25,7 +25,7 @@ Third, currency alignment: any submission denominated in a non-base currency nee
 
 None of these transformations involves judgment about whether the numbers are right. They are mechanical steps that convert heterogeneous inputs into a homogeneous comparison surface. The recipe can do them reliably and document every transformation in a log. The analyst cannot do them reliably at scale while also thinking about the substance of the submissions.
 
-![Six heterogeneous department submissions on the left converge through three alignment stages — period, account, currency — into a single normalized comparison surface on the right.](images/10-budget-request-normalizer-and-challenge-pack-fig-01.png)
+![Six heterogeneous department submissions on the left converge through three alignment stages — period, account, currency — into a single normalized comparison surface on the right.](../images/10-budget-request-normalizer-and-challenge-pack-fig-01.png)
 *Figure 10.1 — The normalization pipeline converts heterogeneous inputs into a comparison surface*
 
 <!-- → [DIAGRAM: Six department submission boxes on the left, each with a different shape (different color/icon representing different templates). Center: Normalization pipeline with three stages labeled Period alignment, Account alignment, Currency alignment. Right: Single normalized comparison surface. Caption: Normalization converts heterogeneous inputs into a surface where numbers can be compared. It does not evaluate whether the numbers are right.] -->
@@ -53,7 +53,7 @@ The rejection log is also useful information for the planning lead: which depart
 
 *Table 1 — Template verification is the first gate. A submission that fails it does not enter the normalization pipeline.*
 
-![Four pre-normalization verification checks — template version, required fields, period coverage, currency declaration — where any failure blocks the submission from entering the pipeline.](images/10-budget-request-normalizer-and-challenge-pack-fig-02.png)
+![Four pre-normalization verification checks — template version, required fields, period coverage, currency declaration — where any failure blocks the submission from entering the pipeline.](../images/10-budget-request-normalizer-and-challenge-pack-fig-02.png)
 *Figure 10.2 — The template verification gate*
 
 ---
@@ -98,7 +98,7 @@ New spend — budget for initiatives, projects, or capabilities that did not exi
 
 *Table 3 — The change table describes what changed. It does not evaluate whether the change is justified. That is the planning discussion.*
 
-![Prior-year actual versus submitted request by budget category, with an attention threshold that flags the largest year-over-year changes for the challenge pack.](images/10-budget-request-normalizer-and-challenge-pack-fig-03.png)
+![Prior-year actual versus submitted request by budget category, with an attention threshold that flags the largest year-over-year changes for the challenge pack.](../images/10-budget-request-normalizer-and-challenge-pack-fig-03.png)
 *Figure 10.3 — The prior-period change table directs attention, it does not judge*
 
 ---
@@ -186,13 +186,13 @@ The challenge question generation is the step in this recipe where the preparati
 ## Prompts
 
 ### Figure 10.1 — The normalization pipeline converts heterogeneous inputs into a comparison surface
-**Files:** images/10-budget-request-normalizer-and-challenge-pack-fig-01.svg · d3/10-budget-request-normalizer-and-challenge-pack-fig-01.html
+**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-01.svg · ../d3/10-budget-request-normalizer-and-challenge-pack-fig-01.html
 **Prompt:** A brutalist convergence diagram on white: six differently-shaped department submission boxes on the left funnel through a framed three-stage alignment pipeline — period, account, currency — into one uniform normalized-surface node on the right. Ink boxes, grey arrowheads, Inter labels; the single red accent frames the normalization pipeline that makes numbers comparable but not judged.
 
 ### Figure 10.2 — The template verification gate
-**Files:** images/10-budget-request-normalizer-and-challenge-pack-fig-02.svg
+**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-02.svg
 **Prompt:** Four stacked brutalist verification-check rows — template version, required fields, period coverage, currency declaration — under one frame, each with a stop-marker for the blocking consequence. White canvas, ink-on-fill cells; the first gate that fails carries the single red accent to mark that a failed submission never enters the pipeline.
 
 ### Figure 10.3 — The prior-period change table directs attention, it does not judge
-**Files:** images/10-budget-request-normalizer-and-challenge-pack-fig-03.svg
+**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-03.svg
 **Prompt:** A brutalist horizontal bar comparison of prior-year actual versus submitted request by budget category, with a vertical attention-threshold line. Zero-baseline ink bars on white, mono value labels; the single red accent marks the bars that cross the threshold and earn a challenge question.
