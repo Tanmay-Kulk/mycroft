@@ -1,8 +1,8 @@
 # License
 
-Copyright © 2026 Nik Bear Brown. All rights reserved.
+Copyright © 2026 Nik Bear Brown and Humanitarians AI. All rights reserved.
 
-Published by Bear Brown, LLC.
+Published by Humanitarians AI, a 501(c)(3) nonprofit organization.
 
 No part of this publication may be reproduced, distributed, or transmitted in any
 form or by any means without the prior written permission of the publisher, except
@@ -21,7 +21,7 @@ This is an all-rights-reserved work. It is **not** open-source, and no open-sour
 or Creative Commons license applies to it.
 
 The manuscript text, figures, diagrams, and code in this repository are © 2026 Nik
-Bear Brown, published by Bear Brown, LLC. Reproduction, distribution, public
+Bear Brown, published by Humanitarians AI. Reproduction, distribution, public
 display, or the creation of derivative works requires the prior written permission
 of the publisher, except for brief quotations in critical reviews and other
 noncommercial uses expressly permitted by copyright law.

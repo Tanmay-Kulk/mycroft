@@ -2,7 +2,7 @@
 
 *Agentic, verified-finance recipes — built and operated inside the Snickerdoodle contract.*
 
-By **Nik Bear Brown** · Published by Bear Brown, LLC.
+By **Nik Bear Brown** and **Humanitarians AI** · Published by Humanitarians AI, a 501(c)(3) nonprofit organization.
 
 ---
 
@@ -77,4 +77,4 @@ loops. Learn more at https://www.medhavy.com/.
 
 ---
 
-Copyright © 2026 Nik Bear Brown. Published by Bear Brown, LLC.
+Copyright © 2026 Nik Bear Brown and Humanitarians AI. Published by Humanitarians AI, a 501(c)(3) nonprofit organization.

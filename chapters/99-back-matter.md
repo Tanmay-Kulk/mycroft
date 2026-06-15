@@ -14,6 +14,8 @@ evidence of real work — whose discipline about provenance over polish shaped t
 doctrine in these pages. The mistakes that remain are mine; the habit of looking
 for them is theirs.
 
+Above all, this book is written *for* the Humanitarians AI Fellows. It is theirs first.
+
 ---
 
 ## About the Author
@@ -45,6 +47,8 @@ content was never the hard part. Judgment, skepticism, and failure-recovery were
 - https://www.skepticism.ai
 - https://www.humanitarians.ai/
 - bear@bearbrown.co
+
+**Humanitarians AI** — co-author and publisher of this book — is a 501(c)(3) nonprofit (EIN 33-1984805), founded in 2019 and based in Boston. It connects international graduates on Optional Practical Training (OPT) with real projects, experienced mentors, and the *Irreducibly Human* curriculum built around the cognitive capacities the AI era most needs. Its Fellows are where the verified-data, provenance-over-polish discipline in these pages was pressure-tested against production work — and the community this book is written for. [humanitarians.ai](https://www.humanitarians.ai/) · [info@humanitarians.ai](mailto:info@humanitarians.ai)
 
 ---
 
