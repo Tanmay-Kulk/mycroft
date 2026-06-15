@@ -29,7 +29,7 @@
 <!-- state 1 fully explained -->
 <rect x="265" y="56" width="230" height="50" fill="#FFFFFF" stroke="#D4D4D4" stroke-width="1"/>
 <text x="275" y="78" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" font-weight="bold">Fully explained</text>
-<text x="275" y="94" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">driver matches full amount, reference attached</text>
+<text x="275" y="94" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="9" fill="#545454">driver matches full amount, reference attached</text>
 <text x="510" y="86" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="10" fill="#545454">closed</text>
 
 <!-- state 2 partial -->

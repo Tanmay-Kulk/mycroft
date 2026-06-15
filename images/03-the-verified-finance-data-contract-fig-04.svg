@@ -17,16 +17,16 @@
     <text x="416" y="222">verify?</text>
   </g>
   <!-- accountable -->
-  <rect x="488" y="170" width="172" height="60" fill="#F5F5F5" stroke="#2a1a0e"/>
-  <text x="500" y="190" font-size="12" fill="#2a1a0e">Accountable layer</text>
-  <text x="500" y="208" font-size="12" fill="#545454">materiality · treatment · release</text>
+  <rect x="478" y="166" width="210" height="68" fill="#F5F5F5" stroke="#2a1a0e"/>
+  <text x="490" y="194" font-size="12" fill="#2a1a0e">Accountable layer</text>
+  <text x="490" y="214" font-size="11" fill="#545454">materiality · treatment · release</text>
   <!-- arrows -->
   <g stroke="#2a1a0e" stroke-width="2" fill="#2a1a0e">
     <line x1="160" y1="200" x2="198" y2="200"/><polygon points="200,200 193,196 193,204"/>
     <line x1="340" y1="200" x2="384" y2="200"/><polygon points="386,200 379,196 379,204"/>
-    <line x1="446" y1="200" x2="486" y2="200"/><polygon points="488,200 481,196 481,204"/>
+    <line x1="446" y1="200" x2="476" y2="200"/><polygon points="478,200 471,196 471,204"/>
   </g>
-  <text x="452" y="194" font-size="10" font-family="'JetBrains Mono', monospace" fill="#545454">adequate</text>
+  <text x="461" y="190" font-size="9" font-family="'JetBrains Mono', monospace" fill="#545454" text-anchor="middle">adequate</text>
   <!-- stop condition loop back -->
   <path d="M416,260 L416,330 L270,330 L270,232" fill="none" stroke="#545454" stroke-width="1.5" stroke-dasharray="4 3"/>
   <polygon points="270,230 265,242 275,242" fill="#545454"/>

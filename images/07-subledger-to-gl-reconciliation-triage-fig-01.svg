@@ -53,5 +53,5 @@
 <!-- exception queue -->
 <rect x="518" y="236" width="150" height="76" fill="#FFFFFF" stroke="#2a1a0e" stroke-width="1.5"/>
 <text x="593" y="268" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e" font-weight="600">Exception queue</text>
-<text x="593" y="288" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">requires accountant judgment</text>
+<text x="593" y="288" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="9.5" fill="#545454">requires accountant judgment</text>
 </svg>
