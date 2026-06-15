@@ -46,6 +46,8 @@ The fluency trap lives at the boundary between preparation and judgment. AI is g
 
 When fluent output crosses that boundary without a gate — when the prepared surface becomes the finished judgment because it arrived looking polished — the accountability disappears. The organization is left with a clean paragraph that no one can actually stand behind.
 
+None of this means the human should go back to producing the variance note by hand. The machine is an excellent drafter — let it pull the data, structure the comparison, write the first paragraph faster and more neatly than any analyst could. Producing the artifact was never the scarce skill. The discipline is what happens next: a person reads the note, ties the numbers back to the source, tests the explanation against what they actually know about the business, and confirms they could defend it in front of a controller or an audit committee. Accepting a fluent note because it looks finished — the finance version of prompt-and-hope — is exactly the failure the gate exists to stop. The point is not who typed the note. It is whether someone checked it.
+
 | Layer | What it is | Who/what does it | What makes it verifiable |
 |---|---|---|---|
 | Data | Raw exports, system-generated files, period-labeled records | Source systems | Traceable to a system of record; control totals tie out |
