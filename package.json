@@ -10,7 +10,8 @@
     "to-markdown": "node scripts/to-markdown.mjs",
     "eval:score": "node scripts/eval/score-run.mjs",
     "eval:report": "node scripts/eval/report.mjs",
-    "svg-to-png": "node scripts/svg-to-png.mjs"
+    "svg-to-png": "node scripts/svg-to-png.mjs",
+    "audit:layout": "node scripts/svg-layout-audit.mjs"
   },
   "dependencies": {
     "glob": "^10.0.0",
