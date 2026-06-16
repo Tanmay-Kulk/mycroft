@@ -22,9 +22,9 @@ inline and turns transfer prompts into click-to-reveal.
 | File | Role |
 |---|---|
 | `SKILL.md` | Skill definition + workflow |
-| `SLIDES.md` | Slide-decision authority (Phase 0–4, 12 failure modes, checklists) |
-| `DESIGN.md` | Visual authority (palette, type, contrast, dark mode) |
-| `D3-CODING.md` | D3 v7 coding constitution for figures |
+| `brutalist/SLIDES.md` (repo root) | Slide-decision authority (Phase 0–4, 12 failure modes, checklists) |
+| `brutalist/DESIGN.md` (repo root) | Visual authority (palette, type, contrast, dark mode) |
+| `brutalist/D3.md` (repo root) | D3 v7 coding constitution for figures (formerly CLAUDE.md) |
 | `deck-template.html` | The deck runtime you fill with slides (3 worked example slides included) |
 
-Authority order: DESIGN.md (visuals) · SLIDES.md (slide decisions) · D3-CODING.md (figure code).
+Design info is read from the repo's `brutalist/` folder. Authority: brutalist/DESIGN.md (visuals) · brutalist/SLIDES.md (slide decisions) · brutalist/D3.md (figure code).

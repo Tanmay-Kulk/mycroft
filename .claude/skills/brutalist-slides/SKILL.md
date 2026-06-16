@@ -22,19 +22,28 @@ It is the *visual-layout* counterpart to a course outline. An outline says what 
 cover. This skill decides what each slide claims, what one visual carries it, what
 goes in the notes, and lays it out so it survives the back row.
 
-## Files in this skill (load before generating)
+## Design info lives in the repo's `brutalist/` folder (load before generating)
 
-- `SLIDES.md` — the slide-decision authority. Phase 0–4 workflow, audience calibration,
-  the twelve failure modes, per-slide and per-deck checklists. **Read it in full first.**
-- `DESIGN.md` — the visual authority. Six-color palette tokens, typography (EB Garamond
-  / Inter / JetBrains Mono), spacing, contrast, dark mode. Colors come from here, only here.
-- `D3-CODING.md` — the D3 v7 coding constitution (pinned CDN 7.9.0, `var(--color-*)`,
-  `(event,d)` handlers, ResizeObserver, accessibility). Governs every figure.
-- `deck-template.html` — the deck **runtime**: the navigable shell you fill with slides.
-  This is the layout engine SLIDES.md hands off to.
+The skill reads its design authority from the **repo-root `brutalist/` folder**, not from
+copies inside the skill. Load these from the repo root before generating:
+
+- `brutalist/SLIDES.md` — the slide-decision authority. Phase 0–4 workflow, audience
+  calibration, the twelve failure modes, per-slide and per-deck checklists. **Read it in full first.**
+- `brutalist/DESIGN.md` — the visual authority. Six-color palette tokens, typography
+  (EB Garamond / Inter / JetBrains Mono), spacing, contrast, dark mode. Colors come from here, only here.
+- `brutalist/D3.md` — the D3 v7 coding constitution (pinned CDN 7.9.0, `var(--color-*)`,
+  `(event,d)` handlers, ResizeObserver, accessibility). Governs every figure. (Formerly named
+  `CLAUDE.md`; renamed to `D3.md` because it is the D3 stack file, not a Claude-Code config.)
+
+This skill ships only the **runtime**:
+
+- `deck-template.html` — the navigable deck shell you fill with slides. The layout engine SLIDES.md hands off to.
+
+(The `SLIDES.md` / `DESIGN.md` / `D3-CODING.md` files inside this skill dir are pointer stubs
+to the canonical `brutalist/` copies — do not edit them; edit `brutalist/`.)
 
 When the constitution files conflict: DESIGN.md wins on visuals, SLIDES.md wins on
-slide decisions, D3-CODING.md wins on figure code.
+slide decisions, D3.md wins on figure code.
 
 ## When to use
 
