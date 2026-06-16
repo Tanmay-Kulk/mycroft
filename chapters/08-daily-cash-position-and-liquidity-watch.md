@@ -157,3 +157,109 @@ I know the threshold should be calibrated to the entity's cash flow cycle and up
 **Exercise 2.** Write a prompt that instructs an AI to produce a liquidity watch summary from a normalized cash position dataset. Specify that the output must include an as-of timestamp for every balance, flag any unknown accounts, and list all threshold breaches without suppression. Then write a second prompt that omits those specifications. Compare the outputs: what does the unconstrained model include or omit that the constrained model handles correctly?
 
 **Exercise 3.** For one threshold breach scenario in your liquidity watch artifact, write the escalation alert that the recipe would generate. Specify: which account, which entity, which threshold, what the current balance is, what the as-of timestamp is. Then ask the model to add a recommended action to the alert. Review what it proposes, and write a one-paragraph explanation of why that recommendation should not be in the recipe output and what would need to be true for it to be appropriate.
+
+---
+
+## Chapter 8 Exercises: Daily Cash Position and Liquidity Watch
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** a solvency/liquidity screen on a company before you buy, and the term-structure-of-fear read — near-term versus longer-dated put/call as an institutional signal, with the read-only discipline held absolute.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Compute a company's liquidity ratios (current, quick, cash) and debt-maturity coverage from attached balance-sheet figures, each tied to a source line — *Why AI works here:* deterministic ratio arithmetic on fixed inputs; every number is re-checkable. (Computation task.)
+- Build the term-structure-of-fear table: put/call skew and implied volatility at near-dated versus 3-6-month expiries, filtering out 0DTE retail noise — *Why AI works here:* structuring and arithmetic over an options chain you supply; the comparison is mechanical. (Computation/structuring task.)
+- Flag any balance or option series that is stale or missing an as-of timestamp — *Why AI works here:* freshness checking is a rule applied to data, not a market opinion. (Validation task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Deciding whether a steep longer-dated put skew is a genuine smart-money warning or noise — *Why AI fails here:* the signal is a hypothesis needing evidence FOR and AGAINST; the model has no ground truth on what the institution is actually positioning for.
+- Concluding a company is "safe to buy" because its liquidity ratios pass — *Why AI fails here:* this is the gate, and the output of a screen is never your reason to act; ratios miss context the filing doesn't carry.
+- Initiating, sizing, or timing any position off the fear read — *Why AI fails here:* AI never executes; signals are tested, not followed, and options carry real, sometimes irreversible risk.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5. The liquidity watch is a read-only position statement with provenance on every number; this chapter carries the strong signal lens — the term-structure of fear is an institutional whisper you surface and test, never a sweep the recipe is allowed to trigger.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** a liquidity screen plus a term-structure-of-fear table for a company you're considering, with every figure timestamped and the institutional signal logged as a tested hypothesis. · **Tool:** Claude (a single analysis session works well; attach the balance-sheet figures and an options-chain snapshot so the read traces to your data).
+
+**The Prompt:**
+```
+You are helping me build a pre-buy liquidity screen and a term-structure-of-fear read for [FILL IN: TICKER]. I have attached two things: balance-sheet figures from the latest filing, and an options-chain snapshot with put and call implied volatility and open interest across expiries.
+
+Part A — Liquidity screen. From the attached balance sheet only, compute: current ratio, quick ratio, cash ratio, and coverage of debt maturing within 12 months by cash and equivalents. Show each input line and an as-of date for the filing. Flag any figure you cannot tie to an attached line as "unsourced" and skip it.
+
+Part B — Term-structure of fear. Using the options snapshot, build a table comparing near-dated (under 30 days) versus 3-6-month expiries on: put/call IV skew, and put/call open-interest ratio. EXCLUDE 0DTE and sub-7-day series as retail noise and say so. Note the snapshot timestamp. Describe what the term structure shows (e.g., near-term calm but elevated longer-dated put skew) as a NEUTRAL observation.
+
+Part C — Write to signals/[FILL IN: TICKER]-liquidity-fear.md. For the fear read, add two empty headed sections "Evidence FOR this being a real institutional signal" and "Evidence AGAINST" — leave both blank for me to fill.
+
+Do not conclude whether the stock is safe, attractive, or risky. Do not recommend, size, or time any position. Do not say buy, sell, hold, or hedge.
+```
+
+**What this produces:** a timestamped liquidity screen and a noise-filtered fear table, with the signal framed as a hypothesis and two empty evidence columns waiting for your own work. **How to adapt this prompt:** *For your own desk:* run the screen on every name before it enters your watchlist so liquidity is a standing gate, not an afterthought. *For ChatGPT / Gemini:* paste the chain inline and ask it to list which expiries it excluded as 0DTE/retail so you can confirm the filter. *For a Claude Project:* keep signals/ persistent so you can compare today's fear read to last month's for the same ticker. **Connection to previous chapters:** the liquidity screen joins the earnings-surprise read (Ch 6) as evidence in theses/<TICKER>.md, and the positions confirmed in your Chapter 7 reconciliation are the book this screen protects. **Preview of next chapter:** Chapter 9 reads the full balance sheet for flux-versus-prior-period red flags — the liquidity lines here are a subset of the flux review you'll build next.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** a script that computes liquidity ratios and a term-structure-of-fear comparison from local snapshot files, strictly read-only, never touching any account. · **Tool:** Claude Code · **Skill level:** Intermediate.
+
+**Setup:**
+- [ ] `data/[TICKER]-balance-sheet.csv` with the relevant balance-sheet lines and an as-of date.
+- [ ] `data/[TICKER]-options-chain.csv` with expiry, type, strike, IV, and open interest.
+- [ ] A `signals/` directory the agent may write to, and confirmation no brokerage or live-quote connection is configured.
+
+**The Task:**
+```
+Read data/[TICKER]-balance-sheet.csv and data/[TICKER]-options-chain.csv (READ-ONLY).
+
+1. Compute current, quick, and cash ratios plus 12-month debt-maturity coverage. Carry the as-of date through to the output. Halt and report any required line that is missing — do not impute.
+2. Build a near-dated (<30d) vs 3-6-month fear table: put/call IV skew and put/call OI ratio. Exclude any series under 7 days to maturity and list what was excluded. Carry the snapshot timestamp through.
+3. Write signals/[TICKER]-liquidity-fear.md with both sections, every figure timestamped, plus empty "Evidence FOR" / "Evidence AGAINST" headings.
+
+Verification step: print the count of option series used vs excluded and confirm none under 7 days remain in the table; print PASS/FAIL.
+
+Stop conditions: never connect to a brokerage or live quote feed. Never place, size, time, or suggest a trade or hedge. Never conclude safe/unsafe or buy/sell. Leave input files unchanged. Halt on missing data.
+```
+
+**Expected output:** `signals/[TICKER]-liquidity-fear.md` with timestamped ratios, a noise-filtered fear table, empty evidence headings, and a PASS line on the exclusion check. **What to inspect:** whether any sub-7-day series slipped into the table (filter failure) and whether the as-of dates on the two sources are close enough to compare. **If it goes wrong:** a wildly off ratio usually means a sign or units error in the source CSV, not the formula — check the balance-sheet file. **CLAUDE.md / AGENTS.md note:** add "Options and balance-sheet data are read-only snapshots. Never connect to a brokerage or live feed. Never place, size, or suggest a trade. Treat every signal as a hypothesis, never a conclusion."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-generated liquidity screen and term-structure-of-fear read. **Validation type:** freshness, noise-filter, and read-only-boundary check. **Risk level:** High — a stale balance, an unfiltered 0DTE series, or a smuggled "looks bullish" line could push you toward an irreversible options position. **Setup:** open the output next to both source snapshots.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+```
+Validation Checklist — Daily Cash Position and Liquidity Watch (Liquidity + Fear Read)
+□ Correctness: do all ratios recompute from the attached balance-sheet lines?
+□ Completeness: every required liquidity line present, or missing ones halted/flagged?
+□ Scope: confined to the stated ticker; balance-sheet and options snapshots both timestamped?
+□ Noise filter: are 0DTE / sub-7-day series excluded from the fear table, with the exclusions listed?
+□ Read-only boundary: no recommendation, no sizing, no timing, no buy/sell/hedge language anywhere?
+□ Failure-mode check: fluent-but-wrong? a stale balance treated as current? a signal stated as a conclusion instead of a hypothesis? missing as-of timestamp?
+```
+
+**What to do with your findings:** any unfiltered retail series or any action language is an automatic Fail — re-run with the filter and the read-only boundary enforced before the read informs your gate. **AI Use Disclosure prompt:** "I used [tool] to compute liquidity ratios and a noise-filtered term-structure-of-fear table from attached snapshots. I treated the signal as a hypothesis and made every position decision myself." **Series connection:** the failure mode here is the signal-as-conclusion — an institutional whisper presented as a reason to act; Tier 5 trains you to surface the signal, timestamp it, and test it FOR and AGAINST before you ever cross the gate.
+
+---
+
+**Tags:** liquidity-screen · term-structure-of-fear · options-signal · read-only-discipline · noise-filter · hypothesis-testing

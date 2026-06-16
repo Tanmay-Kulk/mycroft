@@ -167,3 +167,114 @@ That is the workflow. Not slower — more reliable. The dashboard was never the 
 
 9. *Difficulty: Advanced* — The chapter argues that the recipe "cannot declare the books ready" because readiness is a professional judgment requiring knowledge the model does not have: the entity's operating context, the materiality of movements in context, and the standing to be accountable. A skeptic argues this is a temporary limitation — that a sufficiently trained model, given enough historical close data for the same entity, could in principle develop the contextual knowledge required to assess adequacy and that the "human judgment" boundary is a policy choice, not a logical necessity. Construct the strongest version of this argument. Then evaluate it against the chapter's claim: is the boundary a limitation of current models, or is there something about the accountability requirement that cannot be satisfied by a model regardless of its contextual knowledge? What would need to be true — about the model, the legal framework, and the professional standards — for the skeptic's argument to hold?
 *What this tests: ability to engage with the chapter's deepest claim about the nature of professional judgment, reason from the accountability requirement rather than capability, and evaluate whether the boundary is contingent or structural.*
+
+---
+
+## Chapter 9 Exercises: Close Flux Analysis and Balance-Sheet Review
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** reading a 10-Q balance sheet for red flags — flux versus the prior period — so movement that needs explanation is surfaced and ranked before it touches your thesis.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Compute dollar and percent flux for every balance-sheet line between two filed periods, ranked by magnitude — *Why AI works here:* deterministic arithmetic on two attached trial-balance-equivalent tables; every delta is reproducible and source-traceable. (Computation task.)
+- Check each material movement for whether the filing's notes or MD&A actually mention it (support-coverage check) — *Why AI works here:* presence-or-absence retrieval against attached text, labeled supported/unsupported, not an adequacy judgment. (Retrieval task.)
+- Carry forward last quarter's still-unexplained flux items with their age — *Why AI works here:* mechanical carry-forward of a prior artifact, making aging visible. (Structuring task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Judging whether a $1.2M jump in receivables is a red flag or a benign seasonal swing — *Why AI fails here:* adequacy is a judgment requiring business context the filing alone does not carry; the model can label movement, not evaluate it.
+- Declaring the balance sheet "clean" and the thesis confirmed — *Why AI fails here:* this is the gate, and readiness is your accountable call; an AI label of "supported" is not your reason to act.
+- Deciding an unexplained movement is immaterial because it is below a dollar threshold — *Why AI fails here:* materiality-in-context is human judgment; a fluent dismissal can hide exactly the item that matters.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5. The flux review separates close status from close adequacy; here it separates "a line moved" from "I understand why" — the recipe ranks and routes movement, and you decide whether what it surfaces changes your thesis.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** a balance-sheet flux red-flag pack comparing a company's current 10-Q to the prior period, ranked and support-checked, with adequacy left to you. · **Tool:** Claude Project (load both filings' balance sheets and the current MD&A/notes as project knowledge so flux and support checks run against attached text).
+
+**The Prompt:**
+```
+You are helping me build a balance-sheet flux red-flag pack for [FILL IN: TICKER]. I have attached the current-period balance sheet, the prior-period balance sheet, and the current filing's notes/MD&A text.
+
+Step 1 — Compute flux. For every balance-sheet line, compute dollar flux (current minus prior) and percent flux (dollar flux over absolute prior balance, to avoid sign issues near zero). Show the source figure for each side. If a line cannot be tied to an attached balance sheet, flag it "unsourced" and skip its flux.
+
+Step 2 — Rank and flag. Rank by absolute dollar flux, descending. Flag any line whose percent flux exceeds [FILL IN: threshold, e.g. 20%] OR whose dollar flux exceeds [FILL IN: dollar threshold].
+
+Step 3 — Support coverage. For each flagged line, search the attached notes/MD&A for language that explains the movement. Label each: supported (current-period language found), stale (only prior-period language), or unsupported (no explanation found). Quote the supporting sentence when present. Do NOT judge whether the explanation is adequate — only whether it exists.
+
+Step 4 — Zero-flux watch. Flag any line with near-zero flux in categories where offsetting activity hides (e.g., other assets, accrued liabilities) for my manual review.
+
+Step 5 — Write to theses/[FILL IN: TICKER]/flux-redflags-[period].md, with an empty "My adequacy read" section under each flagged line. Do not conclude the balance sheet is clean or risky and do not recommend any action on the position.
+```
+
+**What this produces:** a ranked, support-tagged flux pack with empty adequacy slots — a red-flag work surface where the model routes attention and you supply the judgment. **How to adapt this prompt:** *For your own desk:* run it each quarter so flux items that stay unexplained carry forward and age in your thesis file. *For ChatGPT / Gemini:* paste both balance sheets inline and ask it to echo each source figure so you can confirm no number came from memory. *For a Claude Project:* keep prior flux packs as knowledge so carry-forward of aged items is automatic. **Connection to previous chapters:** the liquidity lines from Chapter 8 are a subset here; flagged flux items become evidence FOR or AGAINST the thesis in theses/<TICKER>.md alongside the earnings-surprise read (Ch 6). **Preview of next chapter:** Chapter 10 challenges management's guidance and your own return assumptions — the red flags surfaced here are inputs to that challenge pack.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** a script that computes ranked balance-sheet flux between two local filing extracts and tags support coverage from a notes file, read-only. · **Tool:** Claude Code · **Skill level:** Intermediate.
+
+**Setup:**
+- [ ] `data/[TICKER]-bs-current.csv` and `data/[TICKER]-bs-prior.csv` with matching line labels and an as-of date each.
+- [ ] `data/[TICKER]-notes.txt` containing the current filing's notes/MD&A text.
+- [ ] A `theses/` directory the agent may write to.
+
+**The Task:**
+```
+Read data/[TICKER]-bs-current.csv, data/[TICKER]-bs-prior.csv, and data/[TICKER]-notes.txt (ALL READ-ONLY).
+
+1. Verify both balance sheets use matching line labels; halt and list mismatches if not. Confirm the prior file's period is one period before the current.
+2. Compute dollar and percent flux per line. Rank by absolute dollar flux, descending.
+3. Flag lines exceeding [FILL IN: percent threshold] or [FILL IN: dollar threshold].
+4. For each flagged line, scan notes.txt for explanatory language; tag supported / stale / unsupported and quote the matching sentence when found.
+5. Flag near-zero-flux lines in high-risk categories for manual review.
+6. Write theses/[TICKER]/flux-redflags.md with the ranked list, support tags, and an empty "My adequacy read" line under each flag.
+
+Verification step: confirm every flagged line received a support tag and every flux ties to both source figures; print PASS/FAIL.
+
+Stop conditions: never edit any input file. Never conclude clean/risky and never suggest a position action. Halt on label mismatch or missing data rather than guessing.
+```
+
+**Expected output:** `theses/[TICKER]/flux-redflags.md` with ranked flux, support tags with quotes, zero-flux watch items, empty adequacy slots, and a PASS line. **What to inspect:** any large movement tagged "unsupported" (your highest-priority red flag) and whether stale-support tags reflect genuinely old language. **If it goes wrong:** if labels mismatch, the two filings used different line wording — align the source CSVs, don't loosen the match. **CLAUDE.md / AGENTS.md note:** add "Filing extracts are read-only. Support coverage is presence/absence only, never an adequacy verdict. Never conclude clean/risky, never suggest a trade."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-generated balance-sheet flux red-flag pack. **Validation type:** flux-integrity and support-label discipline check. **Risk level:** Medium — a miscomputed flux or a "supported" label on absent text could let a real red flag pass into your thesis unchallenged. **Setup:** open the pack next to both balance sheets and the notes file.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+```
+Validation Checklist — Close Flux Analysis and Balance-Sheet Review (Red-Flag Pack)
+□ Correctness: does every flux recompute from the two source balance sheets?
+□ Completeness: every balance-sheet line covered, with unsourced lines flagged not silently dropped?
+□ Scope: confined to the two stated periods for one ticker, prior exactly one period before current?
+□ Support discipline: is each support tag (supported/stale/unsupported) backed by a quotable sentence or its absence — not an adequacy judgment?
+□ Adequacy slot: is the "My adequacy read" section left empty for every flag?
+□ Failure-mode check: fluent-but-wrong? a "supported" label where no real explanation exists? a movement quietly judged immaterial? missing source tie?
+```
+
+**What to do with your findings:** any "supported" tag without a real quote, or any adequacy conclusion the model wrote itself, is an automatic Fail — re-run and supply your own adequacy read before the pack informs your thesis. **AI Use Disclosure prompt:** "I used [tool] to compute ranked balance-sheet flux and tag whether the filing explains each movement. I made every adequacy and red-flag judgment myself." **Series connection:** the failure mode here is the false "supported" — a coverage label mistaken for an adequacy verdict; Tier 5 trains you to treat existence of an explanation as routing, never as a clean bill of health.
+
+---
+
+**Tags:** balance-sheet-flux · red-flags · support-coverage · prior-period-comparison · adequacy-vs-status · thesis-evidence

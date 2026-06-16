@@ -184,3 +184,151 @@ The threshold question is the one I find hardest to operationalize. I know that 
 **Exercise 2.** Design a completeness check for one data extract you use regularly. What is the defined population the extract should cover? What is the mechanism you would use to verify that coverage — a row count against a control table, a sum against a GL total, a cross-reference to an authoritative list? Write the check as a recipe step, then ask the model to identify any cases where the check would pass but the extract could still be incomplete.
 
 **Exercise 3.** Write a prompt that instructs an AI to draft a variance commentary using only warranted verbs — specifying that the model must distinguish between what the data confirms, what it suggests, and what it cannot support, and that it must flag any item where the evidence is insufficient for a claim. Compare the output to a commentary drafted without that instruction. What changed in the language, and what did the model flag that a standard prompt would have asserted?
+
+## Chapter 5 Exercises: Verifying Finance Evidence
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** an evidence-adequacy audit for the desk — is each metric AND each options **signal** adequately sourced before it reaches your call? — with a strong signal lens: distinguishing real institutional positioning from retail 0DTE noise by reading the 3–6-month term structure as the filter.
+
+---
+
+### Exercise 1 — When to Use AI
+**The judgment:** In this chapter's work, AI assistance is appropriate for the following tasks:
+
+- Running the mechanical adequacy checks on an evidence run you supply — completeness (all entities present?), freshness (chain pulled when?), control totals (does the share count tie to the 10-Q?), and whether the signal used a 3–6-month window — *Why AI works here:* these are rule-based checks against data you paste; you confirm each flag. (Checking task.)
+- Classifying each conclusion's language by warranted-verb level (can say / can suggest / cannot claim / needs review) — *Why AI works here:* it's labeling against stated evidence; you re-classify any line you disagree with. (Classification task.)
+- Flagging where a claim or signal uses causal language the evidence only supports as correlation — *Why AI works here:* it's pattern-spotting in text you can re-read. (Detection task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+**The judgment:** In this chapter's work, the following tasks require human judgment.
+
+- Deciding whether an adequacy gap is *material* to your decision — *Why AI fails here:* materiality depends on your thesis, position size, and what you're risking; the model can find the gap but cannot weigh it. (Values/missing ground truth.)
+- Judging whether an options signal is real institutional positioning or retail 0DTE froth — *Why AI fails here:* the call needs the actual 3–6-month term structure and microstructure context the model didn't ground in, plus accountability for acting on it; it will tell a confident story either way. (Calibration/missing ground truth.)
+- Deciding the evidence is sufficient and the signal can inform the call — *Why AI fails here:* "sufficient" is a professional judgment tied to your stakes; a fluent "evidence adequate" is the parses-but-isn't-proven failure from this chapter. (Accountability.)
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5 — Causal. The skill is separating what the evidence *establishes* from what it merely *suggests* — especially the leap from a signal's correlation to a causal story about smart money.
+
+---
+
+### Exercise 3 — LLM Exercise
+**What you're building this chapter:** `evidence-audit.md` — a per-item adequacy audit that checks each metric and each signal before it informs your call.
+
+**Tool:** Claude Project (it should read your `agent-recipe.md`, `human-card.md`, `/evidence` contracts, and `sources-of-truth.md`) — a Project because the audit cross-references the whole chain you built.
+
+**The Prompt:**
+```
+Context: my agent-recipe.md, human-card.md, /evidence contracts, and
+sources-of-truth.md are in this Project. Do NOT decide materiality, do NOT
+mark anything verified or any signal "real," and do NOT make a buy/sell call.
+
+Audit the evidence behind ONE ticker's human card. For EACH metric and EACH
+options signal on the card, produce a row:
+Item | Source it ties to | Completeness (all entities/strikes present?) |
+Freshness (pull timestamp vs. period) | Control total (ties to filing? to chain?) |
+Mapping/period consistent? | Warranted-verb level the card SHOULD use
+(can say / can suggest / cannot claim / needs review) | Adequate for the decision?
+(LEAVE BLANK — mine to judge).
+
+For options signals specifically, add a SIGNAL column:
+- Expiration window used (flag if 0DTE / under ~3 months as likely retail noise).
+- Is the read based on the 3-6 month term structure (skew, IV slope) or on
+  short-dated flow? Label "positioning candidate" vs "likely 0DTE noise" — but
+  mark it NEEDS HUMAN, since only I can confirm with the actual term structure.
+
+End with a list of every causal claim the card makes that the evidence only
+supports as correlation. Mark "NEEDS HUMAN" wherever you guessed.
+
+Ticker:
+[FILL IN: the ticker whose card you're auditing]
+```
+
+**What this produces:** an `evidence-audit.md` table that pre-checks the mechanical adequacy of each item and flags signals that look like 0DTE noise — leaving the materiality and "is it real" calls blank for you.
+
+**How to adapt this prompt:**
+- *For your own desk:* run it as the last step before you fill the card's decision block.
+- *For ChatGPT / Gemini:* paste the card and contracts inline; if it declares a signal "real" or a gap "immaterial," restate the no-judgment line.
+- *For a Claude Project:* keep the audit template in Project knowledge so every card gets the same adequacy and signal screen.
+
+**Connection to previous chapters:** Chapter 4's card holds the call; this audit tests whether the evidence and signals under it are adequate before you make it.
+
+**Preview of next chapter:** Chapter 6 turns the recurring research into a repeatable pack — the monthly cadence that runs the recipe, audits the evidence, and stops at your gate.
+
+---
+
+### Exercise 4 — CLI Exercise
+**What you're building this chapter:** `evidence-audit.md` committed per ticker, with adequacy and signal columns filled mechanically and the judgment columns left blank.
+
+**Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+- [ ] Your repo has `agent-recipe.md`, `human-card.md`, `/evidence` contracts, and `sources-of-truth.md`.
+- [ ] You have a completed evidence run to audit.
+- [ ] `CLAUDE.md` carries the no-verify-by-AI / no-execute rule.
+
+**The Task:**
+```
+Read agent-recipe.md, human-card.md, /evidence/*.md, and sources-of-truth.md.
+Read only. You have no brokerage or account access; fetch nothing live, decide
+nothing, execute nothing.
+
+Then, for <TICKER>:
+1. Write evidence-audit.md: one row per metric and per signal with columns
+   Source | Completeness | Freshness | Control-total-ties? | Mapping/period-OK? |
+   Warranted-verb-level | Adequate-for-decision? (LEAVE BLANK).
+2. For each signal, add: expiration window used; flag 0DTE/under-3-month as
+   "likely 0DTE noise"; tag 3-6 month reads "positioning candidate (NEEDS HUMAN)".
+3. List every causal claim the card makes that is only correlation in the evidence.
+4. Do NOT mark adequate/material, do NOT label a signal "real," do NOT fill the
+   card's decision.
+5. STOP and show me the audit table before writing anything else.
+
+Do not delete anything. Use only items present in the card and contracts.
+```
+
+**Expected output:** an `evidence-audit.md` with mechanical columns filled, signals screened for 0DTE-vs-positioning, causal-overreach flagged, and all judgment columns left blank for you.
+
+**What to inspect:** that no "adequate"/"material" or "real signal" call was made; that short-dated signals are flagged as likely noise; that causal claims are separated from correlations; that read-only inputs are untouched.
+
+**If it goes wrong:** the common failure is the model declaring a 0DTE flow "real institutional positioning." Reject and re-run with "any window under ~3 months is flagged as likely noise; you do not confirm positioning — that's mine."
+
+**CLAUDE.md / AGENTS.md note:** add: "The assistant runs mechanical adequacy and signal-window checks but never declares evidence adequate/material or a signal 'real' — those, and the 3–6-month positioning call, are the human's."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+**What you're validating:** the evidence-adequacy audit from Exercise 3.
+
+**Validation type:** Adequacy + reasoning chain (signal lens). · **Risk level:** High — this is the gate between an under-sourced signal and a real position.
+
+**Setup:** open `evidence-audit.md` next to `human-card.md`. (If thin, audit this seed: an audit row that marks a put/call ratio "adequate," labels a same-week 0DTE call sweep "real institutional positioning," and pre-fills "material: yes.")
+
+**The Validation Task:**
+Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain.
+```
+Validation Checklist — Verifying Finance Evidence
+□ Correctness: Do the completeness/freshness/control-total checks match what the run and filings actually show?
+□ Completeness: Was every metric AND every signal on the card audited, or did some skip the screen?
+□ Scope: Did the model declare anything "adequate," "material," or a signal "real" it was told to leave blank?
+□ Signal vs noise: Is each signal's expiration window stated, and is anything under ~3 months flagged as likely 0DTE noise rather than positioning?
+□ Causal check: Are causal claims separated from correlations, with overreach flagged?
+□ Failure-mode check: fluent-but-wrong — did a confident "adequate" stop you checking the source? Was a 0DTE flow dressed up as smart money? Any missing ground truth behind a "real" label?
+```
+
+**What to do with your findings:** all pass → judge materiality and the signal yourself, then fill the card. One fail → blank the column and re-run. Multiple fails → audit by hand; the positioning call needs the term structure the model never saw.
+
+**AI Use Disclosure prompt:** two sentences — (1) what the AI produced (the mechanical adequacy checks and signal-window flags) and how you used it (a screen you confirmed); (2) one thing the AI could not determine (whether a gap is material, and whether a 3–6-month signal is real positioning versus 0DTE noise).
+
+**Series connection:** the failure mode is *0DTE noise mistaken for institutional positioning, and correlation read as cause* — the Tier 5 causal trap of letting a confident signal stand in for grounded evidence.
+
+---
+
+**Tags:** evidence-adequacy · signal-vs-noise · 0dte-vs-positioning · 3-6-month-term-structure · warranted-verbs · tier-5-causal

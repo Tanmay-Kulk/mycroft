@@ -169,3 +169,145 @@ What happens next — the calls, the holds, the decisions about relationships an
 
 9. *Difficulty: Advanced* — The chapter states that "AI can classify and queue. Humans communicate with vendors and customers, approve holds, release payments, or write off balances." A fintech argument holds that this boundary is already obsolete: modern payment systems authorize and release payments algorithmically at scale, collections platforms send automated communications, and write-off rules are encoded in policy engines — all without human review of individual transactions. The chapter's boundary, the argument goes, describes a workflow that barely exists anymore. Construct the strongest version of this argument, drawing on what automated payment and collections systems actually do. Then evaluate it: does high-frequency algorithmic action eliminate the accountability requirement, or does it relocate it? If the boundary moves — from individual transaction review to policy design and exception escalation — does the chapter's core principle still hold, and in what form?
 *What this tests: ability to engage with the most direct challenge to the chapter's premise, reason from what automated systems actually do rather than the chapter's assumptions, and determine whether the principle survives under changed conditions or requires reformulation.*
+
+---
+
+## Chapter 12 Exercises: AP/AR Exception and Aging Workbench
+
+**Project:** Your Own Mycroft
+**This chapter adds:** Two aging lenses — spotting receivables-quality red flags in a company's reported numbers (DSO blowups as early earnings risk) and aging your own open theses so you can see how long each has sat unconfirmed.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Compute a company's days-sales-outstanding trend across the last eight reported quarters from its filings and bucket the change (improving / stable / deteriorating). — *Why AI works here:* DSO is a defined formula over reported figures, and bucketing a trend is arithmetic against a threshold you set; a deterministic computation.
+- Sort your own open theses into aging buckets (current, 30, 60, 90+ days since last confirming evidence) and flag any past 90 days with no new FOR/AGAINST item. — *Why AI works here:* aging by date is a mechanical sort against an as-of date; the same operation an AR workbench runs, applied to your research log.
+- Flag pairs of your watchlist names that you appear to be tracking under two slightly different tickers or note titles (a counterparty-anomaly check on your own files). — *Why AI works here:* near-duplicate detection on structured records is a matching task with a visible match-strength, not a judgment about what to do about it.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Concluding that a rising DSO *means* the company is stuffing the channel or that earnings will miss. — *Why AI fails here:* a DSO blowup is a red flag to investigate, not a finding; the causal call requires reading the business context and accepting accountability for the thesis — accountability.
+- Deciding which aged thesis to kill, hold, or double down on. — *Why AI fails here:* that is a capital-allocation values call tied to your conviction and risk, and the model has no stake in the outcome — values.
+- Treating a clean aging report as confirmation that a thesis is still valid because it is "current." — *Why AI fails here:* recency of a note is not the same as reconfirmed evidence; reading recency as validity is a calibration error the model will happily reinforce — calibration.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5 — this is exception-surfacing and queue-prep for your research, one tier below the pre-trade gate, because aging tells you where to look, not what to conclude.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** A two-part aging workbench — a receivables-quality red-flag scan on a company and an aging report on your own open theses · **Tool:** Claude (a single analytical chat; the work is per-ticker and per-snapshot, not persistent state)
+
+**The Prompt:**
+
+```
+You are my aging workbench. You surface and queue exceptions; you do not decide what
+to do about any of them, and you never recommend or place a trade.
+
+PART A — Receivables-quality red flags (a company's reported numbers)
+TICKER: [FILL IN]
+QUARTERLY DATA (paste reported revenue and accounts receivable for the last 8 quarters):
+[FILL IN]
+
+1. Compute days-sales-outstanding for each quarter (AR / revenue x days in period).
+2. Show the DSO trend and bucket it: improving / stable / deteriorating.
+3. Flag any quarter where DSO jumped materially versus its prior trend, and note that
+   a DSO blowup is a RED FLAG TO INVESTIGATE — a potential early signal of earnings
+   risk or aggressive recognition — not a conclusion.
+4. Do NOT conclude that revenue is overstated or that earnings will miss. List the
+   specific questions an investor should ask next.
+
+PART B — Aging my own open theses
+THESIS LOG (paste each thesis: name, direction, date of last confirming evidence):
+[FILL IN]
+
+5. Age each thesis into buckets from today's date: current / 1–30 / 31–60 / 61–90 / 90+
+   days since last confirming evidence.
+6. Route to plain queues: "needs reconfirmation" (61–90), "stale — review or retire"
+   (90+), "data-quality" (any thesis tracked under two near-duplicate names).
+7. Do NOT tell me which thesis to keep, kill, or add to. Just age, bucket, and queue.
+
+End with a one-line note on anything you could not compute (missing dates, missing
+revenue figures) rather than guessing.
+```
+
+**What this produces:** A DSO trend with investigate-flags and a no-conclusion question list, plus an aged thesis log routed to plain review queues — exceptions surfaced, decisions left to you. **How to adapt this prompt:** *For your own desk:* add an inventory-turns or deferred-revenue check alongside DSO for richer receivables-quality coverage. *For ChatGPT / Gemini:* identical paste; ask it to render Part A as a small table so the trend is legible. *For a Claude Project:* keep your thesis log as a project file and re-run Part B weekly so the aging is always against fresh dates. **Connection to previous chapters:** the queue-not-conclude discipline and the as-of-date confirmation come straight from the corporate-close lens — here aimed at receivables and at your own research backlog. **Preview of next chapter:** Chapter 13 moves to forecasting — a company's free-cash-flow forecast versus actual, and the recovery trajectory the options market is pricing in, your first full signal-lens chapter.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local thesis-aging report generated from your research log, plus a DSO computation from a checked-in data file · **Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+
+- [ ] A `desk/theses.csv` with columns: ticker, direction, thesis_summary, last_confirmed_date.
+- [ ] A `desk/financials/[TICKER]-quarterly.csv` with columns: quarter, revenue, accounts_receivable.
+- [ ] Read-only confirmation: no account or brokerage credentials in the repo; Claude Code has no order-placing capability configured.
+
+**The Task:**
+
+```
+Work only inside desk/. This is READ-ONLY analysis of my own files and public
+financial data. Do not connect to any brokerage or account. Do not place, draft, or
+simulate any order. Do not modify desk/theses.csv or any financials file.
+
+1. Read desk/theses.csv. Using today's date, age each thesis into buckets
+   (current / 1–30 / 31–60 / 61–90 / 90+ days since last_confirmed_date).
+2. Read desk/financials/[TICKER]-quarterly.csv. Compute DSO per quarter
+   (accounts_receivable / revenue x days_in_quarter) and the quarter-over-quarter
+   change. Flag any deterioration as "INVESTIGATE — possible earnings-quality risk."
+3. WRITE two new files: desk/out/thesis-aging.md (the aged, bucketed, queued theses)
+   and desk/out/dso-redflags.md (the DSO table with investigate-flags and a
+   questions-to-ask list).
+4. Do NOT write any buy/hold/sell language or any conclusion that revenue is misstated.
+5. STOP after writing both files and print a one-line summary of each to the terminal.
+
+Verification step: re-read both output files and confirm (a) no recommendation or
+trade language appears, and (b) every 90+ bucket entry maps to a real row in
+theses.csv with a last_confirmed_date older than 90 days. Report mismatches.
+```
+
+**Expected output:** Two new files under `desk/out/` — an aged thesis queue and a DSO red-flag table — with source CSVs untouched and a terminal summary. **What to inspect:** confirm the 90+ "stale" bucket actually reflects dates older than 90 days, and that a flagged DSO jump is a real quarter-over-quarter deterioration, not a one-quarter seasonal blip the script mislabeled. **If it goes wrong:** if DSO looks wild, check that revenue is a quarterly (not annual) figure and that days_in_quarter is correct; fix the data, not the formula. **CLAUDE.md / AGENTS.md note:** "Personal research repo. Read-only on all account data; never connect to a brokerage or place/draft/simulate orders. DSO flags are investigate-prompts, never earnings conclusions or recommendations."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A DSO red-flag analysis the AI produced for one company. **Validation type:** correctness-and-restraint check (is the math right, and did it stop at "investigate" rather than "conclude"?). **Risk level:** Medium — a miscomputed or over-interpreted DSO trend could send you toward a wrong thesis. **Setup:** take the DSO output, recompute one quarter by hand, and read the language for overreach.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — AP/AR Exception and Aging Workbench
+□ Correctness: recompute DSO for one quarter by hand — does it match the AI's figure?
+□ Completeness: was every quarter in the source data included, with no gaps silently
+  dropped?
+□ Scope: did the output stop at "investigate / red flag" rather than concluding that
+  earnings will miss or revenue is overstated?
+□ Trend integrity: did it flag genuine quarter-over-quarter deterioration, not a
+  seasonal pattern mislabeled as a blowup?
+□ Aging accuracy: in the thesis log, do the buckets match the actual day-counts from
+  the last-confirmed dates?
+□ Failure-mode check: fluent-but-wrong (plausible causal story for the DSO jump)?
+  recency-mistaken-for-validity in the thesis aging? missing ground truth on cause?
+```
+
+**What to do with your findings:** if the math fails, discard the analysis and recompute; if the language overreached into conclusions, rewrite the red flags as questions before you act on any of them. **AI Use Disclosure prompt:** "I used [tool] to compute a company's DSO trend and to age my own open theses by last-confirmed date. It flagged items to investigate; it drew no earnings conclusion and made no recommendation, and I verified the DSO math myself." **Series connection:** the failure mode is fluent-but-wrong causal storytelling on top of a real red flag — and recency-mistaken-for-validity in your own backlog; Tier 5.
+
+---
+
+**Tags:** receivables-quality · dso-red-flags · thesis-aging · exception-queues · earnings-risk · investigate-not-conclude

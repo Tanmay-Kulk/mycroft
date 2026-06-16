@@ -185,3 +185,146 @@ I know the mapping table needs to be maintained and versioned, with a change log
 **Exercise 2.** Write a prompt that instructs an AI to produce an exception review pack for a contract with a modification — a change in scope and price that occurred mid-contract. Specify that the model must separately list factual mismatches and accounting-policy questions, and must not propose an accounting treatment for any policy question. Compare the output to a prompt that does not include that instruction. What does the unconstrained model assert about revenue recognition that the constrained model correctly holds for human review?
 
 **Exercise 3.** For one accounting-policy question in your exception review pack, write the facts-for-analysis section that the accounting team would need to assess the revenue recognition treatment. Specify the ASC 606 consideration at issue, the relevant contract language, and the factual questions that need to be answered before the accounting judgment can be made. Then ask the model to draft a preliminary accounting memo conclusion for the same item. Review what it proposes, and write a one-paragraph explanation of why that conclusion belongs in a human accounting memo rather than in the exception review pack.
+
+---
+
+## Chapter 15 Exercises: Revenue Contract and Billing Exception Triage
+
+**Project:** Your Own Mycroft
+**This chapter adds:** A revenue-recognition red-flag lens — scanning a company's disclosures for channel stuffing, bill-and-hold, and aggressive rev rec, the kind of finding that becomes evidence AGAINST a thesis.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Scan a company's 10-K/10-Q revenue-recognition policy, MD&A, and risk factors and extract every passage touching on timing, channel/distributor sales, bill-and-hold, multi-element arrangements, or variable consideration. — *Why AI works here:* extraction and tagging against a defined list of rev-rec patterns is a retrieval task over text you supply; verifiable against the document.
+- Triage the extracted items into two buckets: factual red flags (a metric you can recompute, like a DSO/revenue divergence) versus accounting-policy questions (an interpretation under the standard). — *Why AI works here:* the bucket rule — can you check it numerically without an accounting judgment? — is explicit, making triage a deterministic routing task.
+- Compute corroborating metrics for a suspected channel-stuffing flag (revenue growth vs. receivables growth vs. inventory-at-distributor, where disclosed). — *Why AI works here:* the metrics are formulas over reported figures; arithmetic, not interpretation.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Concluding that a company *is* channel stuffing or recognizing revenue improperly. — *Why AI fails here:* that is a determination under ASC 606 and the facts, requiring trained accounting judgment and accountability; the model can flag a pattern, not adjudicate the treatment — accountability.
+- Deciding whether a flagged rev-rec risk is severe enough to be evidence AGAINST your thesis or immaterial. — *Why AI fails here:* materiality to your decision is a values-and-risk call tied to your position, not a property of the disclosure — values.
+- Asserting the company's revenue is overstated by a specific amount. — *Why AI fails here:* it has no ground truth for the true figure and will hallucinate a confident number; precision here is invented — hallucination.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6 — rev-rec red flags feed the evidence-AGAINST column of a high-stakes thesis; surfacing them is one tier below the synthesis gate where you weigh them.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** A revenue-recognition red-flag triage pack for one company · **Tool:** Claude (analytical chat with the filing pasted/uploaded; per-company, per-filing)
+
+**The Prompt:**
+
+```
+You are my revenue-recognition red-flag triage. You surface and bucket potential
+issues; you do not conclude that any improper recognition occurred, you do not size an
+overstatement, and you never recommend or place a trade.
+
+TICKER: [FILL IN]
+FILING TEXT (paste or attach the revenue-recognition policy note, MD&A revenue
+  discussion, and relevant risk factors): [FILL IN]
+SUPPORTING FIGURES (paste reported revenue, receivables, and any distributor/channel
+  inventory figures for recent periods): [FILL IN]
+
+1. Extract every passage touching: revenue timing, channel/distributor sales,
+   bill-and-hold, multi-element/bundled arrangements, variable consideration, or
+   unusual quarter-end activity. Quote each with its location.
+2. Triage each into TWO buckets:
+   - FACTUAL RED FLAG (checkable numerically without an accounting judgment), and
+   - ACCOUNTING-POLICY QUESTION (requires an ASC 606 interpretation).
+3. For factual red flags, compute the corroborating metric (e.g. revenue growth vs.
+   receivables growth; signs of channel stuffing) and state what it SUGGESTS as a
+   hypothesis — in warranted-verb language.
+4. For accounting-policy questions, state the ASC 606 consideration at issue and the
+   facts that would need analysis. Do NOT propose a treatment or conclusion.
+5. Do NOT conclude that revenue is overstated, that the company is channel stuffing, or
+   that earnings are misstated. Do NOT size any overstatement. Do NOT recommend any
+   action.
+6. End with: the red-flag list as evidence-AGAINST candidates, and the open questions
+   each raises.
+```
+
+**What this produces:** A two-bucket pack — checkable factual red flags with corroborating metrics, and accounting-policy questions framed for further analysis — as candidate evidence AGAINST, with no verdict. **How to adapt this prompt:** *For your own desk:* add sector-specific patterns (e.g. for SaaS, RPO/deferred-revenue trends; for hardware, sell-in vs. sell-through). *For ChatGPT / Gemini:* same paste; ask for the two buckets as separate tables. *For a Claude Project:* keep a project file of rev-rec red-flag patterns so the scan is consistent across companies. **Connection to previous chapters:** the factual-versus-policy triage mirrors the two-bucket discipline of the corporate chapter, and the red flags drop straight into the evidence binder from Chapter 14 as AGAINST items. **Preview of next chapter:** Chapter 16 assembles the whole desk — fundamentals, institutional signal, and your own book — into one honest, gated buy/hold/sell write-up where these red flags are weighed, not just listed.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local rev-rec red-flag scan over a filing file plus a metrics file, writing a triaged pack · **Tool:** Cowork · **Skill level:** Intermediate
+
+**Setup:**
+
+- [ ] `desk/filings/[TICKER]/revenue-note.txt` — the pasted revenue-recognition policy, MD&A revenue section, and relevant risk factors.
+- [ ] `desk/filings/[TICKER]/figures.csv` — columns: period, revenue, receivables, channel_inventory (where disclosed).
+- [ ] Read-only confirmation: no account credentials present; the environment has no order-placing capability; inputs are public-filing data.
+
+**The Task:**
+
+```
+Work only inside desk/filings/[TICKER]/. READ-ONLY on all data. Do not connect to any
+brokerage or account, do not place/draft/simulate any order, and do not modify
+revenue-note.txt or figures.csv.
+
+1. Read revenue-note.txt. Extract and quote every passage on revenue timing, channel/
+   distributor sales, bill-and-hold, bundled arrangements, variable consideration, or
+   quarter-end spikes.
+2. Read figures.csv. Compute revenue growth vs. receivables growth vs. channel-inventory
+   growth period over period.
+3. Triage each finding into FACTUAL RED FLAG or ACCOUNTING-POLICY QUESTION using the
+   rule: numerically checkable without an accounting judgment = factual.
+4. WRITE desk/filings/[TICKER]/out/revrec-pack.md with two sections (factual red flags
+   with metrics; accounting-policy questions with the ASC 606 consideration and facts-
+   for-analysis).
+5. Do NOT conclude improper recognition, do NOT size any overstatement, do NOT write
+   any buy/hold/sell language.
+6. STOP after writing the pack and print the count of items in each bucket.
+
+Verification step: re-read revrec-pack.md and confirm (a) every factual red flag has a
+recomputable metric, (b) no accounting-policy item carries a proposed treatment, and
+(c) no recommendation or overstatement figure appears. Report any discrepancy.
+```
+
+**Expected output:** A `revrec-pack.md` with two clearly separated sections, source files untouched, and bucket counts echoed. **What to inspect:** confirm a flagged metric (e.g. receivables growing far faster than revenue) recomputes from `figures.csv`, and that policy questions are framed as questions, not answered. **If it goes wrong:** if the metrics look implausible, check that periods align (don't compare a quarter to a trailing-twelve-month figure) before trusting the flags. **CLAUDE.md / AGENTS.md note:** "Personal research repo. Read-only on all account data; never connect to a brokerage or place/draft/simulate orders. Rev-rec findings are red flags and questions only — never a conclusion of improper recognition, never a sized overstatement, never a recommendation."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A rev-rec red-flag pack the AI produced for one company. **Validation type:** correctness-and-restraint check (are the flags real and the metrics right, and did it stop short of an accounting verdict?). **Risk level:** High — a fabricated red flag or an over-stated conclusion could anchor a wrong short/avoid thesis. **Setup:** take the Exercise 3/4 pack, the filing, and the figures.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — Revenue Contract and Billing Exception Triage
+□ Correctness: does each quoted passage actually appear in the filing, and does each
+  computed metric recompute from the figures?
+□ Completeness: were the major rev-rec disclosure areas all scanned (timing, channel,
+  bill-and-hold, bundles, variable consideration)?
+□ Scope: did the output avoid concluding improper recognition, sizing an overstatement,
+  or making any buy/hold/sell call?
+□ Triage integrity: are factual red flags genuinely numerically checkable, and are
+  policy questions left as questions (no proposed ASC 606 treatment)?
+□ Quote fidelity: are the quotations verbatim, not paraphrased or invented?
+□ Failure-mode check: fluent-but-wrong (a plausible-sounding flag with no basis in the
+  text)? hallucinated quote or figure? a conclusion dressed as a flag?
+```
+
+**What to do with your findings:** delete any flag whose quote or metric you cannot verify; keep only checkable red flags as evidence AGAINST, and weigh their materiality yourself. **AI Use Disclosure prompt:** "I used [tool] to scan a company's revenue-recognition disclosures and flag potential red flags, separating checkable metrics from accounting-policy questions. It reached no conclusion of improper recognition and made no recommendation; I verified every quote and metric myself." **Series connection:** the failure mode is the hallucinated or over-interpreted red flag — a plausible accusation with no anchor in the filing; Tier 6.
+
+---
+
+**Tags:** revenue-recognition · red-flags · channel-stuffing · bill-and-hold · asc-606-triage · evidence-against

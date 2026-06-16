@@ -178,3 +178,111 @@ The five exception classes are designed to be mutually exclusive, and in most ca
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies a real design tension: the five exception classes are mutually exclusive in the recipe, but real items sometimes fit more than one class, and the primary classification is a heuristic that practitioners may accept without reviewing. Design an accountant review workflow that treats the primary classification as a starting point, not a conclusion — including what the confirmation interface looks like, how reclassifications are logged, and how the recipe uses reclassification data over time to improve the fuzzy matching heuristics. Address explicitly how you prevent the confirmation step from becoming a rubber stamp while keeping the review efficient enough that practitioners don't bypass it. *What this tests: ability to close the loop between human review and recipe improvement — operationalizing the principle that classification suggestions are hypotheses, not outputs.*
+
+---
+
+## Chapter 7 Exercises: Subledger-to-GL Reconciliation Triage
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** reconciling your brokerage statement to your own thesis/position ledger — the personal analog of subledger-to-GL — and tying a company's segment detail to its reported totals.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Deterministically match each line on your brokerage statement to a position in your thesis ledger on ticker, quantity, and cost basis — *Why AI works here:* exact matching at scale is mechanical; every match is fully traceable and re-checkable against both sources. (Matching/computation task.)
+- Sum a company's reported segment revenues and tie the total to the consolidated revenue line — *Why AI works here:* deterministic arithmetic against attached filing figures; the control total either reconciles or it doesn't. (Computation task.)
+- Build the exception queue of statement lines with no ledger match, each tagged with a suggested class and status "unreviewed" — *Why AI works here:* fuzzy near-matching generates hypotheses you then confirm; the structuring is the value, not the conclusion. (Structuring task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Deciding what an unmatched statement line *means* — an untracked position, a forgotten thesis, a corporate action you missed — *Why AI fails here:* the classification is judgment about your own book that the model has no ground truth for; it can only guess.
+- Confirming an exception is resolved and updating your ledger to match — *Why AI fails here:* this is the gate, and accountability for the ledger is yours; the model never clears its own exception.
+- Treating a segment-to-total tie-out as proof the company's numbers are clean — *Why AI fails here:* arithmetic agreement is not evidence of accounting quality; reading the discrepancy is your call, not a follow-the-output reflex.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6. Reconciliation is integration work — the brokerage-to-ledger tie binds your recorded theses to reality, and Tier 6 asks you to design the queue, the stop conditions, and the human gate that converts hypotheses into a confirmed book.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** a reconciliation of your brokerage statement to your thesis/position ledger, producing an exception queue of unmatched or mismatched lines. · **Tool:** Claude Project (load your book/ledger and a sanitized statement export as project knowledge so matching runs against attached sources, not memory).
+
+**The Prompt:**
+```
+You are helping me reconcile my brokerage statement to my own position ledger. I have attached two files: book/ledger.md (my recorded positions: ticker, quantity, cost basis, thesis link) and a statement export book/statement-[FILL IN: date].csv (ticker, quantity, market value).
+
+Step 1 — Source check. Confirm both files cover the same as-of date. Check for duplicate tickers within either file and halt with a list if any are found. Confirm the statement total ties to the stated account value; if not, stop and report the difference.
+
+Step 2 — Deterministic match. Match each statement line to a ledger position on EXACT ticker and quantity. Output matched lines as "cleared."
+
+Step 3 — Exception queue. For every statement line with no exact match, and every ledger position with no statement line, create a queue row with: the statement record, the ledger record (if any), a suggested exception class (untracked-position / quantity-mismatch / closed-but-still-in-ledger / corporate-action-suspected / unexplained), and status "unreviewed."
+
+Step 4 — Write the queue to book/reconciliation-[date].md. Leave every status as "unreviewed." Do NOT mark anything resolved, do NOT edit ledger.md, and do NOT suggest buying, selling, or adjusting any position.
+```
+
+**What this produces:** a sourced exception queue where every break is a labeled hypothesis with status "unreviewed" — a surface for you to work through, not a corrected ledger. **How to adapt this prompt:** *For your own desk:* swap in the segment-to-total variant — attach a company's segment table and consolidated totals and ask for a tie-out with any residual flagged as an exception. *For ChatGPT / Gemini:* paste both files inline and ask it to print the control-total check first so you confirm the sources agree before any matching. *For a Claude Project:* keep ledger.md and prior reconciliations as persistent knowledge so aged, still-open exceptions carry forward month to month. **Connection to previous chapters:** the ledger references the theses/<TICKER>.md files and the earnings-surprise reads from Chapter 6; this reconciliation is where recorded thesis meets actual position. **Preview of next chapter:** Chapter 8 screens a company's liquidity before you buy and reads the term-structure of fear — the positions you confirm here are the book those screens will inform.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** a script that reconciles a sanitized statement export to your ledger and emits an aged exception queue, carrying forward prior open items. · **Tool:** Claude Code · **Skill level:** Intermediate.
+
+**Setup:**
+- [ ] `book/ledger.csv` (your positions: ticker, quantity, cost basis) and `book/statement.csv` (sanitized export: ticker, quantity, market value).
+- [ ] A prior `book/reconciliation-prev.md` if one exists, so open items can carry forward.
+- [ ] Confirmation that statement.csv is a static export with no live brokerage connection.
+
+**The Task:**
+```
+Read book/ledger.csv, book/statement.csv, and book/reconciliation-prev.md if present (ALL READ-ONLY — modify nothing).
+
+1. Verify control totals: statement quantity-times-value sum should be present; report it. Halt and list rows if duplicate tickers appear in either file.
+2. Deterministic match on exact ticker + quantity. List cleared matches.
+3. Build the exception queue for all unmatched lines with a suggested class and status "unreviewed."
+4. Carry forward any still-open items from reconciliation-prev.md, showing how many periods each has been open.
+5. Write book/reconciliation-new.md with: control-total line, cleared count, exception queue, and aged carryforward section.
+
+Verification step: confirm cleared count + statement-side exceptions equals total statement lines; print PASS/FAIL.
+
+Stop conditions: never edit ledger.csv or statement.csv. Never connect to a brokerage. Never mark an exception resolved and never suggest a trade. If the as-of dates differ between files, halt and report.
+```
+
+**Expected output:** `book/reconciliation-new.md` with control total, cleared matches, an unreviewed exception queue, and an aged carryforward section, ending in PASS. **What to inspect:** any item open for two-plus periods (a stale break is no longer a timing issue) and whether the cleared+exceptions count reconciles. **If it goes wrong:** if PASS fails, a line was both matched and queued — usually a duplicate ticker the halt should have caught; fix the source. **CLAUDE.md / AGENTS.md note:** add "Ledger and statement files are read-only ground truth. Never connect to a brokerage, never resolve exceptions autonomously, never suggest position changes."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-generated reconciliation exception queue between your statement and ledger. **Validation type:** matching-integrity and gate-discipline check. **Risk level:** Medium-high — a silently "resolved" exception or a phantom break from bad source data corrupts your book of record. **Setup:** open the queue alongside both source files.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+```
+Validation Checklist — Subledger-to-GL Reconciliation (Statement-to-Ledger)
+□ Correctness: does every "cleared" match agree on exact ticker AND quantity in both sources?
+□ Completeness: is every statement line and every ledger position accounted for as either cleared or queued?
+□ Scope: same as-of date on both sides, with control totals checked before matching?
+□ Status discipline: is every exception status "unreviewed" — nothing auto-resolved, ledger unedited?
+□ Aging: are prior-period open items carried forward with their age, not silently dropped?
+□ Failure-mode check: fluent-but-wrong? a phantom break from a duplicate row? an exception quietly marked resolved? missing ground truth on what a break means?
+```
+
+**What to do with your findings:** any auto-resolved exception or any edit to the ledger is an automatic Fail — re-run read-only and confirm every status is "unreviewed" before you work the queue. **AI Use Disclosure prompt:** "I used [tool] to match my statement to my ledger and structure the exception queue. I confirmed every match against both sources and resolved each exception myself." **Series connection:** the failure mode here is the silently-cleared break — an exception that vanishes without a human resolution record; Tier 6 trains you to keep every hypothesis visible until you confirm it.
+
+---
+
+**Tags:** reconciliation · brokerage-to-ledger · exception-queue · segment-tie-out · book-of-record · gate-discipline

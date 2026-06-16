@@ -155,3 +155,155 @@ The cleaner answer is probably to build population documentation into the data c
 **Exercise 2.** Write a prompt that instructs an AI to review a control evidence package and produce an evidence readiness ledger without drawing any conclusion on effectiveness. Then ask the model the direct question: "Is this control effective?" Compare what it says to the ledger it produced. What does the gap between the readiness assessment and the effectiveness question reveal about where the model's judgment is being applied?
 
 **Exercise 3.** For one flagged item in your control evidence readiness ledger, write the coverage note that explains what the recipe found, what it could not determine, and what the reviewer needs to resolve before the control can be assessed. Then ask the model to draft a remediation plan for the flagged item. Review the plan: does it address the specific gap, and does it produce evidence that would satisfy the completeness check in the next review period?
+
+---
+
+## Chapter 11 Exercises: Control-Evidence Completeness Checker
+
+**Project:** Your Own Mycroft
+**This chapter adds:** A pre-trade due-diligence checklist that confirms you completed your own "controls" — and validated the signal — before you ever clicked buy.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Run the eight-item completeness check over your own pre-trade work for a ticker — fundamentals pulled, institutional signal characterized, your-book reconciliation done, evidence FOR and AGAINST both gathered — and flag any check that is missing, stale, or unsupported. — *Why AI works here:* the criteria are explicit and the inputs are structured, so this is a mechanical conformance check against a checklist you defined; a present/missing/flag verdict.
+- Cross-check that every evidence item you cite has a timestamp inside your review window, and flag anything that predates your thesis by more than a cycle (a stale-artifact check on your own research). — *Why AI works here:* timestamp comparison against a window is pure arithmetic with a clear flag condition; a deterministic check.
+- Confirm your institutional-signal inputs come from 3–6-month options rather than 0DTE retail noise, and flag any signal item whose tenor you did not record. — *Why AI works here:* it is a field-presence and range check against a stated rule, not a judgment about what the signal means; a completeness check.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Concluding that your due diligence is "complete enough to buy." — *Why AI fails here:* completeness of the binder is not the same as sufficiency of the evidence; the readiness-vs-reliability gap is a professional judgment, and treating a clean checklist as a buy signal collapses the gate — accountability.
+- Deciding whether a passed-all-checks thesis is actually reliable — whether your sources are independent, whether the signal is credible given the risk. — *Why AI fails here:* reliability depends on context the model cannot see from your file contents; it has no ground truth for source independence and will produce a fluent verdict anyway — missing ground truth.
+- Judging whether a flagged gap is material enough to kill the trade or small enough to note and proceed. — *Why AI fails here:* materiality is a values-and-risk call tied to your capital and your tolerance, not a property of the data — values.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6 — this is high-stakes pre-decision quality control. The checker can confirm your process ran; it cannot certify the conclusion, which is exactly why it sits one tier below the full synthesis run.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** A reusable pre-trade due-diligence completeness checker for your own desk · **Tool:** Claude Project (a persistent project so the checklist, your evidence-attribute map, and prior checks live together across tickers)
+
+**The Prompt:**
+
+```
+You are my pre-trade due-diligence completeness checker. You verify that I completed
+my own research process before I make a buy/hold/sell decision. You do NOT recommend,
+rate, or place any trade. You produce a readiness ledger only.
+
+Here is my completed pre-trade work for one ticker:
+
+TICKER: [FILL IN]
+REVIEW WINDOW: [FILL IN start date] to [FILL IN end date]
+
+FUNDAMENTALS GATHERED: [FILL IN — what reported numbers I pulled, source, as-of date]
+INSTITUTIONAL SIGNAL CHARACTERIZED: [FILL IN — put/call skew, term-structure of fear,
+  IV crush notes; the OPTION TENOR I used (must be 3–6 month, not 0DTE); source; date]
+MY OWN BOOK RECONCILED: [FILL IN — current position/thesis in this name, last updated]
+EVIDENCE FOR the thesis: [FILL IN — items with source + timestamp]
+EVIDENCE AGAINST the thesis: [FILL IN — items with source + timestamp]
+
+Run these eight completeness checks and return a one-row readiness ledger. For each
+check return PASS / FLAG / MISSING / N/A and a one-line coverage note:
+
+1. Evidence existence — is each required input present (fundamentals, signal, book,
+   FOR evidence, AGAINST evidence)?
+2. Period coverage — does every cited item carry a timestamp inside my review window?
+3. Source attribution — does every item name a source I could re-open?
+4. Signal tenor — is the institutional signal drawn from 3–6-month options, not 0DTE?
+5. Both-sides coverage — is there at least one substantive item of evidence AGAINST,
+   not just FOR?
+6. Timestamp integrity — is any item internally inconsistent (e.g. signal dated before
+   the data it reacts to)?
+7. Stale artifact — does any item predate the review window by more than one cycle?
+8. Book reconciliation — is my current position/thesis stated and recently updated?
+
+Rules:
+- Missing evidence is logged as MISSING, never "pending" or "expected."
+- Do NOT draw any conclusion about whether I should buy, hold, or sell.
+- Do NOT rate the quality or reliability of the evidence — only its presence,
+  timeliness, attribution, and internal consistency.
+- End with a one-line coverage-notes summary of anything you could not determine.
+```
+
+**What this produces:** A single readiness-ledger row across eight dimensions, telling you where your own pre-trade process has gaps before you act — not a verdict on the trade. **How to adapt this prompt:** *For your own desk:* add checks specific to your style (e.g. a "liquidity check" or "earnings-date proximity" flag) and store your evidence-attribute map in the Project so you do not re-paste it each ticker. *For ChatGPT / Gemini:* paste the same block into a single chat; without project memory you will re-supply your checklist each run, so keep it in a saved note. *For a Claude Project:* upload your checklist and a few sanitized prior ledgers as project files so the checker learns your conventions. **Connection to previous chapters:** this reuses the warranted-verb discipline (confirm vs. suggest) and the data-contract habit of confirming as-of dates before trusting an input. **Preview of next chapter:** Chapter 12 turns the lens on receivables-quality red flags and on aging your own open theses — how long a thesis has sat unconfirmed becomes its own due-diligence signal.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local script-assisted completeness sweep over a folder of your own research notes, producing a readiness ledger file · **Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+
+- [ ] A local folder `desk/research/[TICKER]/` containing your own pre-trade notes (markdown or text), each with a date in the filename or a front-matter timestamp.
+- [ ] A `checklist.md` in that folder listing the eight completeness checks and your review window.
+- [ ] Read-only confirmation: no brokerage or account credentials are present in this folder, and Claude Code has no order-placing tool configured.
+
+**The Task:**
+
+```
+Work only inside desk/research/[TICKER]/. This is READ-ONLY analysis of my own
+research notes. Do not connect to any brokerage, account, or trading API. Do not
+place, draft, or simulate any order. Do not modify or delete my source notes.
+
+1. Read checklist.md to load the eight completeness checks and my review window.
+2. Read every note file in this folder. For each, extract: the evidence type
+   (fundamentals / signal / book / FOR / AGAINST), the source named, the timestamp,
+   and (for signal notes) the option tenor.
+3. Run the eight completeness checks across the collected notes.
+4. WRITE a single new file readiness-ledger.md containing one ledger row with
+   PASS / FLAG / MISSING / N/A per check plus a coverage-notes line.
+5. Do NOT write any recommendation, rating, or buy/hold/sell language into the ledger.
+6. STOP after writing readiness-ledger.md. Print the ledger to the terminal so I can
+   review it before doing anything else.
+
+Verification step: after writing, re-read readiness-ledger.md and confirm that (a) it
+contains no buy/hold/sell language, and (b) every MISSING corresponds to a check with
+no supporting note file. Report any discrepancy.
+```
+
+**Expected output:** A new `readiness-ledger.md` with one row, eight check verdicts, and a coverage-notes line — and a terminal echo of it. Source notes untouched. **What to inspect:** open the ledger and confirm each MISSING/FLAG points to a real gap in your notes, not a parsing miss; spot-check one timestamp the script flagged as stale. **If it goes wrong:** if every check reads MISSING, your notes likely lack the metadata the checklist expects — add dates/sources to a few files and re-run rather than loosening the checklist. **CLAUDE.md / AGENTS.md note:** add a line — "This repo holds personal investment research. Read-only on all account data. Never connect to a brokerage or place/draft/simulate orders. Output is a process-completeness ledger, never a recommendation."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A readiness ledger an AI produced for your pre-trade due diligence on one ticker. **Validation type:** completeness-and-scope check (did the checker stay inside its lane and report honestly?). **Risk level:** High — a falsely clean ledger gives you unwarranted confidence to commit capital. **Setup:** take the ledger from Exercise 3 or 4, the underlying notes, and your checklist, and judge the ledger against the notes.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — Control-Evidence Completeness Checker
+□ Correctness: does each PASS correspond to a note that actually exists with the
+  required timestamp and source?
+□ Completeness: were all eight checks run, and is every MISSING logged as MISSING
+  (not "pending" or "expected later")?
+□ Scope: did the ledger avoid any buy/hold/sell conclusion or quality/reliability
+  rating it was told not to make?
+□ Both-sides integrity: did the checker flag a thin or absent AGAINST column rather
+  than passing it because the FOR column was full?
+□ Signal-tenor check: did it correctly flag any institutional-signal item that was
+  not drawn from 3–6-month options?
+□ Failure-mode check: fluent-but-wrong? readiness mistaken for reliability? missing
+  ground truth (did it assert a source was credible rather than just present)?
+```
+
+**What to do with your findings:** treat any Fail or Cannot-determine as a hard block on the trade until you resolve it yourself; a clean ledger is permission to make your own call, not the call itself. **AI Use Disclosure prompt:** "I used [tool] to run an eight-point completeness check over my own pre-trade research; it verified presence, timing, and attribution of my evidence. It made no buy/hold/sell recommendation and I confirmed every check against my source notes myself." **Series connection:** the failure mode here is readiness-mistaken-for-reliability — a full binder that looks decision-ready but isn't; Tier 6, because catching it protects the capital decision that follows.
+
+---
+
+**Tags:** due-diligence-checklist · pre-trade-controls · evidence-completeness · signal-validation · readiness-vs-reliability · process-not-picks

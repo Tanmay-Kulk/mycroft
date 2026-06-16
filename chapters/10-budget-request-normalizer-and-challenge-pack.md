@@ -180,3 +180,114 @@ The challenge question generation is the step in this recipe where the preparati
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies a real tension: challenge questions that are specific enough to be actionable can land as accusations rather than inquiries, and the calibration is left to the planning lead's review — a human judgment step the recipe cannot assist with. Design a tiered question format that preserves specificity while signaling collaborative intent: what would a three-tier structure look like (information request, assumption flag, policy exception), how would the language differ across tiers, and how would the planning lead's review criteria differ for each tier? Address whether this tiering should be visible to the departments receiving the pack or only to the planning team. *What this tests: ability to operationalize the tone calibration problem the chapter leaves open — designing a structure that makes the human judgment step more consistent without removing it.*
+
+---
+
+## Chapter 10 Exercises: Budget-Request Normalizer and Challenge Pack
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** challenging management's guidance and projections — and your own return assumptions — by turning fluent narrative into specific, sourced challenge questions you take into the decision.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Normalize management's guidance into a comparable structure: extract the explicit assumptions (growth rate, margin, units) behind a guidance range and align them to prior-period actuals — *Why AI works here:* extraction and structuring of stated figures into a common surface; each pulled number ties to the transcript or filing. (Structuring task.)
+- Generate specific, sourced challenge questions from each flagged assumption — naming the line, the stated value, and the gap — *Why AI works here:* mechanical question generation from flags, asking for information, not rendering a verdict. (Structuring task.)
+- Compute your own thesis's implied return assumptions and compare them to history — *Why AI works here:* deterministic arithmetic on your inputs; reproducible and checkable. (Computation task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Deciding whether management's guidance is credible or sandbagged — *Why AI fails here:* credibility is judgment grounded in management's track record and context the model can't verify; it produces plausible language, not a calibrated read.
+- Concluding your own return assumptions are "conservative enough" and acting on the thesis — *Why AI fails here:* this is the gate; the challenge pack is a tool for reaching your decision, never the reason for it.
+- Accepting a challenge question's framing as a settled finding — *Why AI fails here:* a question that reads like an accusation can manufacture false confidence; the answer, and what it means, is yours to judge.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6. The challenge pack is integration and confrontation work — it normalizes guidance and your own assumptions into one surface and generates the questions that interrogate both, with the planning-lead gate replaced by your own decision gate.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** a challenge pack against a company's forward guidance and your own thesis's return assumptions — normalized to a common surface, with sourced challenge questions and no verdict. · **Tool:** Claude Project (load the guidance transcript/filing, prior actuals, and your thesis file so the pack confronts attached sources, not memory).
+
+**The Prompt:**
+```
+You are helping me build a challenge pack against [FILL IN: TICKER]'s forward guidance and against my own thesis assumptions. I have attached: the guidance language (earnings-call transcript or filing), the prior-period actuals, and my thesis file theses/[FILL IN: TICKER].md.
+
+Step 1 — Normalize guidance. Extract every explicit assumption behind the guidance (revenue growth %, margin %, unit volume, FX or rate assumptions). Put them in a table against the prior-period actual for the same metric, with a source quote for each extracted assumption. Mark any guidance figure with no stated basis as "unsupported assumption."
+
+Step 2 — Normalize my assumptions. From my thesis file, extract my implied return assumptions (entry price, target, holding period, implied annualized return, and the growth/margin assumptions I'm relying on). Put them in the same table beside management's.
+
+Step 3 — Flag. Flag (a) any guidance assumption that differs from prior actuals by more than [FILL IN: threshold], (b) any unsupported assumption, and (c) any place where MY assumption is more optimistic than management's own guidance.
+
+Step 4 — Generate challenge questions. For each flag, write ONE specific, sourced question that names the line, states the value, and asks for the missing basis — phrased as an information request, not an accusation. Include a tier label: information-request / assumption-flag / optimism-gap.
+
+Step 5 — Write to theses/[FILL IN: TICKER]/challenge-pack.md with an empty "My answer / resolution" line under each question. Do not judge whether guidance is credible, do not conclude the thesis holds or fails, and do not recommend any action on the position.
+```
+
+**What this produces:** a side-by-side assumption surface (management's vs. yours) with tiered, sourced challenge questions and empty resolution slots — a confrontation tool, not a conclusion. **How to adapt this prompt:** *For your own desk:* run it before every add or trim so your own return math is challenged against management's own numbers, surfacing where you're more bullish than the company. *For ChatGPT / Gemini:* paste the transcript inline and ask it to quote the source sentence for every extracted assumption so you can confirm nothing was invented. *For a Claude Project:* keep the challenge pack with your thesis so next quarter's guidance can be tested against last quarter's questions. **Connection to previous chapters:** the pack pulls the earnings-surprise read (Ch 6), the reconciled position (Ch 7), the liquidity/fear signal (Ch 8), and the flux red flags (Ch 9) as evidence to challenge; it is where the whole desk's prior work confronts the forward story. **Preview of next chapter:** the challenge pack closes the evidence-gathering arc — the next stage is the standing decision discipline these artifacts feed.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** a script that normalizes management guidance and your thesis assumptions from local files into one comparison table and generates tiered challenge questions, read-only. · **Tool:** Cowork · **Skill level:** Advanced.
+
+**Setup:**
+- [ ] `data/[TICKER]-guidance.txt` (guidance language) and `data/[TICKER]-actuals.csv` (prior-period metrics).
+- [ ] Your `theses/[TICKER].md` with stated entry, target, horizon, and assumptions.
+- [ ] A `theses/` directory the agent may write to.
+
+**The Task:**
+```
+Read data/[TICKER]-guidance.txt, data/[TICKER]-actuals.csv, and theses/[TICKER].md (ALL READ-ONLY).
+
+1. Extract management's explicit guidance assumptions with a source quote each; mark any without a stated basis "unsupported."
+2. Extract my thesis assumptions (entry, target, horizon, implied return, growth/margin relied on).
+3. Build one comparison table: metric | prior actual | management guidance | my assumption | source quote.
+4. Flag: guidance vs actual beyond [FILL IN: threshold]; unsupported assumptions; any metric where my assumption exceeds management's guidance.
+5. For each flag generate one sourced, information-request-style question with a tier label (information-request / assumption-flag / optimism-gap).
+6. Write theses/[TICKER]/challenge-pack.md with the table, questions, and an empty "My answer / resolution" line under each.
+
+Verification step: confirm every extracted assumption has a source quote and every flag produced exactly one question; print PASS/FAIL.
+
+Stop conditions: never edit guidance, actuals, or the thesis file. Never judge credibility, never conclude the thesis holds or fails, never suggest buying, trimming, or adding. Halt if guidance.txt has no extractable assumptions rather than inventing them.
+```
+
+**Expected output:** `theses/[TICKER]/challenge-pack.md` with a four-column comparison table, tiered sourced questions, empty resolution slots, and a PASS line. **What to inspect:** every "optimism-gap" flag (where you out-assume management) and whether each extracted assumption carries a real quote. **If it goes wrong:** if PASS fails on missing quotes, the model inferred an assumption rather than extracting it — tighten to "explicit, quoted assumptions only." **CLAUDE.md / AGENTS.md note:** add "Guidance, actuals, and thesis files are read-only. Extract only quotable assumptions. Never judge credibility, never conclude on the thesis, never suggest a trade."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-generated challenge pack confronting management guidance and your own assumptions. **Validation type:** extraction-fidelity and question-framing check. **Risk level:** Medium-high — an invented assumption or an accusatory question framed as a finding could distort the decision your gate depends on. **Setup:** open the pack next to the guidance text, actuals, and your thesis.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+```
+Validation Checklist — Budget-Request Normalizer and Challenge Pack (Guidance Challenge)
+□ Correctness: does every extracted management assumption have a real source quote in guidance.txt?
+□ Completeness: are both management's and your own assumptions on the same surface, none dropped?
+□ Scope: confined to the stated ticker and period; thesis assumptions read from your file, not invented?
+□ Question discipline: is each challenge question an information request (sourced, specific), not a verdict or accusation, with a correct tier label?
+□ Gate discipline: is the "My answer / resolution" slot empty and no credibility/thesis conclusion drawn?
+□ Failure-mode check: fluent-but-wrong? an assumption inferred rather than quoted? a question that reads as a settled finding? missing source quote?
+```
+
+**What to do with your findings:** any unquoted assumption or any question phrased as a conclusion is an automatic Fail — restrict to quoted assumptions and reframe questions as requests before the pack informs your decision. **AI Use Disclosure prompt:** "I used [tool] to normalize management guidance and my own assumptions onto one surface and to generate sourced challenge questions. I judged credibility and resolved each question myself." **Series connection:** the failure mode here is the question-as-verdict — a challenge phrased so it pre-answers itself; Tier 6 trains you to keep every challenge an open, sourced question that feeds your gate rather than replacing it.
+
+---
+
+**Tags:** challenge-pack · guidance-skepticism · assumption-normalization · return-assumptions · sourced-questions · decision-gate

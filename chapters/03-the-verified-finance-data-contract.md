@@ -221,3 +221,146 @@ The data contract is how you tell the difference. Not by reading the numbers. By
 
 9. *Difficulty: Advanced* — PCAOB Auditing Standard 1105 defines audit evidence but was written before AI-generated outputs existed as a category of finance artifact. The chapter treats AI output as non-evidence by default. Construct the strongest counterargument: under what conditions, if any, could a logged, reproducible AI output meet the standard's implicit criteria for evidence? What would need to be true about the log, the transformation record, and the approval chain? Then evaluate your own argument — does it hold, or does it dissolve under scrutiny?
 *What this tests: ability to engage with the chapter's most contestable empirical and professional claim, reason from the underlying standard rather than the chapter's summary, and apply the intellectual honesty norm to your own argument.*
+
+## Chapter 3 Exercises: The Verified Finance Data Contract
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** a sources-of-truth list and a data contract for the desk — SEC EDGAR filings and a named options-chain provider are sources; tweets, pundit takes, and a fluent AI paragraph are not — so every number and signal you act on can be traced back to where it came from.
+
+---
+
+### Exercise 1 — When to Use AI
+**The judgment:** In this chapter's work, AI assistance is appropriate for the following tasks:
+
+- Drafting the field skeleton of a data contract for a metric you supply (source, period, entity, version, filing-accession-number, owner, freshness, retrieval-timestamp) — *Why AI works here:* it's structured templating you fill and verify against the actual filing. (Templating task.)
+- Comparing two filings or two options-chain pulls for schema or scope differences you then inspect (different fiscal period, restated line, missing strike) — *Why AI works here:* mechanical diffing of data you paste; you confirm each flagged difference. (Comparison task.)
+- Extracting the candidate provenance fields from a 10-K cover page (CIK, period of report, filer) into the contract template — *Why AI works here:* extraction against a document you can open and check character-for-character. (Extraction task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+**The judgment:** In this chapter's work, the following tasks require human judgment.
+
+- Deciding whether a source counts as a source of truth — *Why AI fails here:* the model will happily treat a confident blog post or its own paraphrase as authoritative; it has no standing to rank provenance, and the whole point is that you do. (Accountability/provenance.)
+- Marking a number "verified" by tying it to a filing line — *Why AI fails here:* verification is the act of a named human pointing at the source; an AI "verified" is exactly the fluent-summary-as-evidence failure the chapter warns about. (Missing ground truth.)
+- Supplying a value or accession number the filing doesn't actually contain — *Why AI fails here:* it will hallucinate a plausible figure or ID to complete the template; only retrieval against EDGAR settles it. (Hallucination.)
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6 — Accountability/provenance. The skill is owning the trail: knowing, and being able to show, exactly where each number and signal came from.
+
+---
+
+### Exercise 3 — LLM Exercise
+**What you're building this chapter:** `sources-of-truth.md` — your ranked list of allowed sources and a per-metric data contract that ties each number to its origin.
+
+**Tool:** Claude Project (it should read your `theses/<TICKER>.md` and `effort-plan.md` so the contract covers exactly the metrics your plan said matter) — a Project because the sources list is desk-wide and reused on every ticker.
+
+**The Prompt:**
+```
+Context: my claim-audit and effort-plan are in this Project. Do NOT add numbers,
+accession numbers, or sources of your own, and do NOT mark anything verified.
+
+Help me build two things for ONE stock:
+A. A SOURCES-OF-TRUTH ranking. List the sources I name below and tag each:
+   "source of truth" (e.g. SEC EDGAR filing, named options-chain provider),
+   "context only" (analyst notes, news), or "not a source" (tweets, hype, an AI
+   paragraph). If I left a tier empty, say so — do not invent sources.
+B. A DATA CONTRACT TABLE for each decision-moving metric from my effort-plan:
+   Metric | Source-of-truth it must tie to | Period | Entity | Version/accession
+   | Owner (me) | Freshness need | Retrieval-timestamp | Verified? (LEAVE BLANK).
+   For options signals, the "source" column must name the chain provider, the
+   expiration window (favor 3-6 month, not 0DTE), and the strikes.
+
+Leave every "Verified?" cell blank for me to fill by hand against the actual
+source. Mark "NEEDS HUMAN" wherever you couldn't fill a field without guessing.
+
+My metrics and candidate sources:
+[FILL IN: list your decision-moving metrics + the sources you actually use]
+```
+
+**What this produces:** a reusable `sources-of-truth.md` plus an empty-but-structured data contract you fill by opening each source yourself. The blank "Verified?" column is deliberate — only you, citing the source, can fill it.
+
+**How to adapt this prompt:**
+- *For your own desk:* run it once to set the source ranking, then reuse the contract template per ticker.
+- *For ChatGPT / Gemini:* identical; if it tries to populate a value or accession number, restate "leave data cells blank; you don't have the filing."
+- *For a Claude Project:* store the finished sources-of-truth ranking in Project knowledge so every future contract inherits it.
+
+**Connection to previous chapters:** the effort-plan said which metrics matter; this chapter fixes where each one is allowed to come from.
+
+**Preview of next chapter:** Chapter 4 splits the research into two outputs — an agent recipe that gathers from these sources and does the math, and a human card that holds the call.
+
+---
+
+### Exercise 4 — CLI Exercise
+**What you're building this chapter:** `sources-of-truth.md` and an `evidence/` folder convention committed to the desk repo, with a contract stub per decision-moving metric.
+
+**Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+- [ ] Your desk repo has `theses/<TICKER>.md`, `effort-plan.md`, and `CANNOT-KNOW.md`.
+- [ ] You have a draft sources ranking from Exercise 3.
+- [ ] `CLAUDE.md` carries the no-verify-by-AI / no-execute rule.
+
+**The Task:**
+```
+Read effort-plan.md and the draft sources ranking I placed at sources-of-truth.md.
+Read only — do not modify the thesis, charter, or effort plan. You have no brokerage
+or account access; do not retrieve, fetch, or fabricate any market data or filings.
+
+Then:
+1. Finalize sources-of-truth.md as a three-tier list: "Sources of truth",
+   "Context only", "Not a source". Use only sources I listed; add none.
+2. For each decision-moving metric in effort-plan.md, create a stub file in
+   /evidence named <METRIC>.md containing the empty data-contract table
+   (Source | Period | Entity | Version/accession | Owner | Freshness |
+   Retrieval-timestamp | Verified?). Leave all data and Verified? cells blank.
+3. Do NOT populate any value, accession number, or "verified" mark — those are mine.
+4. STOP and show me the file tree and one example stub before writing the rest.
+
+Do not delete anything. Do not invent tickers, metrics, or sources.
+```
+
+**Expected output:** a finalized three-tier `sources-of-truth.md`, one empty contract stub per metric under `/evidence`, no AI-filled data or verification marks, and a preview to inspect before the full write.
+
+**What to inspect:** that tiers contain only sources you named; that every contract cell is blank; that no "verified" appears; that read-only inputs are untouched.
+
+**If it goes wrong:** the typical failure is the model filling in a plausible accession number or a "current" value to be helpful. Reject and re-run with "every data cell must be empty; you have not opened any filing."
+
+**CLAUDE.md / AGENTS.md note:** add: "The assistant may build empty data-contract templates but never populates a value, accession number, or 'verified' mark, and never treats its own output, a tweet, or a news post as a source of truth."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+**What you're validating:** the sources ranking and data-contract template from Exercise 3.
+
+**Validation type:** Provenance / structured data. · **Risk level:** High — a bad source ranking lets hype enter as if it were a filing.
+
+**Setup:** open `sources-of-truth.md` and one `/evidence/<METRIC>.md` stub. (If thin, audit this seed: a contract that lists "a trader's tweet thread" as the source for a revenue figure and pre-fills "Verified? yes.")
+
+**The Validation Task:**
+Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain.
+```
+Validation Checklist — The Verified Finance Data Contract
+□ Correctness: Is every "source of truth" actually authoritative (EDGAR filing, named chain provider) — not a paraphrase or a feed?
+□ Completeness: Does each decision-moving metric have a contract stub with all provenance fields present (even if blank)?
+□ Scope: Did the model populate any value, accession number, or "verified" mark it was told to leave blank?
+□ Provenance: For each metric, can you name the exact filing + line (or expiration + strike) the contract points to?
+□ Source-tiering: Are tweets/news/AI-paragraphs correctly placed in "context only" or "not a source," never in "source of truth"?
+□ Failure-mode check: fluent-but-wrong — did a confident contract make a number feel verified before you opened the source? Any hallucinated accession number?
+```
+
+**What to do with your findings:** all pass → start filling the contracts against real sources. One fail → fix the tier or blank the cell. Multiple fails → rebuild the sources list by hand; provenance is the one thing you cannot delegate.
+
+**AI Use Disclosure prompt:** two sentences — (1) what the AI produced (the source tiers and an empty contract template) and how you used it (a scaffold you filled and verified); (2) one thing the AI could not determine (whether a source is authoritative, and whether a number truly ties to its filing).
+
+**Series connection:** the failure mode is *an unsourced number wearing the costume of evidence* — the Tier 6 accountability trap of acting on a figure you can't trace.
+
+---
+
+**Tags:** data-contract · sources-of-truth · EDGAR-not-tweets · provenance · options-chain-provider · tier-6-accountability

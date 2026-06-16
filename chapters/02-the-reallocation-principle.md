@@ -168,3 +168,145 @@ That question connects to Chapter 3, which is about the finance data contract �
 **Exercise 2.** Take the variance analysis scenario from the opening. Write a prompt that instructs an AI to produce a draft summary with explicit uncertainty markers — places where the model cannot determine the answer from the source data and flags the gap for human review. Compare the output to a prompt that does not include that instruction.
 
 **Exercise 3.** Design a phase gate for one step in your reallocation hypothesis artifact. Specify: who is the named approver, what does the recipe hand them, what are the stop conditions, and what would make the finding defensible if someone asked tomorrow. Then ask the model to review your gate design and identify any scope or verification gaps.
+
+## Chapter 2 Exercises: The Reallocation Principle
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** a research-effort plan that spends your scarce attention where it actually changes the decision — the two or three claims and signals that move buy/hold/sell — instead of leaking it into ticker-watching, 0DTE noise, and re-reading things you already verified.
+
+---
+
+### Exercise 1 — When to Use AI
+**The judgment:** In this chapter's work, AI assistance is appropriate for the following tasks:
+
+- Inventorying a thesis into its steps and sorting each as preparation (gather/compute) versus judgment (the call) — *Why AI works here:* mechanical decomposition and labeling against text you supply; you can re-sort any line you disagree with. (Decomposition task.)
+- Estimating, from the claim-audit, which open claims could plausibly flip the decision if they resolved against you — a sensitivity sketch — *Why AI works here:* it's structured reasoning over inputs you give it, and you confirm each "could-flip" against your own thesis. (Prioritization-draft task.)
+- Drafting the time-cost side of an effort plan — roughly how long pulling each piece of evidence (a 10-Q line, a 3–6-month options term structure) would take — *Why AI works here:* it's estimation and formatting you sanity-check against your own experience. (Reformatting/estimation task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+**The judgment:** In this chapter's work, the following tasks require human judgment. Delegating them to AI is not appropriate.
+
+- Deciding which claim *actually* moves your decision — *Why AI fails here:* the weighting depends on your thesis, your risk tolerance, and your time horizon, none of which the model can know; it will rank by salience in the text, not by what changes your call. (Values/missing ground truth.)
+- Deciding the effort is "done" and the position is ready — *Why AI fails here:* it carries no accountability for capital and cannot feel when evidence is thin; a fluent "analysis complete" is the recovered-hours-vanish failure from this chapter. (Accountability.)
+- Judging whether an options signal is worth research time at all, or is retail 0DTE noise to skip — *Why AI fails here:* that triage needs the actual term-structure and microstructure context; the model will narrate either way. (Calibration.)
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5 — Causal. The skill is reasoning about cause and effect: which research effort actually *causes* better decisions, versus effort that only feels productive.
+
+---
+
+### Exercise 3 — LLM Exercise
+**What you're building this chapter:** `effort-plan.md` — a ranked plan that allocates your next research session to the claims/signals that can change the decision.
+
+**Tool:** Claude Project (so the plan can read your `theses/<TICKER>.md` and `CANNOT-KNOW.md` from Chapter 1 as context) — a Project, not a single chat, because the effort plan is only as good as the charter and audit it builds on.
+
+**The Prompt:**
+```
+Context: my claim-audit (theses/<TICKER>.md) and my charter (CANNOT-KNOW.md)
+are in this Project. Do NOT recommend a trade, a size, or a price target.
+
+Help me build a research-effort plan for ONE stock. Steps:
+1. List every open item from the claim-audit tagged "unsupported," "needs-a-source,"
+   or "inferred." Add any options-signal questions I name below.
+2. For each item, fill a table: Item | What would settle it (exact filing line,
+   options expiration/strike, or data series) | Rough effort to get it (low/med/high)
+   | If it resolved AGAINST my thesis, would it change my decision? (yes/maybe/no).
+3. Rank the items by decision-impact first, effort second. Put "would change the
+   decision" items at the top regardless of effort.
+4. Separately, list items that are ticker-watching or 0DTE noise — interesting
+   but decision-irrelevant — under a heading "Do NOT spend time here."
+5. Mark "NEEDS HUMAN" wherever you guessed at decision-impact, since you can't
+   know my thesis weighting or risk tolerance.
+
+Do not tell me what to conclude. Open options-signal questions:
+[FILL IN: e.g. "is the 3-6mo put skew on <TICKER> real positioning?"]
+```
+
+**What this produces:** a ranked, effort-aware plan you finalize by hand — you set the real decision-impact column — and save as `effort-plan.md`. The "Do NOT spend time here" list is the point: it names the noise you'll be tempted to chase.
+
+**How to adapt this prompt:**
+- *For your own desk:* run it the night before a research session so you walk in with a ranked list, not a ticker feed.
+- *For ChatGPT / Gemini:* paste the audit and charter inline; if it volunteers a recommendation or target, restate the no-trade line.
+- *For a Claude Project:* keep the audit and charter in Project knowledge so each new ticker's plan inherits your weighting conventions.
+
+**Connection to previous chapters:** Chapter 1's claim-audit exposed the gaps; this chapter decides which gaps are worth closing.
+
+**Preview of next chapter:** Chapter 3 fixes *where* each piece of evidence is allowed to come from — the sources-of-truth and data contract that make the plan's evidence defensible.
+
+---
+
+### Exercise 4 — CLI Exercise
+**What you're building this chapter:** `effort-plan.md` committed to your desk repo, plus a tiny `BACKLOG.md` that captures the noise items so they stop distracting you.
+
+**Tool:** Claude Code · **Skill level:** Beginner–Intermediate
+
+**Setup:**
+- [ ] Your desk repo from Chapter 1 exists with `theses/<TICKER>.md` and `CANNOT-KNOW.md`.
+- [ ] You have a draft effort plan from Exercise 3 to paste or place in the repo.
+- [ ] Your `CLAUDE.md` still carries the no-verify-by-AI / no-execute rule.
+
+**The Task:**
+```
+Read theses/<TICKER>.md, CANNOT-KNOW.md, and the draft effort plan I placed at
+effort-plan.md (repo root). Read only. Do not modify the thesis or the charter.
+You have no access to any brokerage account; do not place, size, or simulate trades.
+
+Then:
+1. Reformat effort-plan.md into two sections: "## Decision-moving — research first"
+   (the ranked items) and "## Do NOT spend time here — noise" (the rest).
+   Use only items already present in my draft; invent no new claims or tickers.
+2. Create BACKLOG.md and move every "noise" item there as a checklist, so the
+   effort plan stays focused on decision-movers.
+3. Do NOT mark any claim "verified" and do NOT label any options signal "real" —
+   leave those columns for me.
+4. STOP and show me both files as a diff before writing anything else.
+
+Do not delete the original items; relocate them. Do not create other files.
+```
+
+**Expected output:** a focused `effort-plan.md` (decision-movers on top), a `BACKLOG.md` holding the noise, nothing verified or labeled by the AI, and a diff to inspect before commit.
+
+**What to inspect:** that no new claims/tickers appeared; that no "verified" or "real signal" labels were added; that noise items were moved, not deleted; that the read-only files are untouched.
+
+**If it goes wrong:** the common failure is the model promoting a noise item into the decision-moving list because it "sounds important." Reject and re-run with "rank only by my decision-impact column; do not re-judge impact yourself."
+
+**CLAUDE.md / AGENTS.md note:** add a line: "The assistant ranks and reformats research items but never assigns decision-impact or 'verified'/'real' labels — those are the human's."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+**What you're validating:** the ranked effort plan from Exercise 3.
+
+**Validation type:** Prioritization / reasoning chain. · **Risk level:** Medium — a misranked plan wastes a research session, but the gate downstream still catches a bad call.
+
+**Setup:** open `effort-plan.md` next to your `theses/<TICKER>.md`. (If your plan is thin, audit this seed instead: a plan that ranks "watch the daily price action" and "read every analyst tweet" above "confirm the deferred-revenue line in the 10-Q.")
+
+**The Validation Task:**
+Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain.
+```
+Validation Checklist — The Reallocation Principle
+□ Correctness: Does each "what would settle it" cite a real, openable source (filing line, options expiration/strike, data series)?
+□ Completeness: Did the plan capture every open claim from the audit, or did decision-movers get dropped?
+□ Scope: Did the model slip in a recommendation, a size, or a price target it was told not to?
+□ Decision-impact: Are the top-ranked items ones that, if they resolved against you, would actually change buy/hold/sell — or just salient?
+□ Noise filter: Is ticker-watching / 0DTE chatter correctly quarantined to "do not spend time here"?
+□ Failure-mode check: fluent-but-wrong — did a confident ranking make you skip checking? Did effort-saved silently become effort-not-spent-on-review?
+```
+
+**What to do with your findings:** all pass → run the session against the plan. One fail → fix the column and re-rank. Multiple fails → rank it by hand; the model is optimizing for salience, not your decision.
+
+**AI Use Disclosure prompt:** two sentences — (1) what the AI produced (the item inventory and a draft ranking) and how you used it (a starting order you re-weighted); (2) one thing the AI could not determine (which items truly move *your* decision given your horizon and risk tolerance).
+
+**Series connection:** the failure mode is *effort that feels productive but doesn't change the decision* — the Tier 5 causal trap of mistaking activity for the cause of a better call.
+
+---
+
+**Tags:** reallocation · effort-where-it-moves-the-decision · noise-filter · 0dte-vs-positioning · prioritization · tier-5-causal

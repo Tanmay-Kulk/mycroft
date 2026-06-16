@@ -196,3 +196,122 @@ The dangerous shortcut is skipping the forty-five minutes because the machine al
 
 9. *Difficulty: Advanced* — The chapter argues that the commentary column should be blank when no human has written an explanation, and that a blank is "information — it tells the reviewer that a flagged item has no prior context and needs fresh commentary." A CFO argues the opposite: blanks in a distribution pack look incomplete, erode confidence in the finance team, and should be filled with at least a model-generated placeholder marked as preliminary. Construct the strongest version of the CFO's argument. Then evaluate it against the chapter's core claim about the structural separation of preparation and judgment. Does the CFO's concern reveal a genuine tension in the design, or does it dissolve under scrutiny? If the concern is genuine, propose a structural solution that preserves the gate while addressing the presentation problem.
 *What this tests: ability to engage with the chapter's most contestable design claim, reason from first principles rather than the chapter's conclusion, and propose a structural rather than cosmetic resolution.*
+
+---
+
+## Chapter 6 Exercises: Monthly Variance Pack
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** the earnings-surprise read — a company's reported actuals against guidance and consensus, and your own returns against a benchmark, with the gate between the computed delta and the human explanation held firm.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Compute actual-vs-consensus and actual-vs-guidance deltas across every reported line of a 10-Q, ranked by magnitude — *Why AI works here:* deterministic arithmetic on a fixed set of inputs; every delta traces to a source row and is reproducible, so you can independently re-check it. (Computation task.)
+- Compute your portfolio's period return against a chosen benchmark (e.g. SPY total return) and decompose it by position — *Why AI works here:* the math is mechanical and the inputs are your own recorded prices and weights; the answer is verifiable against the source numbers. (Computation task.)
+- Attach the prior period's filed explanation for a flagged line as labeled context — *Why AI works here:* retrieval of a sourced, dated artifact you already hold, not generation of a new claim. (Retrieval/structuring task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Explaining *why* a revenue line missed consensus — "demand softened" vs. "a deal slipped a quarter" — *Why AI fails here:* the cause is not in the delta; the model produces fluent, plausible language with no ground truth behind it, and a wrong cause looks identical to a reviewed one.
+- Deciding whether an earnings surprise changes your thesis enough to act — *Why AI fails here:* this is the gate, and it carries accountability; the output of a model can never be your reason to trade.
+- Judging whether your benchmark outperformance is genuine skill or one lucky position — *Why AI fails here:* calibration over a meaningful sample is a judgment about your own process, and past performance is not future results.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5. The variance pack is preparation that lands at a gate; this tier asks you to build a comparison surface (actuals vs. consensus, you vs. benchmark) where the computed delta is reproducible and the explanation stays explicitly human-owned and labeled.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** an earnings-surprise variance pack — a company's reported actuals against consensus and prior guidance, with a two-column commentary structure that keeps the cause-of-miss explanation human-authored. · **Tool:** Claude Project (load the company's filing and the consensus/guidance figures as project knowledge so the deltas trace to attached sources, not to the model's memory).
+
+**The Prompt:**
+```
+You are helping me build an earnings-surprise variance pack for [FILL IN: TICKER], for [FILL IN: fiscal quarter]. I have attached the company's reported income-statement figures and a table of consensus and prior-guidance figures for the same lines.
+
+Produce a variance table with one row per income-statement line. For each line, columns:
+- Reported actual (from the attached filing only)
+- Consensus estimate (from the attached consensus table)
+- Prior guidance midpoint (from the attached guidance table; blank if none)
+- Dollar variance vs. consensus
+- Percent variance vs. consensus
+- Dollar and percent variance vs. guidance midpoint
+- Source cell reference for every reported number
+
+Then:
+1. Rank flagged lines by absolute dollar variance vs. consensus, descending. Flag any line where the percent variance vs. consensus exceeds [FILL IN: threshold, e.g. 3%].
+2. Add a column "Prior commentary (sourced)" and populate it ONLY from the prior period's filed MD&A language if I have attached it; otherwise leave it blank.
+3. Add a column "Current explanation (owner required)" and leave EVERY cell blank. Do not write causal explanations for any variance. Do not characterize any miss or beat as favorable, structural, or one-time.
+4. If any reported figure cannot be tied to an attached source, flag the line as "unsourced" and do not compute its variance.
+
+Save the table as theses/[FILL IN: TICKER]/earnings-surprise-[quarter].md. Do not recommend any action on the position and do not suggest whether the surprise is bullish or bearish.
+```
+
+**What this produces:** a sourced, ranked surprise table with a deliberately empty current-explanation column — a work surface where you, not the model, write what the miss or beat means. **How to adapt this prompt:** *For your own desk:* swap in your portfolio return file and a benchmark series to produce the parallel you-vs-benchmark version, with the attribution column left for your own read. *For ChatGPT / Gemini:* paste the filing and consensus tables inline rather than as project knowledge, and ask it to echo back each source reference so you can confirm nothing was pulled from memory. *For a Claude Project:* keep consensus/guidance files and your theses/ folder as persistent knowledge so successive quarters build a comparable history. **Connection to previous chapters:** the variance table writes into the same theses/<TICKER>.md structure you established earlier; the surprise read becomes evidence FOR or AGAINST the existing thesis, not a fresh verdict. **Preview of next chapter:** Chapter 7 reconciles your brokerage statement to this thesis ledger — the surprise read here feeds the position view you will reconcile next.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** a script that computes your portfolio's period return against a benchmark from your own recorded data, with a verification step that ties back to source totals. · **Tool:** Claude Code · **Skill level:** Intermediate.
+
+**Setup:**
+- [ ] A `book/positions.csv` file with your positions, entry prices, current prices, and weights (your own data).
+- [ ] A `benchmark/spy.csv` with the benchmark's period-open and period-close levels.
+- [ ] A `book/` directory the agent may write reports to, and confirmation that no brokerage credentials are present in the working tree.
+
+**The Task:**
+```
+Read book/positions.csv and benchmark/spy.csv (READ-ONLY — do not modify either file).
+
+Compute, for the period covered by the data:
+1. Each position's return and its contribution to total portfolio return (weight x return).
+2. The total portfolio period return.
+3. The benchmark period return from spy.csv.
+4. Active return = portfolio return minus benchmark return.
+
+Write the result to book/returns-vs-benchmark.md as a ranked contribution table (largest absolute contribution first) plus the three headline figures.
+
+Verification step: independently re-sum the position contributions and confirm they equal the total portfolio return to within rounding; print PASS or FAIL and the residual.
+
+Stop conditions: if positions.csv has a missing price or weight, halt and list the offending rows — do not impute values. Do not connect to any brokerage or external account. Do not place, modify, or suggest any trade. Leave all input files unchanged.
+```
+
+**Expected output:** `book/returns-vs-benchmark.md` with a ranked contribution table, portfolio/benchmark/active return, and a PASS line on the reconciliation check. **What to inspect:** the residual on the verification step (should be near zero) and whether any rows were halted for missing data. **If it goes wrong:** a non-zero residual usually means weights don't sum to 1 or a price is stale — fix the source file, not the script's tolerance. **CLAUDE.md / AGENTS.md note:** add "Account/return data is read-only. Never connect to a brokerage. Never place or suggest trades. Halt on missing data rather than imputing."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** an AI-generated earnings-surprise variance table for a company you follow. **Validation type:** source-tie and boundary check. **Risk level:** Medium — a wrong delta or a smuggled causal explanation could quietly become your reason to act. **Setup:** take the Exercise 3 output and the original filing side by side.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+```
+Validation Checklist — Monthly Variance Pack (Earnings-Surprise Read)
+□ Correctness: does every reported figure tie exactly to a cell in the source filing?
+□ Completeness: is every material income-statement line present, or are omissions noted?
+□ Scope: is the table confined to the stated ticker and quarter, with no cross-period bleed?
+□ Variance integrity: are dollar and percent variances computed against the stated consensus/guidance version, not a remembered one?
+□ Gate discipline: is the "Current explanation" column blank for every line, with no causal language anywhere?
+□ Failure-mode check: fluent-but-wrong? a plausible cause-of-miss sentence presented as fact? a figure that looks right but was pulled from model memory instead of the attached source?
+```
+
+**What to do with your findings:** any unsourced figure or any causal sentence is an automatic Fail — strip it and re-run with sources attached before the table informs your thesis. **AI Use Disclosure prompt:** "I used [tool] to compute earnings-surprise variances from attached source figures and to structure the comparison. I wrote every causal explanation myself and verified each reported number against the filing." **Series connection:** the failure mode here is the fluent-but-ungrounded explanation; Tier 5 trains you to accept the computation and reject the unverified narrative.
+
+---
+
+**Tags:** earnings-surprise · variance-analysis · consensus-vs-actual · benchmark-return · gate-discipline · computational-skepticism

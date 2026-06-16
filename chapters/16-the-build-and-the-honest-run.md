@@ -210,3 +210,153 @@ This is partly a design problem and partly a culture problem. The design can mak
 **Exercise 2.** Produce a draft gate record for one gate in your run. Include the approver name and role, the evidence surface reviewed, the decision, and any condition. Then ask the model to write the gate record for the same gate based only on the recipe output, without your input. Compare the two records: what does the model assert about the gate decision that you would not assert, and why?
 
 **Exercise 3.** Write the did-not-test list and open risks list for your full run. For each item, write one sentence explaining what the risk is if the excluded item or unresolved question goes the wrong way. Then ask the model to draft a run certification based on your four-component output. Review what it certifies: identify every claim the model makes that goes beyond what the evidence supports, and rewrite the certification to stay within what can honestly be said.
+
+---
+
+## Chapter 16 Exercises: The Build and the Honest Run
+
+**Project:** Your Own Mycroft
+**This chapter adds:** The whole desk, assembled — fundamentals, institutional signal, and your own book combined into one honest, gated buy/hold/sell write-up where you make the call and disclose how AI helped. (Signal lens, full.)
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Assemble your three decision inputs for one ticker into a single structured run: the fundamentals summary, the institutional-signal characterization (3–6-month options skew and term structure), and your reconciled book position — each traced to its source. — *Why AI works here:* this is collation and indexing of inputs you already built, with source-tracing; a structured assembly task with a clear schema.
+- Lay out the evidence FOR and the evidence AGAINST the thesis side by side, in warranted-verb language, with each item pointing to its binder source. — *Why AI works here:* organizing existing evidence into a two-column ledger with source pointers is a formatting-and-cross-reference task, verifiable against your binder.
+- Draft the did-not-test list and the open-risks list from the gaps your earlier chapters' artifacts already flagged. — *Why AI works here:* compiling already-flagged gaps into two lists is mechanical aggregation, not new judgment.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Making the buy/hold/sell call. — *Why AI fails here:* the call is the whole point of the desk and it is yours alone; the AI gathered evidence and did the math, but the decision carries your capital and your accountability — accountability.
+- Certifying that the run, as a whole, is adequate to act on. — *Why AI fails here:* adequacy depends on the stakes, the materiality of what you did not test, and your risk tolerance — context the model cannot weigh and cannot stand behind — values.
+- Deciding whether the institutional signal is strong enough to tip a close call. — *Why AI fails here:* signals are hypotheses to be tested, not followed; treating the model's read of the skew as the deciding vote collapses the gate — calibration.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 7 — the capstone. Every prior tier feeds this one honest run; the AI prepares all four components, and the human makes and certifies the call. This is where the whole book's preparation-versus-judgment division is put into operation at once.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** Your Own Mycroft, assembled — a four-component honest run that hands you a decision surface for one ticker · **Tool:** Claude Project (the full desk: binders, signal notes, and book reconciliation all living together)
+
+**The Prompt:**
+
+```
+You are my honest-run assembler for Your Own Mycroft. You gather the evidence and lay
+out the math; I make the call. You do NOT recommend buy/hold/sell, you do NOT certify
+the run as adequate, and you never place a trade.
+
+TICKER: [FILL IN]
+RUN SCOPE: [FILL IN — period, what's in scope, what's deliberately excluded]
+FUNDAMENTALS (paste your summary + sources): [FILL IN]
+INSTITUTIONAL SIGNAL (paste your 3–6-month options read — skew, term structure of fear,
+  IV-crush notes — and sources; exclude 0DTE retail noise): [FILL IN]
+MY OWN BOOK (paste current position/thesis in this name, reconciled, with date): [FILL IN]
+EVIDENCE FOR (paste items with sources): [FILL IN]
+EVIDENCE AGAINST (paste items with sources, including any rev-rec/DSO red flags): [FILL IN]
+KNOWN GAPS (paste anything your binder/aging/bridge flagged as unsupported/stale/open):
+  [FILL IN]
+
+Produce FOUR components, labeled, and nothing more:
+
+1. RUN LOG — every input you used, its source, and its as-of date; note any input you
+   could not verify.
+2. DECISION SURFACE (the human report) — fundamentals, signal, and book organized by
+   the three decision inputs, with evidence FOR and AGAINST in two columns, all in
+   warranted-verb language (confirms / suggests / cannot support). NO conclusion.
+3. EVIDENCE APPENDIX — every claim in the decision surface pointed back to its source.
+4. COMPLETION RECORD — a did-not-test list and an open-risks list, each item with a
+   one-line "what's the risk if this goes the wrong way."
+
+Then STOP. Do NOT state a buy/hold/sell recommendation, do NOT certify adequacy, do NOT
+weigh the inputs into a verdict. Leave a blank line labeled "THE CALL (human):" and a
+blank line labeled "RUN CERTIFICATION (human):" for me to complete myself.
+```
+
+**What this produces:** A four-component honest run — log, decision surface, appendix, completion record — that organizes your whole desk and hands you the two blanks (the call, the certification) that only you can fill. **How to adapt this prompt:** *For your own desk:* add a weighting note where you record, after the fact, how much each input moved your decision — useful for reviewing your own process over time. *For ChatGPT / Gemini:* same paste; assemble inputs into one message since they lack project files. *For a Claude Project:* with binders and signal notes already in the project, you can reference them rather than re-paste, and re-run as the position evolves. **Connection to previous chapters:** this run consumes everything you built — the completeness checker (Ch11), thesis aging (Ch12), the variance bridge and options trajectory (Ch13), the evidence binder (Ch14), and the rev-rec red flags (Ch15) — and assembles them under the gate discipline. **Preview:** there is no next chapter — from here, go to the synthesis and back matter, which step back from the single run to the practice of running the desk honestly over many decisions and many months.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local honest-run assembler that reads your desk folders and writes the four components, leaving the call and certification blank · **Tool:** Cowork · **Skill level:** Advanced
+
+**Setup:**
+
+- [ ] A `desk/holdings/[TICKER]/` containing the artifacts from prior chapters: `binder-index.md`, `gap-report.md`, signal notes, a fundamentals summary, and a book-reconciliation file.
+- [ ] A `desk/holdings/[TICKER]/scope.md` defining the run's period, what's in scope, and what's deliberately excluded.
+- [ ] Read-only confirmation: no account or brokerage credentials anywhere in the repo; the environment has no order-placing capability configured.
+
+**The Task:**
+
+```
+Work only inside desk/holdings/[TICKER]/. READ-ONLY on all data. Do not connect to any
+brokerage or account, do not place/draft/simulate any order, and do not modify any
+existing artifact in this folder.
+
+1. Read scope.md. Read all prior-chapter artifacts (binder-index, gap-report, signal
+   notes, fundamentals summary, book reconciliation).
+2. Assemble FOUR components into desk/holdings/[TICKER]/out/honest-run.md:
+   - RUN LOG: every input file used, with its last-modified date; note any file missing.
+   - DECISION SURFACE: fundamentals, institutional signal, and book, organized by the
+     three decision inputs, with evidence FOR/AGAINST in two columns, warranted-verb
+     language, NO conclusion.
+   - EVIDENCE APPENDIX: each decision-surface claim pointed to its source file.
+   - COMPLETION RECORD: did-not-test list + open-risks list, pulled from gap-report and
+     scope exclusions, each with a one-line risk-if-wrong.
+3. Append two empty labeled sections: "THE CALL (human):" and "RUN CERTIFICATION
+   (human):" — leave them blank.
+4. Do NOT write any buy/hold/sell recommendation, adequacy certification, or weighted
+   verdict. The two human sections stay empty.
+5. STOP after writing honest-run.md and print its section headers to the terminal.
+
+Verification step: re-read honest-run.md and confirm (a) all four components are present
+and traceable to source files, (b) the two human sections are empty, and (c) no
+recommendation, verdict, or certification text appears anywhere. Report any discrepancy.
+```
+
+**Expected output:** A single `out/honest-run.md` with four assembled components and two deliberately empty human sections, all source artifacts untouched, headers echoed to the terminal. **What to inspect:** confirm every claim in the decision surface points to a real source file in the appendix, and that the call and certification sections are genuinely blank — the moment the script fills them is the moment it crossed the line. **If it goes wrong:** if a component is thin, the upstream artifact is probably missing or empty — fix the input chapter's artifact rather than letting the assembler invent content. **CLAUDE.md / AGENTS.md note:** "Personal investment-research desk. Read-only on all account data; never connect to a brokerage or place/draft/simulate orders. The assembler prepares the four-component run and leaves THE CALL and RUN CERTIFICATION blank for the human — it never recommends, weighs, or certifies."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A completed honest run — after you have written the call and certification yourself. **Validation type:** boundary-and-honesty check (did the AI components stay on the preparation side, and does your write-up disclose AI use and stay within the evidence?). **Risk level:** High — this is the document behind a real capital decision; a hidden gate-crossing or an overclaiming certification is the exact failure the whole book guards against. **Setup:** take the four AI-assembled components plus your own written call and certification, and the underlying sources.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — The Build and the Honest Run
+□ Correctness: does every claim in the decision surface trace to a real source in the
+  appendix, with a matching as-of date?
+□ Completeness: are all four components present, and are the did-not-test and open-risks
+  lists populated from the actual gaps (not empty by omission)?
+□ Scope: did the AI components contain NO buy/hold/sell call, NO adequacy certification,
+  and NO weighted verdict — leaving the call and certification to you?
+□ Signal discipline: is the institutional signal characterized as a tested hypothesis
+  (3–6-month tenor, retail noise excluded), not followed as a recommendation?
+□ Disclosure honesty: does YOUR call and certification state what AI did, stay within
+  what the evidence supports, and avoid certifying coverage the run did not have?
+□ Failure-mode check: fluent-but-wrong (a polished run hiding a stale or unsupported
+  input)? a gate quietly crossed (AI language that decides rather than prepares)?
+  missing ground truth presented as settled?
+```
+
+**What to do with your findings:** if any AI component crossed into the call or certification, strip it and redo that component; if your own certification claims more than the run covered, rewrite it to say only what you can stand behind — then, and only then, is the run honest. **AI Use Disclosure prompt:** "I used [tool] to assemble my fundamentals, institutional-signal, and book inputs into a four-component run with evidence FOR and AGAINST, all traced to sources. The AI prepared the surface and certified nothing; I made the buy/hold/sell call and signed the run certification myself, within what the evidence supports." **Series connection:** the failure mode is the gate quietly crossed — a clean-looking run in which preparation slid into judgment without anyone noticing; Tier 7, the capstone where catching that crossing is the entire discipline.
+
+---
+
+**Tags:** honest-run · desk-assembly · buy-hold-sell-gate · evidence-for-and-against · ai-use-disclosure · signal-lens-full

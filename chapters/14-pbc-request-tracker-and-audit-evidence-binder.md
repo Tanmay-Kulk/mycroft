@@ -170,3 +170,141 @@ That is the right outcome. The preparation was fast. The judgment took as long a
 
 9. *Difficulty: Advanced* — The chapter argues that adequacy, privilege, and scope are judgment calls that cannot be automated because they require professional standing, legal expertise, and negotiation with external parties. A legal technology argument holds that AI-assisted privilege review is already deployed in large-scale document review (e-discovery), that adequacy determinations follow patterns recognizable from prior audit cycles, and that scope negotiation is increasingly codified in audit standards — suggesting all three judgments are, in principle, automatable with sufficient training data and oversight structure. Construct the strongest version of this argument, drawing on what AI-assisted legal review and audit analytics platforms actually do. Then evaluate it: does the existence of AI-assisted privilege tagging in e-discovery mean the privilege judgment can be delegated to a recipe in the PBC context? Is there a meaningful difference between AI-assisted review (human confirms model output) and human review (human evaluates independently), and if so, where does that difference matter most in an audit binder context?
 *What this tests: ability to engage with the chapter's most sophisticated challenge — the existence of deployed AI tools in adjacent legal and audit contexts — and reason about whether those tools relocate or eliminate the judgment requirement, rather than simply asserting that judgment cannot be automated.*
+
+---
+
+## Chapter 14 Exercises: PBC Request Tracker and Audit-Evidence Binder
+
+**Project:** Your Own Mycroft
+**This chapter adds:** A due-diligence binder per holding — the sourced evidence behind each position, indexed, so every claim in your thesis traces back to a file, a version, and a date.
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Build an indexed evidence binder for one holding: every claim in your thesis mapped to the source that supports it, with file path, version, and as-of date. — *Why AI works here:* indexing claims to sources is structured tracking with a clear schema; the model populates and cross-references fields, a mechanical task.
+- Flag every thesis claim that has no mapped source, and every source that is stale (older than your refresh cycle) or maps to nothing. — *Why AI works here:* presence, mapping, and timestamp checks are deterministic conformance checks against the binder structure.
+- Apply a "needs-legal/needs-caution" flag to evidence categories that carry special risk (e.g. non-public information you should not be acting on, or a source you cannot verify). — *Why AI works here:* category-tagging by rule is a routing task; the recipe flags, a human clears.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Concluding that the binder is "adequate" — that the evidence actually supports the thesis well enough to hold the position. — *Why AI fails here:* adequacy is a professional judgment about sufficiency, not field-matching; a fully-indexed binder can still rest on weak sources — accountability.
+- Clearing a caution-flagged source for use (e.g. deciding a tip is fine to act on). — *Why AI fails here:* whether a source is legitimate to trade on can be a legal/ethical determination the model is not qualified to make and cannot be held responsible for — values.
+- Deciding which sources are reliable enough to anchor a claim versus which are noise. — *Why AI fails here:* source reliability depends on independence and credibility the model cannot assess from the file; it will rate confidently anyway — missing ground truth.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 6 — the binder is the auditable foundation under the pre-trade gate; assembling it is high-stakes because the position you hold is only as defensible as the evidence indexed behind it.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** A due-diligence evidence binder per holding — claims indexed to sources, gaps and caution-flags surfaced · **Tool:** Claude Project (a persistent project, one binder per holding, evidence accumulating over time)
+
+**The Prompt:**
+
+```
+You are my due-diligence binder builder. You index evidence and surface gaps. You do
+not judge whether the evidence is adequate, you do not clear caution flags, and you
+never recommend or place a trade.
+
+HOLDING: [FILL IN ticker and current position]
+THESIS CLAIMS (paste each claim you make in your thesis, FOR and AGAINST): [FILL IN]
+EVIDENCE ON HAND (paste each item: a short description, the source, the file/URL, the
+  version or as-of date): [FILL IN]
+REFRESH CYCLE (how old a source can be before it is stale, e.g. 90 days): [FILL IN]
+
+1. Build a binder index: one row per claim, mapped to the evidence item(s) that
+   support it, with source, version, and as-of date.
+2. Flag every claim with NO mapped source as UNSUPPORTED.
+3. Flag every evidence item that maps to no claim as ORPHAN, and every item older than
+   the refresh cycle as STALE.
+4. Apply a CAUTION flag to any evidence category that warrants special review before
+   use — non-public or unverifiable information, or a source whose provenance is
+   unclear. Do NOT clear these flags; leave them for me.
+5. Do NOT conclude that the binder is adequate or that the thesis is supported. Do NOT
+   rate source reliability. Do NOT recommend any action.
+6. End with three lists: unsupported claims, stale/orphan evidence, and caution-flagged
+   items awaiting my review.
+```
+
+**What this produces:** An indexed binder for one holding plus three gap-lists (unsupported claims, stale/orphan evidence, caution-flagged items) — the preparation layer, with the adequacy judgment left to you. **How to adapt this prompt:** *For your own desk:* add a column for which decision input each claim serves (fundamentals / signal / your book) so you can see if any one leg is thin. *For ChatGPT / Gemini:* same paste; keep the binder in a saved doc since these lack project files. *For a Claude Project:* one project per holding, evidence files uploaded, so the binder grows and re-indexes as you add sources. **Connection to previous chapters:** the support-path-exists-versus-adequacy-confirmed distinction, and the privilege/caution hard-gate, come straight from the audit lens — here it is your own thesis under examination. **Preview of next chapter:** Chapter 15 sharpens the evidence side further with revenue-recognition red flags — channel stuffing, bill-and-hold, aggressive rev rec — the kind of finding that belongs in this binder as evidence AGAINST.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local binder-index generator that maps a claims file to an evidence file and writes a gap report · **Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+
+- [ ] `desk/holdings/[TICKER]/claims.csv` — columns: claim_id, direction (for/against), claim_text.
+- [ ] `desk/holdings/[TICKER]/evidence.csv` — columns: evidence_id, claim_id, description, source, asof_date, category.
+- [ ] Read-only confirmation: no account credentials in the repo; Claude Code has no order capability configured.
+
+**The Task:**
+
+```
+Work only inside desk/holdings/[TICKER]/. READ-ONLY on all data. Do not connect to any
+brokerage or account, do not place/draft/simulate any order, and do not modify
+claims.csv or evidence.csv.
+
+1. Read claims.csv and evidence.csv. Build a binder index joining evidence to claims
+   on claim_id.
+2. Flag any claim with no matching evidence as UNSUPPORTED. Flag any evidence row whose
+   claim_id matches no claim as ORPHAN. Flag any evidence with asof_date older than 90
+   days as STALE. Flag any evidence whose category is "nonpublic" or "unverified" as
+   CAUTION — DO NOT CLEAR.
+3. WRITE desk/holdings/[TICKER]/out/binder-index.md (the indexed binder) and
+   desk/holdings/[TICKER]/out/gap-report.md (unsupported, orphan, stale, caution lists).
+4. Do NOT write any adequacy judgment, source-reliability rating, or buy/hold/sell
+   language. Do NOT clear any CAUTION flag.
+5. STOP after writing both files and print the counts of each flag type.
+
+Verification step: re-read both files and confirm (a) every UNSUPPORTED claim genuinely
+has no evidence row, (b) no CAUTION flag was cleared, and (c) no recommendation or
+reliability rating appears. Report any discrepancy.
+```
+
+**Expected output:** A `binder-index.md` and a `gap-report.md` under `out/`, source CSVs untouched, with flag counts echoed to the terminal. **What to inspect:** confirm each UNSUPPORTED claim really lacks evidence (not just a claim_id typo), and that every nonpublic/unverified item is flagged CAUTION and left uncleared. **If it goes wrong:** if everything reads ORPHAN or UNSUPPORTED, the join key likely mismatches — check that claim_id values are consistent across both files before re-running. **CLAUDE.md / AGENTS.md note:** "Personal due-diligence repo. Read-only on all account data; never connect to a brokerage or place/draft/simulate orders. CAUTION flags (nonpublic/unverified sources) are never auto-cleared. The binder indexes evidence; it never judges adequacy or recommends."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A binder index and gap report the AI produced for one holding. **Validation type:** completeness-and-scope check (is the mapping right, and did it refuse the adequacy/clearance calls?). **Risk level:** High — a binder that looks complete but rests on unsupported claims or a wrongly-cleared caution flag licenses an indefensible position. **Setup:** take the Exercise 3/4 output, the claims, and the evidence.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — PBC Request Tracker and Audit-Evidence Binder
+□ Correctness: does every claim-to-evidence mapping in the index reflect a real row in
+  the evidence file?
+□ Completeness: is every claim accounted for (mapped or flagged UNSUPPORTED), with none
+  silently omitted?
+□ Scope: did the output avoid any adequacy judgment, any source-reliability rating, and
+  any buy/hold/sell language?
+□ Caution integrity: are all nonpublic/unverified items flagged CAUTION and left
+  UNCLEARED?
+□ Staleness: do the STALE flags match the actual age of the source against the refresh
+  cycle?
+□ Failure-mode check: fluent-but-wrong (asserted a claim is "well supported")? a caution
+  flag silently cleared? missing ground truth on source reliability?
+```
+
+**What to do with your findings:** treat unsupported claims and uncleared caution flags as blocks — resolve each yourself before relying on the position; the binder is permission to make your own adequacy call, not the adequacy call. **AI Use Disclosure prompt:** "I used [tool] to index the evidence behind one holding and to flag unsupported claims and caution items. It made no adequacy judgment, rated no source, cleared no flag, and recommended nothing; I verified the mappings and judged adequacy myself." **Series connection:** the failure mode is completeness-mistaken-for-adequacy — an indexed binder that looks decision-ready but isn't — plus a wrongly cleared caution flag; Tier 6.
+
+---
+
+**Tags:** due-diligence-binder · evidence-index · claim-to-source · adequacy-vs-completeness · caution-flag-gate · per-holding-binder

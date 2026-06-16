@@ -194,3 +194,151 @@ The two-customer recipe note is clear as a structure. What is less clear is how 
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies a real tension: translating the run log for the reviewer risks introducing interpretive gaps, but leaving the raw log for the reviewer sacrifices legibility. Design a protocol for calibrating evidence summary depth based on (a) the reviewer's domain knowledge, (b) the consequence of the decision the output supports, and (c) the reversibility of the action the output authorizes. What would a tiered evidence summary look like across three consequence levels — routine, material, disclosure-supporting? *What this tests: ability to operationalize the calibration problem the chapter leaves open, producing a workable standard rather than a theoretical framework.*
+
+## Chapter 4 Exercises: Two Customers
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** your research written twice — an **agent recipe** that gathers the evidence and does the math (reproducible, sourced, stops at the gate) and a **human card** that holds the call (the thesis, the caveats, and your decision) — so the machine's work is auditable and your judgment is the part that's accountable.
+
+---
+
+### Exercise 1 — When to Use AI
+**The judgment:** In this chapter's work, AI assistance is appropriate for the following tasks:
+
+- Drafting the agent recipe — the deterministic spec of which sources to pull, which numbers to compute (put/call ratio, term-structure slope), the output schema, and the stop conditions — *Why AI works here:* it's specification and templating against sources you defined in Chapter 3; you check each step. (Specification task.)
+- Translating a finished evidence run into the human card's evidence-summary section — *Why AI works here:* it's reformatting structured findings into prose you can check line-by-line against the run. (Translation task.)
+- Listing candidate caveats — what the recipe did *not* check (a missing entity, a stale chain, only 0DTE strikes) — *Why AI works here:* it's enumeration over the recipe's own scope, which you then confirm. (Enumeration task.)
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+**The judgment:** In this chapter's work, the following tasks require human judgment.
+
+- Writing the call on the human card — buy/hold/sell, or "do nothing yet" — *Why AI fails here:* the decision encodes your values, horizon, and risk tolerance and carries your capital; a generated call is the polished-memo-that-can't-be-rerun failure from this chapter, dressed as a decision. (Values/accountability.)
+- Deciding whether the caveats are acceptable for *this* decision — *Why AI fails here:* "acceptable" depends on what you're risking and why; the model can list caveats but cannot weigh them against your stakes. (Values.)
+- Judging whether an options signal on the card is real positioning worth acting on — *Why AI fails here:* it needs the 3–6-month term-structure context and carries no accountability; it will narrate either way. (Calibration/missing ground truth.)
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 7 — Judgment/values. The skill is keeping the decision — the part that expresses what you value and what you're willing to risk — on the human side of the gate.
+
+---
+
+### Exercise 3 — LLM Exercise
+**What you're building this chapter:** two files — `agent-recipe.md` (gathers + computes) and `human-card.md` (the call) — for one ticker.
+
+**Tool:** Claude Project (it should read your `sources-of-truth.md`, the `/evidence` contracts, and `theses/<TICKER>.md`) — a Project because the recipe must bind to your established sources, not improvise new ones.
+
+**The Prompt:**
+```
+Context: my sources-of-truth.md, my /evidence data contracts, and my thesis are
+in this Project. Do NOT make a buy/sell/size decision, and do NOT mark anything
+verified. Produce two separate documents for ONE ticker.
+
+DOCUMENT 1 — AGENT RECIPE (the machine's job: gather + math, then STOP):
+- Inputs: each source by name from sources-of-truth.md, with period, entity,
+  version/accession, and (for signals) options provider + 3-6mo expiration window
+  + strikes. No 0DTE-only inputs.
+- Steps: the exact computations (e.g. put/call ratio, near-vs-far IV slope),
+  written deterministically.
+- Output schema: the fields a valid evidence run must contain.
+- Stop conditions: when the recipe halts and hands to me (missing source, stale
+  chain, control total mismatch, signal that looks like retail noise).
+- It must STOP before any interpretation or decision.
+
+DOCUMENT 2 — HUMAN CARD (my job; you only draft the scaffold):
+- Purpose (one line), Evidence summary (LEAVE BLANK — I fill from the run),
+  Caveats (list candidates; mark which I must confirm), Open questions,
+  and a DECISION block that you leave EMPTY for me.
+
+Mark "NEEDS HUMAN" anywhere you'd have to guess. Do not fill the decision.
+
+Ticker + any specifics:
+[FILL IN: ticker + which signals/metrics to gather]
+```
+
+**What this produces:** `agent-recipe.md` you can run against your sources, and `human-card.md` whose decision block stays empty until you fill it. The split is the lesson: the recipe is reproducible; the card is yours.
+
+**How to adapt this prompt:**
+- *For your own desk:* keep the recipe narrow — one ticker, named sources — so it stays reproducible.
+- *For ChatGPT / Gemini:* paste the sources list and contracts inline; if it fills the decision block, restate "the DECISION block stays empty."
+- *For a Claude Project:* store the recipe template in Project knowledge so each ticker reuses the same structure and stop conditions.
+
+**Connection to previous chapters:** the data contract fixed the sources; here the recipe binds to them and the card receives their output.
+
+**Preview of next chapter:** Chapter 5 audits whether each metric *and each signal* on the card is adequately sourced — the evidence-adequacy gate, with a hard look at positioning versus 0DTE noise.
+
+---
+
+### Exercise 4 — CLI Exercise
+**What you're building this chapter:** `agent-recipe.md` and `human-card.md` committed per ticker, with the recipe's stop conditions enforced as a checklist.
+
+**Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+- [ ] Your repo has `sources-of-truth.md`, `/evidence` contract stubs, and `theses/<TICKER>.md`.
+- [ ] You have draft recipe and card content from Exercise 3.
+- [ ] `CLAUDE.md` carries the no-verify-by-AI / no-execute rule.
+
+**The Task:**
+```
+Read sources-of-truth.md, /evidence/*.md, and theses/<TICKER>.md. Read only.
+You have no brokerage or account access; gather nothing live, execute nothing,
+size nothing.
+
+Then, for <TICKER>:
+1. Write agent-recipe.md with: Inputs (named sources only), Steps (the math),
+   Output schema, Stop conditions (as a checklist). The recipe must end with an
+   explicit "STOP — hand to human" line before any interpretation.
+2. Write human-card.md with: Purpose, Evidence summary (leave blank), Caveats,
+   Open questions, and a DECISION block left empty.
+3. Do NOT fill the decision, the evidence summary, or any "verified"/"real signal"
+   label. Use only sources from sources-of-truth.md.
+4. STOP and show me both files before writing anything else.
+
+Do not delete anything. Do not add sources or tickers I didn't name.
+```
+
+**Expected output:** a reproducible `agent-recipe.md` that stops at the gate, a `human-card.md` with an empty decision block, no AI-filled judgments, and a preview to inspect.
+
+**What to inspect:** that the recipe ends in an explicit STOP before interpretation; that the decision and evidence-summary blocks are empty; that inputs cite only your named sources; that no signal is labeled "real."
+
+**If it goes wrong:** the common failure is the recipe drifting past gathering into "and therefore the stock looks attractive." Reject and re-run with "the recipe stops at STOP; it never interprets or recommends."
+
+**CLAUDE.md / AGENTS.md note:** add: "The assistant writes the agent recipe (gather + math) and the human-card scaffold, but never fills the decision block, the evidence summary, or any verified/real-signal label."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+**What you're validating:** the agent recipe and human card from Exercise 3.
+
+**Validation type:** Reproducibility + reasoning chain. · **Risk level:** High — a recipe that quietly interprets, or a card with a pre-filled decision, puts the AI's voice where your judgment must be.
+
+**Setup:** open `agent-recipe.md` and `human-card.md` together. (If thin, audit this seed: a "recipe" whose last step is "conclude the calls are cheap and the setup is bullish" and a card whose decision block already reads "Buy.")
+
+**The Validation Task:**
+Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain.
+```
+Validation Checklist — Two Customers
+□ Correctness: Does the recipe's math match the metrics you actually defined (put/call, term-structure slope), against named sources?
+□ Completeness: Does the card carry purpose, caveats, and open questions — and is the evidence summary left for you to fill?
+□ Scope: Did the model fill the decision block, the evidence summary, or a "verified"/"real" label it was told to leave empty?
+□ Reproducibility: Could someone else re-run the recipe from its inputs and steps and get the same evidence?
+□ Stop check: Does the recipe STOP before interpretation — no "therefore buy," no implied call?
+□ Failure-mode check: fluent-but-wrong — did a polished card make a decision feel made? Is any signal called "real" without the term structure?
+```
+
+**What to do with your findings:** all pass → run the recipe, then fill the card yourself. One fail → blank the offending block and re-run. Multiple fails → write the card by hand; the decision is the one thing that cannot be delegated.
+
+**AI Use Disclosure prompt:** two sentences — (1) what the AI produced (the recipe spec and the card scaffold) and how you used it (a structure you ran and then filled); (2) one thing the AI could not determine (the decision itself, and whether the caveats are acceptable for what you're risking).
+
+**Series connection:** the failure mode is *a fluent card that feels like a decision already made* — the Tier 7 values trap of letting generated prose stand in for your own call.
+
+---
+
+**Tags:** two-customers · agent-recipe-vs-human-card · reproducible-gathering · the-call-is-yours · stop-at-the-gate · tier-7-judgment

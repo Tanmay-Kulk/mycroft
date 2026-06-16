@@ -206,3 +206,159 @@ The supervision questions — scope, approval, verification — are clear as a f
 **Challenge**
 
 9. *(Advanced)* The "adequacy bar" for finance artifacts varies by artifact type, audience, and consequence — a department variance note, a board presentation, and an audit workpaper are not the same thing. But in most organizations, the adequacy standard is implicit rather than written. Design a process for making those standards explicit: what categories of artifact would you distinguish, what questions would you ask to calibrate each one, and how would you build those standards into the gate process rather than leaving them to individual reviewer judgment? *What this tests: ability to operationalize the "still puzzling" problem in the chapter — the gap between a clear framework and a workable organizational standard.*
+
+## Chapter 1 Exercises: The Fluency Trap
+
+**Project:** Your Own Mycroft
+
+**This chapter adds:** the judgment frame for the whole desk — a thesis-interrogation reflex and a one-page "what the model and the market chatter cannot tell me" charter that fixes your sources of truth (filings and the options chain, not tweets, hype, or a fluent AI paragraph). Your Own Mycroft gathers evidence and does the math; this chapter establishes that *you* make the call.
+
+---
+
+### Exercise 1 — When to Use AI
+**The judgment:** In this chapter's work, AI assistance is appropriate for the following tasks:
+
+- Splitting a fluent investment thesis — your own, a pundit's, a Reddit post's, or an AI's — into its individual claims — *Why AI works here:* mechanical decomposition of text you can read yourself; you can confirm nothing was dropped or invented.
+- Computing the mechanical numbers off an options chain you supply (put/call ratios, the near-vs-far term-structure slope) — *Why AI works here:* it's arithmetic and reformatting against data you paste; you check the result against the chain.
+- Summarizing a 10-K/10-Q section or an earnings-call transcript into a list of candidate claims to check — *Why AI works here:* summarizing/extraction, and you verify each line against the filing.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria (a filing line, the actual options data) to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+**The judgment:** In this chapter's work, the following tasks require human judgment. Delegating them to AI is not appropriate — not because AI cannot produce output, but because its output here cannot be trusted without verification that requires the same expertise (and the same accountability) as doing the task yourself.
+
+- Deciding whether the thesis is *true*, or whether to buy — *Why AI fails here:* it has no access to the source filings, no stake in the outcome, and real money rides on it; a fluent "strong buy, target $180" is the variance-note-with-a-fabricated-driver from this chapter, in a brokerage app.
+- Judging whether an options signal is real institutional positioning or just retail 0DTE noise — *Why AI fails here:* that distinction requires the actual term-structure data and market-microstructure context the model didn't ground in; it will narrate a confident story either way (calibration + hallucination risk).
+- The buy / hold / sell decision itself — *Why AI fails here:* it carries accountability and your capital; a generated recommendation cannot be asked to defend itself when the position is down 20%.
+
+**The tell:** You know you have crossed the line when you are using AI output as your *reason* to trade rather than as a tool for reaching your own decision. If you could not explain the trade without the AI, the AI did the work that should have been yours.
+
+**Series connection:** Tier 4 — Metacognitive. The skill is knowing the boundary of what both you and the model can actually know: catching yourself mistaking a fluent thesis (or a fluent "signal") for grounded conviction.
+
+> **Desk rule (stands for all 16 chapters):** This project teaches disciplined *research*, not stock picks — nothing here is investment advice. The AI gathers, structures, and flags; it never decides a trade and never executes one. You own every gate. Options and derivatives carry real risk; signals are *tested as hypotheses, not followed*, and past performance does not predict future results.
+
+---
+
+### Exercise 3 — LLM Exercise
+**What you're building this chapter:** the first artifact of your desk — `theses/<TICKER>.md`, a claim-audit of one holding or candidate, plus `CANNOT-KNOW.md`, your charter of what no model and no market-chatter can tell you.
+
+**Tool:** Claude (claude.ai) — or a Claude Project once you have several tickers, so the audit can reference your accumulating charter and sources-of-truth.
+
+**The Prompt:**
+```
+You are helping me interrogate an investment thesis for unsupported claims.
+Do NOT add facts, price targets, sources, or a buy/sell opinion of your own.
+
+I will paste a thesis about one stock. Then:
+1. Extract every distinct claim as a numbered list (financial, competitive,
+   valuation, sentiment, or "signal" claims). Quote or closely paraphrase;
+   do not merge or soften.
+2. Label each claim with ONE tag and a one-line reason:
+   - verified   (a fact that should tie to a filing or the options chain)
+   - inferred   (follows from evidence but isn't directly stated)
+   - unsupported(stated as fact with no visible trail)
+   - taste      (a judgment call — "great management," "cheap here")
+   - needs-a-source (a number/claim that must be tied out before I act)
+3. For each "unsupported" or "needs-a-source" claim, name the SPECIFIC evidence
+   that would settle it (which 10-K/10-Q line item, which options expiration and
+   strike, which data series).
+4. Output a markdown table: Claim | Tag | Reason | Evidence-needed.
+
+After the table, list every place you GUESSED because you couldn't tell, marked
+"NEEDS HUMAN." Do not tell me whether to buy.
+
+Thesis:
+[FILL IN: paste your thesis + ticker — e.g. yours, a pundit's, or an AI's]
+```
+
+**What this produces:** a claim-audit table you then correct by hand and save as `theses/<TICKER>.md`. Separately, you write `CANNOT-KNOW.md` yourself (do not ask AI to write it): the things no model can know — your risk tolerance, your time horizon, whether *you* could defend this trade.
+
+**How to adapt this prompt:**
+- *For your own desk:* paste a thesis you're actually weighing; the messier its provenance, the more the audit teaches.
+- *For ChatGPT / Gemini:* identical; if it starts volunteering a price target or a rating, restate "Do NOT add price targets or a buy/sell opinion."
+- *For a Claude Project:* put `CANNOT-KNOW.md` and your sources-of-truth list in Project knowledge so every audit applies them automatically.
+
+**Connection to previous chapters:** this is Chapter 1 — it sets the interrogation reflex the rest of the desk is built on.
+
+**Preview of next chapter:** Chapter 2 takes the gaps this audit exposes and asks where your scarce research time should actually go — the return is in the few claims that move the decision, not in watching the ticker.
+
+---
+
+### Exercise 4 — CLI Exercise
+**What you're building this chapter:** the repository skeleton for your Investment Research Desk and its first two committed artifacts.
+
+**Tool:** Claude Code
+
+**Skill level:** Beginner
+
+**Setup:**
+Before running this exercise, confirm:
+- [ ] You completed Exercise 3 and have a corrected `theses/<TICKER>.md` and a hand-written `CANNOT-KNOW.md`.
+- [ ] You have an empty folder for the project with Claude Code open in it.
+- [ ] You will add the standing desk rule (below) to `CLAUDE.md`.
+
+**The Task:**
+```
+Set up the repository for my Investment Research Desk (Your Own Mycroft).
+
+Read the two files I placed here: theses/<TICKER>.md and CANNOT-KNOW.md.
+Do not modify their contents.
+
+Then:
+1. Create this structure: /theses, /evidence, /signals, /book, and a top-level README.md.
+2. Move CANNOT-KNOW.md to the repo root; leave theses/<TICKER>.md in /theses
+   (use git mv if this is a git repo). Do not edit either file.
+3. In README.md, write a 6-line description of the desk and a table of contents.
+   Use only facts present in those two files — invent nothing, name no tickers I didn't.
+4. Create CLAUDE.md containing exactly this rule:
+   "The assistant never marks a claim 'verified', never labels an options signal
+    'real', and never recommends, sizes, or executes a trade. Only a human, citing
+    a source, marks a claim verified. Only a human decides and places a trade.
+    Read and analyze only — no brokerage write access, no order placement."
+5. STOP and show me the file tree and the README before doing anything else.
+
+Do not delete anything. Do not create files I did not ask for.
+```
+
+**Expected output:** a four-folder repo with your thesis and charter filed, a factual README, and a `CLAUDE.md` carrying the no-execute / no-verify-by-AI rule.
+
+**What to inspect in the output:** that the README invented no claims or tickers; that files were moved, not rewritten; that `CLAUDE.md` matches the rule verbatim; that nothing was deleted.
+
+**If it goes wrong:** the likeliest failure is the README adding an upbeat "investment summary" with claims that aren't in your files. Reject it and re-run with "use only sentences that appear verbatim in the two files; no summary, no outlook."
+
+**CLAUDE.md / AGENTS.md note:** add the standing rule above — it governs every later chapter's automation and is the project's hard line between preparation (AI) and judgment (you).
+
+---
+
+### Exercise 5 — AI Validation Exercise
+**What you're validating:** the claim-audit table Claude produced in Exercise 3.
+
+**Validation type:** Structured data + reasoning chain.
+
+**Risk level:** High — this is the gate that decides whether a fluent, unsupported thesis reaches a real buy order.
+
+**Setup:** open the AI-labeled table from Exercise 3 next to the original thesis. (If your thesis was already clean, instead paste this pre-generated one and audit it: *"QCOM is a clear buy — the options market is screaming recovery, calls are way more expensive than puts, and the DRAM issue is temporary. Target $175 by summer."*)
+
+**The Validation Task:**
+Evaluate the AI output using this checklist. For each item record Pass / Fail / Cannot determine and explain.
+```
+Validation Checklist — The Fluency Trap
+□ Correctness: Is every claim tagged "verified" actually tied to a filing line or the options chain you can open?
+□ Completeness: Did the audit miss any claim buried in a fluent sentence (a smuggled price target, an assumed cause)?
+□ Scope: Did the model add a rating, a target, a source, or a buy/sell opinion it was told not to?
+□ Signal vs noise: Is any "the options market says..." claim backed by the actual term structure, or is it narration?
+□ Owner test: For each "needs-a-source" claim, can you name the exact document/line that settles it?
+□ Failure-mode check: fluent-but-wrong — did a confident sentence make you stop checking? Any "verified" with no real ground truth? A price target presented as a fact?
+```
+
+**What to do with your findings:** all pass → file the table and proceed. One fail → fix the tag/prompt and re-run Exercise 3. Multiple fails or "cannot determine" → this is a When-NOT-to-Use-AI moment: do the interrogation by hand, and do not let this thesis near a trade.
+
+**AI Use Disclosure prompt:** write two sentences — (1) what the AI produced (the claim split and proposed tags) and how you used it (a first draft you corrected); (2) one thing the AI could not determine that required your judgment (which claims are truly verified, whether the signal is real, and whether *you* could defend this trade).
+
+**Series connection:** the failure mode here is *fluency mistaken for grounded conviction* — the Tier 4 metacognitive trap of trusting a confident thesis or a confident "signal" instead of checking the filing and the chain behind it.
+
+---
+
+**Tags:** fluency-trap · thesis-interrogation · provenance-over-hype · signal-vs-noise · no-vibe-trading · tier-4-metacognitive

@@ -167,3 +167,147 @@ The timing category is the hardest to operationalize cleanly. A timing variance 
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies the hardest operational problem in the bridge: distinguishing a one-time timing variance from a systematic forecasting error. Both look the same in a single week's bridge — cash that was forecast in one period arrived in an adjacent period. Design an analytical framework that makes this distinction visible across multiple periods: what signals in the bridge history would indicate systematic bias rather than one-time timing, how would you quantify the bias, and how would you present the finding to FP&A in a form that supports a model revision decision rather than just documenting the pattern? Address explicitly how the framework handles the case where the bias is real but the business condition that drives it is itself changing — meaning the right model correction is not simply "shift all collections by N days." *What this tests: ability to close the loop between variance analysis and forecast improvement — operationalizing the distinction the chapter identifies as genuinely unresolved.*
+
+---
+
+## Chapter 13 Exercises: Cash Forecast Variance Explainer
+
+**Project:** Your Own Mycroft
+**This chapter adds:** A two-bridge variance lens — reconciling a company's free-cash-flow forecast against actuals, and reading the recovery trajectory the options market is pricing in — with unexplained gaps left open rather than filled with stories. (Signal lens.)
+
+---
+
+### Exercise 1 — When to Use AI
+
+**The judgment:**
+
+- Build a forecast-versus-actual bridge from a company's prior FCF guidance to its reported free cash flow, disaggregating the gap into categories (operating cash, capex, working capital, one-offs) with a sum check. — *Why AI works here:* a bridge is a structured disaggregation with an arithmetic sum-check; the model computes line-item differences against a locked baseline, a deterministic task.
+- Characterize the recovery trajectory the options market is pricing — term structure of implied volatility across 3–6-month tenors, and where IV crush is expected — from an options chain you provide. — *Why AI works here:* extracting skew and term-structure from a supplied chain is computation over given numbers, not a market call; the output is a described curve you can verify.
+- Attach known drivers to each variance category where a sourced figure exists, and mark the rest as unexplained-open. — *Why AI works here:* matching variances to driver records is reconciliation logic with four discrete states; mechanical, with a clear leave-it-open rule.
+
+**The tell:** You know you are using AI appropriately when you can evaluate the output — when you have independent criteria to judge whether it is correct, complete, and fit for purpose.
+
+---
+
+### Exercise 2 — When NOT to Use AI
+
+**The judgment:**
+
+- Writing a narrative for an unexplained FCF variance — "probably working-capital timing" — when no source supports it. — *Why AI fails here:* a plausible story over an unsourced gap is exactly the hallucination the bridge exists to prevent; it papers over what could be a real red flag — hallucination.
+- Deciding what the options market's priced-in recovery *means for your decision* — whether the skew is a buy signal, a warning, or noise. — *Why AI fails here:* signals are hypotheses to be tested, not read off; the interpretive leap to action is a values-and-accountability call the model cannot own — accountability.
+- Forecasting whether the company will close the FCF gap next period. — *Why AI fails here:* that requires business-cycle context and judgment the model lacks; a confident projection here is miscalibrated certainty — calibration.
+
+**The tell:** You know you have crossed the line when you are using AI output as your reason to act rather than a tool for reaching your own decision.
+
+*Desk rule still binds: process not picks · AI never executes · you own the gate · signals tested, not followed.*
+
+**Series connection:** Tier 5 — a signal-lens analysis surface. The bridge and the priced-in trajectory are evidence inputs; the buy/hold/sell read sits a tier higher, at the synthesis gate.
+
+---
+
+### Exercise 3 — LLM Exercise
+
+**What you're building this chapter:** A dual variance bridge — company FCF forecast vs. actual, and the options-implied recovery trajectory · **Tool:** Claude (analytical chat; per-ticker, per-snapshot, with no need for persistent state)
+
+**The Prompt:**
+
+```
+You are my variance explainer. You build bridges and surface gaps. You do not fill
+unexplained gaps with narrative, you do not interpret signals as buy/sell calls, and
+you never recommend or place a trade.
+
+PART A — Free-cash-flow forecast vs. actual
+TICKER: [FILL IN]
+LOCKED FORECAST (the company's prior FCF guidance and its components, as issued before
+the period — paste figures and the date issued): [FILL IN]
+ACTUAL REPORTED (FCF and components for the same period): [FILL IN]
+
+1. Confirm the forecast baseline predates the period; if I did not give a clearly
+   pre-period version, STOP and tell me to supply one.
+2. Build a category bridge from forecast FCF to actual FCF (operating cash flow, capex,
+   working-capital change, one-offs, other). State the sign convention explicitly.
+3. Sum-check: category variances must equal total forecast-to-actual variance. If they
+   do not, halt and tell me what is missing.
+4. Attach a driver to each category ONLY where I supplied a sourced figure. Mark every
+   other variance UNEXPLAINED — OPEN, with a one-line record of what you checked and
+   did not find. Do NOT invent a likely cause.
+
+PART B — Options-implied recovery trajectory (signal lens)
+OPTIONS CHAIN (3–6-month expiries; paste strikes, IVs, put/call): [FILL IN]
+5. Describe the term structure of implied volatility and the put/call skew. Note where
+   IV crush is expected (e.g. around an earnings date).
+6. State, in warranted-verb language, what the chain SUGGESTS the market is pricing as
+   a recovery/stress trajectory — as a hypothesis to test, NOT a recommendation.
+7. Explicitly exclude any 0DTE / sub-week tenor as retail noise.
+
+Do NOT tell me to buy, hold, or sell. End with the list of unexplained-open items and
+the open questions the signal raises.
+```
+
+**What this produces:** A summing FCF bridge with driver-attached and unexplained-open variances, plus a described options-implied trajectory framed as a testable hypothesis — evidence, not a call. **How to adapt this prompt:** *For your own desk:* swap FCF for whatever the company guides on (e.g. operating margin) and keep the same locked-baseline and sum-check discipline. *For ChatGPT / Gemini:* same paste; ask for Part A as a waterfall-style table. *For a Claude Project:* store the locked forecast as a project file at issuance so you cannot accidentally re-baseline toward actuals later. **Connection to previous chapters:** the locked-version and period-alignment gates, and the refusal to narrate unexplained gaps, are the same disciplines from the completeness checker, now applied to forecasts and signals. **Preview of next chapter:** Chapter 14 builds a due-diligence binder per holding — the sourced evidence behind each position, indexed — so every variance and signal you surface here has a permanent, traceable home.
+
+---
+
+### Exercise 4 — CLI Exercise
+
+**What you're building this chapter:** A local FCF variance bridge generated from two checked-in data files, with a hard sum-check and an unexplained-open log · **Tool:** Claude Code · **Skill level:** Intermediate
+
+**Setup:**
+
+- [ ] `desk/forecasts/[TICKER]-locked.csv` — the company's pre-period FCF guidance by component, with an `issued_date`.
+- [ ] `desk/actuals/[TICKER]-reported.csv` — actual FCF by the same components for the period.
+- [ ] Read-only confirmation: no account credentials present; Claude Code has no order capability; both inputs are public/derived data.
+
+**The Task:**
+
+```
+Work only inside desk/. READ-ONLY on all data. Do not connect to any brokerage or
+account, do not place/draft/simulate any order, and do not modify the source CSVs.
+
+1. Read [TICKER]-locked.csv. Confirm issued_date predates the period start. If it does
+   not, STOP and report — do not build a bridge against a re-baselined forecast.
+2. Read [TICKER]-reported.csv. Build a category bridge from forecast FCF to actual FCF.
+   State the sign convention in the output.
+3. Run the sum-check: the category variances must equal the total. If they do not,
+   HALT, write nothing but a sum-check-failure note, and stop.
+4. For each variance, mark FULLY-EXPLAINED / PARTIAL / TIMING-VERIFY / UNEXPLAINED-OPEN.
+   Mark TIMING and UNEXPLAINED items as requiring my review; do not assign a cause.
+5. WRITE desk/out/fcf-bridge.md with the bridge, the sum-check result, and the
+   unexplained-open log. Do NOT write any buy/hold/sell language.
+6. STOP and print the sum-check result and the count of unexplained-open items.
+
+Verification step: re-read fcf-bridge.md and confirm the category variances printed
+there actually sum to the stated total, and that no UNEXPLAINED item carries a guessed
+cause. Report any discrepancy.
+```
+
+**Expected output:** A `desk/out/fcf-bridge.md` that either builds a balanced bridge with a classified variance log, or halts with a sum-check-failure note — never a bridge that does not add up. **What to inspect:** verify the sum-check by hand on the printed totals, and confirm unexplained items are genuinely left open with a search note, not narrated. **If it goes wrong:** a sum-check failure usually means a component is in one file but not the other, or a sign is flipped — reconcile the component lists before re-running. **CLAUDE.md / AGENTS.md note:** "Personal research repo. Read-only on all data; never connect to a brokerage or place/draft/simulate orders. Unexplained variances stay open with a search note — never fill them with a plausible cause. No recommendations."
+
+---
+
+### Exercise 5 — AI Validation Exercise
+
+**What you're validating:** A variance bridge and an options-trajectory description the AI produced. **Validation type:** integrity check (does it sum, and did it resist narrating gaps and signals?). **Risk level:** High — a bridge that silently balances by inventing a driver, or a signal read as a call, can anchor a bad capital decision. **Setup:** take the Exercise 3/4 output, the source figures, and the options chain.
+
+**The Validation Task:** "Evaluate the AI output using this checklist. Pass / Fail / Cannot determine + explain."
+
+```
+Validation Checklist — Cash Forecast Variance Explainer
+□ Correctness: do the category variances actually sum to the total forecast-to-actual
+  gap? Recompute the sum-check by hand.
+□ Completeness: were all forecast components carried into the bridge, with none dropped?
+□ Scope: did the output avoid any buy/hold/sell conclusion, including in Part B's signal
+  read?
+□ Unexplained discipline: is every unsourced variance marked UNEXPLAINED-OPEN with a
+  search note — and NOT given a plausible cause?
+□ Signal restraint: is the options-trajectory stated as a hypothesis in warranted-verb
+  language, with 0DTE/retail tenors excluded?
+□ Failure-mode check: fluent-but-wrong (invented driver to force the sum)? signal read
+  as a recommendation? missing ground truth on the cause of a gap?
+```
+
+**What to do with your findings:** if the bridge does not sum or a gap was narrated, reject it and rebuild; treat the signal description as one hypothesis among your evidence, never as the reason to act. **AI Use Disclosure prompt:** "I used [tool] to build a forecast-versus-actual FCF bridge and to describe the options-implied recovery trajectory for a company. It left unexplained gaps open and made no recommendation; I verified the sum-check myself." **Series connection:** the failure mode is the narrated gap — a plausible story standing in for evidence — and the signal mistaken for a call; Tier 5, signal lens.
+
+---
+
+**Tags:** fcf-variance-bridge · options-implied-trajectory · signal-lens · unexplained-open · iv-term-structure · sum-check-discipline
