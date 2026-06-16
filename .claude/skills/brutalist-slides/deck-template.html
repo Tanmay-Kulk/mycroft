@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <!--
-  Brutalist Slides — deck runtime/template.
-  Fill <main id="deck"> with one <section class="slide"> per slide:
-    <section class="slide" data-type="concept">
-      <h1 class="headline">Assertion headline (≤12 words, a claim)</h1>
-      <div class="body"><!-- exactly ONE visual: inline SVG or D3 figure --></div>
-      <aside class="notes"><!-- speaker script; ## Background allowed --></aside>
-    </section>
-  Modes: add data-mode="study" to <body> to render notes inline + enable reveals.
-  Keys: →/Space next · ←/PgUp back · Home/End · f fullscreen · s presenter · o overview · ? help.
-  Colors come ONLY from the --color-* tokens below (DESIGN.md). No hardcoded hex in new slides.
+  Brutalist Slides deck runtime/template.
+  Fill the #deck element with one slide section per slide. Each slide section has
+  data-type, an h1.headline (assertion, 12 words or fewer), a div.body holding
+  exactly ONE visual (inline SVG or D3 figure), and an aside.notes (speaker script;
+  a Background heading is allowed). Add data-mode=study on the body element to render
+  notes inline and enable reveals.
+  Keys: arrow/Space next, arrow/PgUp back, Home/End jump, f fullscreen, s presenter,
+  o overview, ? help. Colors come ONLY from the --color-* tokens (DESIGN.md); no hardcoded hex.
+  (NOTE for generators: anchor slide insertion on the real element via the regex
+  <body ...> followed by the deck main element, NOT a literal tag in this comment.)
 -->
 <html lang="en">
 <head>
