@@ -170,23 +170,3 @@ That is the right outcome. The preparation was fast. The judgment took as long a
 
 9. *Difficulty: Advanced* — The chapter argues that adequacy, privilege, and scope are judgment calls that cannot be automated because they require professional standing, legal expertise, and negotiation with external parties. A legal technology argument holds that AI-assisted privilege review is already deployed in large-scale document review (e-discovery), that adequacy determinations follow patterns recognizable from prior audit cycles, and that scope negotiation is increasingly codified in audit standards — suggesting all three judgments are, in principle, automatable with sufficient training data and oversight structure. Construct the strongest version of this argument, drawing on what AI-assisted legal review and audit analytics platforms actually do. Then evaluate it: does the existence of AI-assisted privilege tagging in e-discovery mean the privilege judgment can be delegated to a recipe in the PBC context? Is there a meaningful difference between AI-assisted review (human confirms model output) and human review (human evaluates independently), and if so, where does that difference matter most in an audit binder context?
 *What this tests: ability to engage with the chapter's most sophisticated challenge — the existence of deployed AI tools in adjacent legal and audit contexts — and reason about whether those tools relocate or eliminate the judgment requirement, rather than simply asserting that judgment cannot be automated.*
-
----
-
-## Prompts
-
-### Figure 14.1 — Two parallel tracks converging at the delivery gate
-**Files:** ../images/14-pbc-request-tracker-and-audit-evidence-binder-fig-01.svg · ../d3/14-pbc-request-tracker-and-audit-evidence-binder-fig-01.html
-**Prompt:** Two horizontal tracks — a solid-bordered preparation track (recipe) and a dashed-bordered judgment track (human) — both feeding one red delivery gate before documents reach the auditors. Ink on white, single red accent on the gate, single-headed connectors.
-
-### Figure 14.2 — Three judgment boundaries: adequacy, privilege, scope
-**Files:** ../images/14-pbc-request-tracker-and-audit-evidence-binder-fig-03.svg · ../d3/14-pbc-request-tracker-and-audit-evidence-binder-fig-03.html
-**Prompt:** Three columns — adequacy, privilege, scope — each stacked into a neutral "recipe can do" cell over a red-edged "human judgment" cell. The red edge marks where the recipe stops in all three. Flat, restrained, ink on white.
-
-### Figure 14.3 — Seven PBC request fields: set vs. track
-**Files:** ../images/14-pbc-request-tracker-and-audit-evidence-binder-fig-02.svg
-**Prompt:** A seven-row field panel — request ID, description, owner, due date, status, support path, privilege flag — each row marking who sets the field versus what the recipe merely tracks. One accent distinguishes set-by-human from tracked-by-recipe.
-
-### Figure 14.4 — Binder index with privilege-block on delivery
-**Files:** ../images/14-pbc-request-tracker-and-audit-evidence-binder-fig-04.svg
-**Prompt:** A binder-index grid — rows per request ID, columns for support path, period, reviewer sign-off, privilege review, delivery authorization. Rows with an uncleared privilege flag are visibly held out of the delivery queue by a single blocking accent.

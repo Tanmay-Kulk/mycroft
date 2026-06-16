@@ -210,23 +210,3 @@ This is partly a design problem and partly a culture problem. The design can mak
 **Exercise 2.** Produce a draft gate record for one gate in your run. Include the approver name and role, the evidence surface reviewed, the decision, and any condition. Then ask the model to write the gate record for the same gate based only on the recipe output, without your input. Compare the two records: what does the model assert about the gate decision that you would not assert, and why?
 
 **Exercise 3.** Write the did-not-test list and open risks list for your full run. For each item, write one sentence explaining what the risk is if the excluded item or unresolved question goes the wrong way. Then ask the model to draft a run certification based on your four-component output. Review what it certifies: identify every claim the model makes that goes beyond what the evidence supports, and rewrite the certification to stay within what can honestly be said.
-
----
-
-## Prompts
-
-### Figure 16.1 — Four-component run output
-**Files:** ../images/16-the-build-and-the-honest-run-fig-01.svg · ../d3/16-the-build-and-the-honest-run-fig-01.html
-**Prompt:** A 2x2 card grid — run log, human report, evidence appendix, gate record — each card an ink-bordered panel with an ochre top rule. A red note beneath reads that the four together constitute the honest run and any one missing degrades the whole. Restrained, ink on white.
-
-### Figure 16.2 — Scope definition template
-**Files:** ../images/16-the-build-and-the-honest-run-fig-02.svg
-**Prompt:** A stacked-field template — entities, period, source systems, recipes to run, stop conditions, did-not-test list — fixed before the run begins. Plain rows, ink on white, one ochre marker on the did-not-test row to flag the field most often omitted.
-
-### Figure 16.3 — Gate record structure with three decision states
-**Files:** ../images/16-the-build-and-the-honest-run-fig-03.svg
-**Prompt:** A gate-record grid, one row per gate, columns for approver, time, evidence surface, and a three-state decision. Approved / conditional / not-approved each read distinctly; non-approvals stay visible rather than hidden. Ink on white, one accent for the not-approved state.
-
-### Figure 16.4 — Run completion record: three sections
-**Files:** ../images/16-the-build-and-the-honest-run-fig-04.svg
-**Prompt:** A three-section completion record — did-not-test list, open risks, run certification — the certification block signed by a human, with a clear mark that the recipe cannot sign it. Flat, ink on white, one accent on the certification signature line.

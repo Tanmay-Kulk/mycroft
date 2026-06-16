@@ -167,23 +167,3 @@ The timing category is the hardest to operationalize cleanly. A timing variance 
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies the hardest operational problem in the bridge: distinguishing a one-time timing variance from a systematic forecasting error. Both look the same in a single week's bridge — cash that was forecast in one period arrived in an adjacent period. Design an analytical framework that makes this distinction visible across multiple periods: what signals in the bridge history would indicate systematic bias rather than one-time timing, how would you quantify the bias, and how would you present the finding to FP&A in a form that supports a model revision decision rather than just documenting the pattern? Address explicitly how the framework handles the case where the bias is real but the business condition that drives it is itself changing — meaning the right model correction is not simply "shift all collections by N days." *What this tests: ability to close the loop between variance analysis and forecast improvement — operationalizing the distinction the chapter identifies as genuinely unresolved.*
-
----
-
-## Prompts
-
-### Figure 13.1 — Variance bridge waterfall
-**Files:** ../images/13-cash-forecast-variance-explainer-fig-01.svg · ../d3/13-cash-forecast-variance-explainer-fig-01.html
-**Prompt:** A waterfall bridging opening forecast balance to actual ending balance through category steps. Explained steps in neutral gray, the unexplained step in red — the one mark that earns the accent. Zero baseline, mono axis ticks, ink on white, a legend separating explained from open.
-
-### Figure 13.2 — Four-state driver classification
-**Files:** ../images/13-cash-forecast-variance-explainer-fig-03.svg · ../d3/13-cash-forecast-variance-explainer-fig-03.html
-**Prompt:** A four-panel card grid: fully explained, partially explained, timing-verify, unexplained. The two human-review states (timing, unexplained) carry a red accent edge; the recipe-closable states carry an ochre marker. Flat, restrained, ink on white.
-
-### Figure 13.3 — Version and period confirmation gates
-**Files:** ../images/13-cash-forecast-variance-explainer-fig-02.svg
-**Prompt:** Two stacked gate rows — forecast version and period alignment — each pairing its check with a halt condition. The halt is the emphasized element: the run does not proceed until a human resolves it. Ink on white, one accent.
-
-### Figure 13.4 — Unexplained variance escalation record
-**Files:** ../images/13-cash-forecast-variance-explainer-fig-04.svg
-**Prompt:** A single-row record schematic showing the escalation fields — variance ID, category, amount, period, sources checked, residual, escalation status. The "sources checked" zone reads as the substance: the record documents the search, not a story.

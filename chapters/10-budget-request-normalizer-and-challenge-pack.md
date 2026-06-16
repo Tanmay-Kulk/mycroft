@@ -180,19 +180,3 @@ The challenge question generation is the step in this recipe where the preparati
 **Challenge**
 
 9. *(Advanced)* The "Still Puzzling" section identifies a real tension: challenge questions that are specific enough to be actionable can land as accusations rather than inquiries, and the calibration is left to the planning lead's review — a human judgment step the recipe cannot assist with. Design a tiered question format that preserves specificity while signaling collaborative intent: what would a three-tier structure look like (information request, assumption flag, policy exception), how would the language differ across tiers, and how would the planning lead's review criteria differ for each tier? Address whether this tiering should be visible to the departments receiving the pack or only to the planning team. *What this tests: ability to operationalize the tone calibration problem the chapter leaves open — designing a structure that makes the human judgment step more consistent without removing it.*
-
----
-
-## Prompts
-
-### Figure 10.1 — The normalization pipeline converts heterogeneous inputs into a comparison surface
-**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-01.svg · ../d3/10-budget-request-normalizer-and-challenge-pack-fig-01.html
-**Prompt:** A brutalist convergence diagram on white: six differently-shaped department submission boxes on the left funnel through a framed three-stage alignment pipeline — period, account, currency — into one uniform normalized-surface node on the right. Ink boxes, grey arrowheads, Inter labels; the single red accent frames the normalization pipeline that makes numbers comparable but not judged.
-
-### Figure 10.2 — The template verification gate
-**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-02.svg
-**Prompt:** Four stacked brutalist verification-check rows — template version, required fields, period coverage, currency declaration — under one frame, each with a stop-marker for the blocking consequence. White canvas, ink-on-fill cells; the first gate that fails carries the single red accent to mark that a failed submission never enters the pipeline.
-
-### Figure 10.3 — The prior-period change table directs attention, it does not judge
-**Files:** ../images/10-budget-request-normalizer-and-challenge-pack-fig-03.svg
-**Prompt:** A brutalist horizontal bar comparison of prior-year actual versus submitted request by budget category, with a vertical attention-threshold line. Zero-baseline ink bars on white, mono value labels; the single red accent marks the bars that cross the threshold and earn a challenge question.

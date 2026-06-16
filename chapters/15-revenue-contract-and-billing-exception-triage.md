@@ -185,23 +185,3 @@ I know the mapping table needs to be maintained and versioned, with a change log
 **Exercise 2.** Write a prompt that instructs an AI to produce an exception review pack for a contract with a modification — a change in scope and price that occurred mid-contract. Specify that the model must separately list factual mismatches and accounting-policy questions, and must not propose an accounting treatment for any policy question. Compare the output to a prompt that does not include that instruction. What does the unconstrained model assert about revenue recognition that the constrained model correctly holds for human review?
 
 **Exercise 3.** For one accounting-policy question in your exception review pack, write the facts-for-analysis section that the accounting team would need to assess the revenue recognition treatment. Specify the ASC 606 consideration at issue, the relevant contract language, and the factual questions that need to be answered before the accounting judgment can be made. Then ask the model to draft a preliminary accounting memo conclusion for the same item. Review what it proposes, and write a one-paragraph explanation of why that conclusion belongs in a human accounting memo rather than in the exception review pack.
-
----
-
-## Prompts
-
-### Figure 15.1 — Contract source chain with stop signal
-**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-01.svg · ../d3/15-revenue-contract-and-billing-exception-triage-fig-01.html
-**Prompt:** A left-to-right chain — master agreement, three amendments, billing configuration — with single-headed connectors and a per-link check track beneath (executed? references prior? no gap? reflects this version?). One red stop block reads "amendment gap: run stops here." Ink on white, one red accent.
-
-### Figure 15.2 — Two-bucket exception triage funnel
-**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-03.svg · ../d3/15-revenue-contract-and-billing-exception-triage-fig-03.html
-**Prompt:** One ink input node ("all flagged exceptions") splitting into two buckets: factual mismatches (neutral, to billing ops) and accounting-policy questions (red, to accounting). The red bucket marks where interpretation begins. Flat, ink on white, single accent.
-
-### Figure 15.3 — Normalized contract data: five field categories
-**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-02.svg
-**Prompt:** Five rows — dates, products, prices, milestones, modifications — each aligning contract source, billing-system field, and comparison logic. The comparison-logic zone carries the accent that signals a match-or-flag decision. Restrained, ink on white.
-
-### Figure 15.4 — Exception review pack: two-section structure
-**Files:** ../images/15-revenue-contract-and-billing-exception-triage-fig-04.svg
-**Prompt:** A two-section pack schematic — a factual-mismatch table over an accounting-policy table — topped by a source-chain summary band recording amendments verified and run status. The two sections are visibly distinct; the policy section never carries a proposed treatment.

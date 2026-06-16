@@ -167,19 +167,3 @@ That is the workflow. Not slower — more reliable. The dashboard was never the 
 
 9. *Difficulty: Advanced* — The chapter argues that the recipe "cannot declare the books ready" because readiness is a professional judgment requiring knowledge the model does not have: the entity's operating context, the materiality of movements in context, and the standing to be accountable. A skeptic argues this is a temporary limitation — that a sufficiently trained model, given enough historical close data for the same entity, could in principle develop the contextual knowledge required to assess adequacy and that the "human judgment" boundary is a policy choice, not a logical necessity. Construct the strongest version of this argument. Then evaluate it against the chapter's claim: is the boundary a limitation of current models, or is there something about the accountability requirement that cannot be satisfied by a model regardless of its contextual knowledge? What would need to be true — about the model, the legal framework, and the professional standards — for the skeptic's argument to hold?
 *What this tests: ability to engage with the chapter's deepest claim about the nature of professional judgment, reason from the accountability requirement rather than capability, and evaluate whether the boundary is contingent or structural.*
-
----
-
-## Prompts
-
-### Figure 9.1 — Close status is not close adequacy
-**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-01.svg · ../d3/09-close-flux-analysis-and-balance-sheet-review-fig-01.html
-**Prompt:** A vertical brutalist close workflow on white: green status milestones at the top, a dashed red adequacy-gap line, then the controller-gate band and sign-off below. Ink-on-fill stage boxes, Inter labels, mono gap caption; the single red accent marks the gap between "complete" and "ready."
-
-### Figure 9.2 — The support coverage decision tree: the recipe routes, the controller decides
-**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-02.svg · ../d3/09-close-flux-analysis-and-balance-sheet-review-fig-02.html
-**Prompt:** A brutalist decision tree: a material-flux root branches into supported, stale, and unsupported nodes that converge at a solid ink human-review gate; only the supported path exits to sign-off. White canvas, grey arrowheads, dashed stale node; the unsupported branch and its blocking stop-mark carry the single red accent.
-
-### Figure 9.3 — Supervision questions in the close context
-**Files:** ../images/09-close-flux-analysis-and-balance-sheet-review-fig-04.svg
-**Prompt:** Three stacked brutalist rows — scope, approval, verification — each paired with the failure that follows if it is left unasked. Uniform ink-on-fill cells on white, neutral grey failure text; a single red accent flags the verification row where a "supported" label can be mistaken for a reviewed one.
