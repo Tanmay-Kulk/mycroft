@@ -9,11 +9,11 @@
 <text x="280" y="87" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">All open items enter</text>
 <line x1="280" y1="102" x2="280" y2="120" stroke="#545454" stroke-width="1.5" marker-end="url(#arr07b)"/>
 
-<polygon points="120,126 440,126 380,182 180,182" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
-<text x="280" y="150" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" font-weight="700" fill="#2a1a0e">Stage 1 · Deterministic matching</text>
-<text x="280" y="170" text-anchor="middle" font-family="'JetBrains Mono','Courier New',monospace" font-size="11" fill="#545454">exact ID · exact amount · exact period</text>
+<polygon points="112,124 452,124 384,184 176,184" fill="#F5F5F5" stroke="#2a1a0e" stroke-width="1.5"/>
+<text x="282" y="150" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" font-weight="700" fill="#2a1a0e">Stage 1 · Deterministic matching</text>
+<text x="282" y="170" text-anchor="middle" font-family="'JetBrains Mono','Courier New',monospace" font-size="10" fill="#545454">exact ID · exact amount · exact period</text>
 
-<line x1="440" y1="154" x2="500" y2="154" stroke="#545454" stroke-width="1.5" marker-end="url(#arr07b)"/>
+<line x1="418" y1="154" x2="500" y2="154" stroke="#545454" stroke-width="1.5" marker-end="url(#arr07b)"/>
 <rect x="504" y="130" width="164" height="50" fill="#F5F5F5" stroke="#D4D4D4" stroke-width="1"/>
 <text x="586" y="152" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" fill="#2a1a0e">Cleared</text>
 <text x="586" y="168" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">no judgment needed</text>
@@ -21,7 +21,7 @@
 <line x1="280" y1="182" x2="280" y2="202" stroke="#545454" stroke-width="1.5" marker-end="url(#arr07b)"/>
 <text x="296" y="198" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">unmatched residue</text>
 
-<polygon points="180,206 380,206 340,256 220,256" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
+<polygon points="168,206 392,206 344,256 216,256" fill="#FFFFFF" stroke="#C8102E" stroke-width="1.5"/>
 <text x="280" y="228" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="12" font-weight="700" fill="#2a1a0e">Stage 2 · Fuzzy matching</text>
 <text x="280" y="244" text-anchor="middle" font-family="'Inter',-apple-system,'Helvetica Neue',sans-serif" font-size="11" fill="#545454">relaxed criteria</text>
 

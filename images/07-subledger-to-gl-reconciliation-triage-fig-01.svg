@@ -30,7 +30,7 @@
 
 <!-- equivalence bracket -->
 <path d="M196 150 q12 0 12 12 l0 56 q0 12 12 12" fill="none" stroke="#545454" stroke-width="1" stroke-dasharray="5 4"/>
-<text x="200" y="216" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">&#931; = balance</text>
+<text x="107" y="224" text-anchor="middle" font-family="'JetBrains Mono','Fira Code','Courier New',monospace" font-size="11" fill="#545454">sum = balance</text>
 
 <!-- arrows into reconciliation -->
 <line x1="182" y1="146" x2="266" y2="190" stroke="#2a1a0e" stroke-width="1.5" marker-end="url(#arrow)"/>
