@@ -63,9 +63,13 @@ single figure (use the chapter figure prompts / D3-CODING.md directly).
 4. **Assemble the deck.** Fill `deck-template.html` with the generated slides:
    - One `<section class="slide">` per slide: `<h1 class="headline">` (the assertion),
      a `.body` holding exactly one visual, and an `<aside class="notes">` with the speaker script.
-   - Render each figure as **inline D3 v7** inside its slide's `.body` per D3-CODING.md, or
-     inline SVG for static figures. Colors via the `--color-*` tokens already defined in the
-     template's `:root` (copied from DESIGN.md). No hardcoded hex in deck CSS/JS.
+   - **Prefer animated/interactive D3 for every figure.** In order of preference:
+     (a) embed the chapter's existing D3 companion live — `<iframe class="fig" src="../../d3/<slug>-fig-NN.html" title="…" loading="lazy">`;
+     (b) write a fresh **inline D3 v7** figure with enter transitions per D3-CODING.md;
+     (c) only fall back to a static image (`<img src="../../images/<slug>-fig-NN.png">`) when no D3 figure exists and one is not worth authoring.
+     Colors via the `--color-*` tokens in `:root` (from DESIGN.md). No hardcoded hex in deck CSS/JS.
+   - **Path depth:** the deck lives at `slides/<deck-name>/index.html`, so the repo's figures are at
+     `../../d3/…` and `../../images/…` (two levels up).
    - `live` deck: notes hidden (presenter view shows them). `study` deck: set `data-mode="study"`
      so notes render inline beneath each slide and any retrieval prompt uses the reveal block.
      `both`: emit two files, `<slug>-live.html` and `<slug>-study.html`.
