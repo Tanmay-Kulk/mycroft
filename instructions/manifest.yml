@@ -8,6 +8,7 @@ title: "Mycroft agent instructions (source for AGENTS.md + CLAUDE.md)"
 shared:
   - governance.md
   - markdown-default.md
+  - visual-media.md
   - "no-delete.md"
   - conformance-gate.md
   - subagent-scoping.md
