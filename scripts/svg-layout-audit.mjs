@@ -6,6 +6,7 @@
 //   OVERFLOW      text spills outside the rect/polygon it sits in
 //   TEXT/LINE     text sits on top of a connector or arrow <line>
 //   TEXT/PATH     text sits on top of a connector/arrow <path> (incl. curves)
+//   TEXT/SHAPE    text sits on a node <circle>/<ellipse> it does not belong to
 //   TEXT/TEXT     two text labels overlap each other
 //   TEXT/CONTRAST text fill is too close in luminance to the fill behind it (warn)
 //   GLYPH         text uses a non-ASCII glyph that may render as a missing box (warn)
@@ -118,12 +119,15 @@ function flattenPath(d) {
   return segs;
 }
 
+// circle/ellipse → polygon (so node shapes plug into the container + strike machinery)
+const ellipsePoly = (cx, cy, rx, ry, N = 24) => { const pts = []; for (let i = 0; i < N; i++) { const a = 2 * Math.PI * i / N; pts.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]); } return pts; };
+
 function parse(svg) {
   const vb = svg.match(/viewBox\s*=\s*"([\d.\s-]+)"/);
   let W = 700, H = 420;
   if (vb) { const p = vb[1].trim().split(/\s+/).map(Number); W = p[2] || W; H = p[3] || H; }
-  const texts = [], rects = [], lines = [], polys = [], pathSegs = [];
-  const re = /<(\/?)(svg|g)\b([^>]*?)(\/?)>|<text\b([^>]*?)>([\s\S]*?)<\/text>|<rect\b([^>]*?)\/?>|<line\b([^>]*?)\/?>|<polygon\b([^>]*?)\/?>|<path\b([^>]*?)\/?>/g;
+  const texts = [], rects = [], lines = [], polys = [], pathSegs = [], nodes = [];
+  const re = /<(\/?)(svg|g)\b([^>]*?)(\/?)>|<text\b([^>]*?)>([\s\S]*?)<\/text>|<rect\b([^>]*?)\/?>|<line\b([^>]*?)\/?>|<polygon\b([^>]*?)\/?>|<path\b([^>]*?)\/?>|<circle\b([^>]*?)\/?>|<ellipse\b([^>]*?)\/?>/g;
   const stack = [{ fs: 16, anchor: 'start', fill: '#000000' }];
   let m;
   while ((m = re.exec(svg))) {
@@ -166,20 +170,26 @@ function parse(svg) {
       if (stroke && stroke.toLowerCase() !== 'none' && (fill === 'none' || fill === 'transparent')) {
         for (const s of flattenPath(d)) pathSegs.push(s);
       }
+    } else if (m[11] != null) {
+      const a = m[11], cx = num(attr(a, 'cx')), cy = num(attr(a, 'cy')), r = num(attr(a, 'r'));
+      if (r > 0) nodes.push({ l: cx - r, t: cy - r, r: cx + r, b: cy + r, area: Math.PI * r * r, fill: attr(a, 'fill'), pts: ellipsePoly(cx, cy, r, r) });
+    } else if (m[12] != null) {
+      const a = m[12], cx = num(attr(a, 'cx')), cy = num(attr(a, 'cy')), rx = num(attr(a, 'rx')), ry = num(attr(a, 'ry'));
+      if (rx > 0 && ry > 0) nodes.push({ l: cx - rx, t: cy - ry, r: cx + rx, b: cy + ry, area: Math.PI * rx * ry, fill: attr(a, 'fill'), pts: ellipsePoly(cx, cy, rx, ry) });
     }
   }
-  return { W, H, texts, rects, lines, polys, pathSegs };
+  return { W, H, texts, rects, lines, polys, pathSegs, nodes };
 }
 
 function audit(file) {
-  const { W, H, texts, rects, lines, polys, pathSegs } = parse(file.svg);
+  const { W, H, texts, rects, lines, polys, pathSegs, nodes } = parse(file.svg);
   const issues = [];
   const canvas = W * H;
   // background fill = the largest near-canvas rect's fill (default white)
   const bg = rects.filter(r => r.area >= 0.85 * canvas).sort((a, b) => b.area - a.area)[0];
   const bgFill = (bg && bg.fill) || '#FFFFFF';
   // containers = rects + polygons big enough to hold text but not the full canvas
-  const containers = [...rects, ...polys].filter(s => s.area >= 200 && s.area < 0.85 * canvas);
+  const containers = [...rects, ...polys, ...nodes].filter(s => s.area >= 200 && s.area < 0.85 * canvas);
   for (const tx of texts) {
     const b = tx.bbox, lab = tx.content.length > 34 ? tx.content.slice(0, 34) + '…' : tx.content;
     if (b.l < -TOL || b.t < -TOL || b.r > W + TOL || b.b > H + TOL)
@@ -204,6 +214,15 @@ function audit(file) {
       segSeg(ln.x1, ln.y1, ln.x2, ln.y2, cx, b.t + py, cx, b.b - py));
     if (crosses(lines)) issues.push({ code: 'TEXT/LINE', msg: `"${lab}" sits on an arrow/line` });
     if (crosses(pathSegs)) issues.push({ code: 'TEXT/PATH', msg: `"${lab}" sits on a curve/path` });
+    // TEXT/SHAPE: a node circle/ellipse that is NOT this text's own container crossing
+    // its centerline — a label or annotation printed over a node it doesn't belong to.
+    const ownerSet = new Set(owners);
+    const shapeStrike = nodes.some(nd => !ownerSet.has(nd) && nd.pts.some((p, i) => {
+      const q = nd.pts[(i + 1) % nd.pts.length];
+      return segSeg(p[0], p[1], q[0], q[1], b.l + px, cy, b.r - px, cy) ||
+             segSeg(p[0], p[1], q[0], q[1], cx, b.t + py, cx, b.b - py);
+    }));
+    if (shapeStrike) issues.push({ code: 'TEXT/SHAPE', msg: `"${lab}" overlaps a node circle/shape` });
     // TEXT/CONTRAST: text fill vs the fill behind it (its container, else the canvas)
     const tRGB = toRGB(tx.fill);
     const behind = owners.length ? (toRGB(owners[0].fill) || toRGB(bgFill)) : toRGB(bgFill);
@@ -246,6 +265,6 @@ else {
     for (const i of r.issues) console.log(`  [${i.code}]${i.warn ? ' (warn)' : ''} ${i.msg}`);
   }
   console.log(`\n==== ${nBad}/${files.length} SVGs flagged | ${nErr} layout errors | ${nWarn} warnings ====`);
-  console.log('Codes: OOB=outside-canvas  OVERFLOW=spills-box  TEXT/LINE=on-arrow  TEXT/PATH=on-curve  TEXT/TEXT=labels-overlap  TEXT/CONTRAST=low-contrast(warn)  GLYPH=may-not-render(warn)');
+  console.log('Codes: OOB=outside-canvas  OVERFLOW=spills-box  TEXT/LINE=on-arrow  TEXT/PATH=on-curve  TEXT/SHAPE=on-node-circle  TEXT/TEXT=labels-overlap  TEXT/CONTRAST=low-contrast(warn)  GLYPH=may-not-render(warn)');
 }
 process.exit((nErr > 0 || (STRICT && nWarn > 0)) ? 1 : 0);
