@@ -1,0 +1,154 @@
+---
+name: vendor-intelligence-brief
+description: |
+  Generate structured vendor intelligence brief (6 sections, sourced) for a company.
+  Routes through 5 specialized agents (financial, technology, news, personnel, competitive)
+  via LLM supervisor. Each agent queries verified signals from PostgreSQL and Neo4j,
+  synthesizes evidence, and produces a scored assessment with citations.
+
+status: DRAFT
+todos_open: 3
+recipe_version: 0.1.0
+last_gate: null
+attestation: null
+
+inputs:
+  - company_name (string): Target vendor to brief (e.g., "Cohere", "Anthropic")
+  - optional_date (string, ISO-8601): Override run date for historical briefing
+
+outputs:
+  - name: brief (JSON object)
+    description: |
+      Structured 6-section vendor intelligence brief:
+      - financial_health: {score: 0-100, signals: [...]}
+      - technology_momentum: {score: 0-100, signals: [...]}
+      - news_sentiment: {sentiment: positive|neutral|negative, signals: [...]}
+      - personnel_stability: {score: 0-100, signals: [...]}
+      - competitive_position: {direct_competitors: [...], investor_overlap: [...], edges: [...]}
+      - executive_summary: "1 paragraph procurement recommendation"
+  - name: metadata (JSON object)
+    description: |
+      Execution metadata:
+      - agents_called: array of agent names in execution order
+      - execution_time_ms: number
+      - signals_count: number
+      - citations_count: number
+      - cache_hit: boolean
+
+phase_gates:
+  - name: "Signal validation (Phase 2)"
+    status: "[TODO]"
+    description: |
+      Human must validate >= 50% of signals in data/verified/ai_company_signals
+      before brief generation. Evidence: signed-off audit in signals-validation-audit.md.
+    owner: "Data steward (TBD)"
+
+  - name: "Supervisor routing review (Phase 2)"
+    status: "[TODO]"
+    description: |
+      Operator reviews Langfuse trace of supervisor's agent-routing decisions.
+      Evidence: Trace ID logged in RUN_LOG.md, with operator sign-off on quality.
+    owner: "Operations lead (TBD)"
+
+  - name: "Brief approval (Phase 2)"
+    status: "[TODO]"
+    description: |
+      Procurement owner reviews brief before sharing with company.
+      Evidence: Sign-off comment in RUN_LOG.md entry linking to brief artifact.
+    owner: "Procurement owner (TBD)"
+
+known_issues:
+  - "[BLOCKER] Zero human signal validation — signals enter verified layer unvetted (P4 violation)"
+  - "[BLOCKER] Brief approval gate not logged — no procurement review record (Phase 2)"
+  - "[BLOCKER] Groq token limit at company #33 of 50 batch — Phase 3 batch job blocked"
+  - "[IMPROVEMENT] No historical trend detection — single-run only (Phase 3 feature)"
+  - "[IMPROVEMENT] Neo4j graph may be stale — ingest frequency not documented"
+
+architecture:
+  supervisor: |
+    LLM (AWS Bedrock Nova Micro) receives company_name and verified signals from all 4 sources.
+    Routes agent calls in dependency order: financial → technology → news → personnel → competitive.
+    Each agent call is traced in Langfuse; supervisor decides next agent based on collected signals.
+    Final synthesis stage aggregates all agent outputs into the 6-section brief.
+
+  data_sources:
+    - name: "EDGAR (10-K, 10-Q, 8-K filings)"
+      table: ai_company_signals
+      signal_types: ["funding", "executive_change"]
+      coverage: "3 public companies, ~50 signals"
+      refresh: quarterly
+      owner: "Data ingest (Phase 1)"
+
+    - name: "GitHub (stars, commits, releases, contributors)"
+      table: ai_company_signals
+      signal_types: ["github_activity", "github_release"]
+      coverage: "50 companies, ~125 signals"
+      refresh: weekly
+      owner: "Data ingest (Phase 1)"
+
+    - name: "ArXiv (research papers by company affiliation)"
+      table: ai_company_signals
+      signal_types: ["research_paper"]
+      coverage: "50 companies, ~440 signals"
+      refresh: weekly
+      owner: "Data ingest (Phase 1)"
+
+    - name: "News (RSS + scraping, LLM-classified by keyword)"
+      table: ai_company_signals
+      signal_types: ["news_mention", "partnership", "product_launch"]
+      coverage: "50 companies, ~413 signals"
+      refresh: daily
+      owner: "Data ingest (Phase 1)"
+
+    - name: Competitive graph
+      system: Neo4j
+      nodes: 50 Company nodes + 8 Investor nodes
+      edges: COMPETES_WITH, BACKED_BY
+      refresh: quarterly
+      owner: Graph ingest (Phase 1)
+
+  agents:
+    - name: Financial Agent
+      specializes_in: Funding signals, burn rate, runway, executive changes
+      queries: Postgres ai_company_signals (funding, executive_change) + EDGAR filings
+      output_fields: [score 0-100, signals with source_url]
+
+    - name: Technology Agent
+      specializes_in: GitHub velocity, research output, deployment pace
+      queries: Postgres ai_company_signals (github_*) + Neo4j research edges
+      output_fields: [score 0-100, activity_rate, latest_release, research_papers]
+
+    - name: News Agent
+      specializes_in: Partnerships, product launches, negative signals, regulatory
+      queries: Postgres ai_company_signals (partnership, negative, regulatory) + classified sentiment
+      output_fields: [sentiment, recent_headlines, risk_flags]
+
+    - name: Personnel Agent
+      specializes_in: Executive hires/departures, headcount, stability
+      queries: Postgres ai_company_signals (executive_change, headcount)
+      output_fields: [score 0-100, recent_changes, headcount_trend]
+
+    - name: Competitive Agent
+      specializes_in: Direct competitors, investor overlap, positioning
+      queries: Neo4j COMPETES_WITH edges, BACKED_BY edges
+      output_fields: [competitors, investor_overlap, market_position]
+
+execution:
+  current: "On-demand via CLI (python agents/run_brief.py 'Cohere')"
+  latency: "30-60 seconds (cached: <100ms same-day)"
+  cache_ttl: "24 hours"
+  caching_system: "API cache (in-process)"
+
+  planned_phase_3:
+    mode: Daily batch (top 50 companies, 2 AM UTC)
+    new_features: Historical tracking, trend detection, anomaly alerts
+    blocker: Groq free-tier token limit (@company #33 of 50)
+    solution: Upgrade Groq tier or use secondary provider for news classification
+
+related_recipes:
+  - name: ai-news-sentiment-agent
+    description: "sentiment classification, reused by News Agent"
+  - name: ai-talent-intelligence-agent
+    description: "personnel data, feeds Personnel Agent"
+  - name: funding-intelligence-agent
+    description: "EDGAR parsing, feeds Financial Agent"

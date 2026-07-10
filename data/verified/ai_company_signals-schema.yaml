@@ -1,0 +1,173 @@
+---
+version: "0.1.0"
+name: ai_company_signals
+description: |
+  Unified signal table for vendor intelligence. Ingests from 4 live sources
+  (EDGAR, GitHub, ArXiv, News RSS/scraping) and validates before entering
+  the verified layer. Each signal is a fact (funding, product launch, research,
+  news mention) with a score and source URL for citation.
+
+table_type: PostgreSQL
+location: data/verified/ai_company_signals/
+canonical_source: User's production PostgreSQL database
+
+schema:
+  fields:
+    - name: signal_id
+      type: UUID
+      nullable: false
+      unique: true
+      description: Primary key, unique per signal
+
+    - name: company_id
+      type: string
+      nullable: false
+      description: Target company (e.g., "cohere", "anthropic")
+      index: true
+
+    - name: signal_type
+      type: enum
+      nullable: false
+      values:
+        - "funding_round"
+        - "funding_stage"
+        - "executive_change"
+        - "product_launch"
+        - "partnership"
+        - "layoff"
+        - "security_issue"
+        - "github_activity"
+        - "github_release"
+        - "research_paper"
+        - "news_mention"
+        - "regulatory_filing"
+        - "headcount"
+      description: Category of signal
+      index: true
+
+    - name: signal_title
+      type: text
+      nullable: false
+      description: Human-readable signal (e.g., "Series D funding round", "CTO departure")
+
+    - name: signal_value
+      type: text
+      nullable: true
+      description: Quantitative or qualitative value (e.g., "$50M", "positive", "3 researchers")
+
+    - name: score
+      type: numeric (0-100)
+      nullable: false
+      description: |
+        Confidence or magnitude score (0-100).
+        For events: 1-100 by confidence in occurrence.
+        For measurements: 1-100 by recent significance.
+        Must not be invented; grounded in source signal.
+      validation_rule: 0 <= score <= 100
+
+    - name: source_type
+      type: enum
+      nullable: false
+      values:
+        - "EDGAR"
+        - "GitHub"
+        - "ArXiv"
+        - "News"
+        - "News_RSS"
+        - "News_Scrape"
+      description: Which ingest pipeline produced this signal
+      index: true
+
+    - name: source_url
+      type: URL
+      nullable: false
+      description: Full resolvable URL for citation (SEC EDGAR link, GitHub URL, ArXiv PDF, news article)
+      validation_rule: Must be HTTP(S), must resolve on spot-check
+
+    - name: occurred_date
+      type: date
+      nullable: true
+      description: When signal occurred (funding date, publication date, news date, release date)
+      validation_rule: occurred_date <= today
+
+    - name: ingested_at
+      type: timestamp
+      nullable: false
+      default: "now()"
+      description: When signal was added to this table (machine-populated, not editable)
+
+    - name: validated_by
+      type: string (user ID or email)
+      nullable: true
+      default: null
+      description: |
+        Human who validated this signal as trustworthy.
+        Null = not yet validated (signal is in raw tier, not verified).
+        Populated by Signal Validation gate (Phase 2).
+
+    - name: validation_note
+      type: text
+      nullable: true
+      description: |
+        Why signal was trusted or rejected.
+        Examples: "EDGAR filing confirmed", "GitHub URL dead as of 2026-07-09 — rejected"
+
+    - name: validation_date
+      type: date
+      nullable: true
+      description: Date validation occurred (populated by gate, null if unvalidated)
+
+    - name: used_in_brief
+      type: boolean
+      nullable: false
+      default: false
+      description: |
+        Set to true by brief generation if signal was included in final brief output.
+        Enables audit: "which signals actually made it into the brief?"
+
+  indexes:
+    - (company_id, signal_type)
+    - (source_type, occurred_date)
+    - (validated_by)  # Find all signals I validated
+    - (used_in_brief)  # Audit trail
+
+validation_rules:
+  conformance:
+    - "score must be 0-100"
+    - "source_url must be HTTP(S) and resolvable"
+    - "occurred_date must be <= today"
+    - "signal_type must be one of the enum values"
+
+  before_entering_verified_layer:
+    - "validated_by must be non-null (gated by Signal Validation gate, Phase 2)"
+    - "validation_note must explain why trusted"
+    - "source_url must pass spot-check (resolvable as of validation date)"
+
+  before_brief_generation:
+    - All signals used in brief must have validated_by != null
+    - All signals used in brief must have source_url that was recently checked (within 7 days)
+
+audit_checks:
+  - "Count signals by signal_type and source_type (detect missing ingests)"
+  - "Find signals with null validated_by (signals not yet reviewed)"
+  - "Find signals with dead source_url (broken citations)"
+  - "Compare used_in_brief = true with brief output JSON (ensure audit accuracy)"
+
+data_quality_notes:
+  - |
+    GitHub activity signals may have delays (API lag, cache staleness).
+    Refresh cadence: weekly (not real-time).
+  - |
+    News signals depend on RSS feed discovery and keyword/LLM classification accuracy.
+    Classified sentiments are judgments, not facts; tag as such.
+  - |
+    ArXiv signals are publication-date-based, not announcement-date.
+    Lag between work completion and publication: typically 1-6 months.
+  - |
+    EDGAR signals are sourced from SEC EDGAR API (quarterly filings lag behind announcements).
+    For breaking news, see News source instead.
+  - |
+    Executive changes from News source may have delays (press release lag).
+    Confirm via EDGAR or company press release when possible.
+
+---
