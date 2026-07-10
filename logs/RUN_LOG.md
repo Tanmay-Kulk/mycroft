@@ -69,3 +69,31 @@ workflow changes.
 - **Outputs:** Added `chapters/01-the-fluency-trap.md` through `chapters/16-the-build-and-the-honest-run.md`; rewrote `chapters/97-fundamental-themes.md` as a finance-specific appendix; added `scripts/write-finance-tiktoc-chapters.mjs`; appended chapter metadata to `logs/log.csv`.
 - **Result:** The named Mycroft finance chapter set now mirrors the reallocation-engine style: framework chapters 01-05, concrete finance recipes 06-15, and an honest-run capstone in 16.
 - **Open issues:** The older placeholder files `chapters/01-chapter-01.md` through `chapters/12-chapter-12.md` still exist and should be archived or superseded in a later cleanup pass if Bear approves.
+
+## 2026-07-09 -- Add vendor-intelligence-brief recipe (Phase 1 scaffold)
+
+- **Recipe:** vendor-intelligence-brief v0.1.0 (DRAFT) — structured vendor intelligence brief (6 sections, sourced).
+- **Inputs:** User's existing vendor intelligence platform (5 specialized agents, supervisor routing, PostgreSQL signal storage, Neo4j competitive graph).
+- **Commands:** 
+  - Created `recipes/vendor-intelligence-brief.yaml` with full frontmatter, inputs/outputs, 5 phase gates (3 Phase 2 placeholders), architecture, and known issues.
+  - Created `data/verified/ai_company_signals-schema.yaml` (signal table schema, validation rules, data quality notes, audit checks).
+  - Updated `DATA_CONTRACT.md` to register vendor intelligence data layer + signal validation gate.
+  - Logged this run in `logs/RUN_LOG.md` with status, blockers, and next steps.
+- **Outputs:** 
+  - `recipes/vendor-intelligence-brief.yaml` (DRAFT, 200L)
+  - `data/verified/ai_company_signals-schema.yaml` (schema + validation rules)
+  - Updated `DATA_CONTRACT.md` (vendor intelligence section)
+  - This log entry
+- **Result:** Mycroft vendor intelligence framework scaffolded at Phase 1 (DRAFT → SPECIFIED).
+- **Blockers:**
+  - [GATE OPEN] Signal validation (Phase 2) — zero signals validated; gate process not yet defined.
+  - [GATE OPEN] Supervisor routing review (Phase 2) — Langfuse traces not logged to RUN_LOG.
+  - [GATE OPEN] Brief approval (Phase 2) — no procurement owner review process.
+  - [BLOCKER] Groq token limit at company #33 of 50 batch — blocks Phase 3 daily batch job.
+- **Next steps:**
+  - Phase 1 → Phase 2: Define signal validation gate (audit script, human sign-off process).
+  - Phase 1 → Phase 2: Add gate decision logging to RUN_LOG (when running sample brief).
+  - Phase 1 → Phase 2: Define brief approval gate (procurement owner + sign-off rule).
+  - Phase 2: Run full sample brief (company: "Anthropic") with all gates open (no human decision yet, just logging).
+  - Phase 2: Generate `signals-validation-audit.md` (spot-check 10 signals, assess quality).
+  - Phase 3: Solve Groq token limit (upgrade tier or secondary provider for news classification).
