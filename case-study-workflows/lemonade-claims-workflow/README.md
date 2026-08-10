@@ -105,7 +105,7 @@ for why that swap requires zero code changes.
 ## Repository Structure — What Each File Is and Why It Exists
 
 ```
-lemonade_claims_pipeline/
+lemonade-claims-workflow/
 ├── config.py                       # All tunable settings, in one place
 ├── exceptions.py                   # Shared error types for wiring/config mistakes
 ├── fixtures.py                     # One canonical set of demo/test scenario data
