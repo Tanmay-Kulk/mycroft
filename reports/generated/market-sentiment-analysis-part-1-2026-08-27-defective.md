@@ -43,11 +43,11 @@ Every file this run rests on, with the hash a reviewer can re-verify.
 | `data/verified/market-sentiment-analysis-part-1/runs/sample-001-defective/quality-checked/reddit-wallstreetbets.json` | verified output (step 3 or 4) | yes | 54671cdf645862a7… |
 | `data/verified/market-sentiment-analysis-part-1/runs/sample-001-defective/reddit-wallstreetbets.json` | verified output (step 3 or 4) | yes | 4debf659ed0cbe48… |
 | `logs/market-sentiment-analysis-part-1/runs/sample-001-defective/sentiment-scores.json` | step-5 sentiment scores | yes | 73f75357ccd0c1d2… |
-| `scripts/tools/market-sentiment-analysis-part-1-verify-provenance.py` | step script | yes | 718a29747223925c… |
-| `scripts/ingest/market-sentiment-analysis-part-1-ingest-inputs.py` | step script | yes | f558f93393a1177e… |
-| `scripts/gigo/market-sentiment-analysis-part-1-validate-data-shape.py` | step script | yes | bc83ad6ad643d1dd… |
-| `scripts/gigo/market-sentiment-analysis-part-1-transform-quality-check.py` | step script | yes | 2cc69f0e1f81ee86… |
-| `scripts/tools/market-sentiment-analysis-part-1-run-approved-tools.py` | step script | yes | edb664608bbd2b21… |
+| `scripts/tools/market-sentiment-analysis-part-1-verify-provenance.py` | step script | yes | 3afb272debc044ae… |
+| `scripts/ingest/market-sentiment-analysis-part-1-ingest-inputs.py` | step script | yes | 0b7d6e1ad217e312… |
+| `scripts/gigo/market-sentiment-analysis-part-1-validate-data-shape.py` | step script | yes | 5842d7bec8c96f48… |
+| `scripts/gigo/market-sentiment-analysis-part-1-transform-quality-check.py` | step script | yes | 7090c48fe30e24be… |
+| `scripts/tools/market-sentiment-analysis-part-1-run-approved-tools.py` | step script | yes | c9179cc024ef9f24… |
 | `scripts/tools/market-sentiment-analysis-part-1-produce-human-report.py` | step script | yes | 3e65b2eb4117ced4… |
 
 ## Inputs used

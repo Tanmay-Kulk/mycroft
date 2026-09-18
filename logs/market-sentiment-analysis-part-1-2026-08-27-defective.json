@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
     "data/verified/market-sentiment-analysis-part-1/runs/sample-001-defective/sample-001-defective-audit.md": "7958cf44b526d4da9341a2f1fbb5e304f3f1f4e14cefd1f288a0878e4959099c",
-    "reports/generated/market-sentiment-analysis-part-1-2026-08-27-defective.md": "b317e3ff5b34279048a6cc909de7447bc600e62e5af3537c1228b5b374d970dd"
+    "reports/generated/market-sentiment-analysis-part-1-2026-08-27-defective.md": "ea418e595c7dc8974ebba4f634dfd044d1b6f8d30a7161b4072559603337b1e5"
   },
   "duplicates": [
     {
@@ -291,7 +291,7 @@
       "status": "evidence recorded; awaiting a named human"
     }
   ],
-  "generated_at": "2026-09-17T20:37:48.194384+00:00",
+  "generated_at": "2026-09-25T00:14:15.762054+00:00",
   "mode": "sample",
   "raw_output_paths": [
     "data/raw/market-sentiment-analysis-part-1/runs/sample-001-defective/news-finnhub-unparseable.json.broken",
@@ -508,36 +508,36 @@
       "exists": true,
       "path": "scripts/tools/market-sentiment-analysis-part-1-verify-provenance.py",
       "role": "step script",
-      "sha256": "718a29747223925cb6e5df32a0f743a9d16f20474a5d55d00a70db2aad9ab1bc",
-      "size_bytes": 14917
+      "sha256": "3afb272debc044ae94c795a83bd3f333d466b1551e0860287dcac2257a03524c",
+      "size_bytes": 14632
     },
     {
       "exists": true,
       "path": "scripts/ingest/market-sentiment-analysis-part-1-ingest-inputs.py",
       "role": "step script",
-      "sha256": "f558f93393a1177ef5398b4cfefeeb520b89c356a16cba76349e3e0e8790332c",
-      "size_bytes": 19391
+      "sha256": "0b7d6e1ad217e31237aeb7692b46dcf278744992c4af0702a72e5c9fae915e0f",
+      "size_bytes": 18959
     },
     {
       "exists": true,
       "path": "scripts/gigo/market-sentiment-analysis-part-1-validate-data-shape.py",
       "role": "step script",
-      "sha256": "bc83ad6ad643d1dd1447fcd23b610ddf88b119f3a4ca30d91ee8ae8caceed523",
-      "size_bytes": 25366
+      "sha256": "5842d7bec8c96f48d3f64f12ff0d039301138b6ed6bda8e60b11ea4a90bd7777",
+      "size_bytes": 24825
     },
     {
       "exists": true,
       "path": "scripts/gigo/market-sentiment-analysis-part-1-transform-quality-check.py",
       "role": "step script",
-      "sha256": "2cc69f0e1f81ee867df341596c4a797cc710a841fe3b19706cda0d49ce324a4a",
-      "size_bytes": 29924
+      "sha256": "7090c48fe30e24be171a82621ae6f49c169b7ac2a8aa775852e1043c2ec1b22d",
+      "size_bytes": 29251
     },
     {
       "exists": true,
       "path": "scripts/tools/market-sentiment-analysis-part-1-run-approved-tools.py",
       "role": "step script",
-      "sha256": "edb664608bbd2b214e5308057e7ad0ada62e2f81caa9bec6a41557d1fff4a624",
-      "size_bytes": 35675
+      "sha256": "c9179cc024ef9f24bf26e5618b4e50adfce612c9a689437355ea971802576ef8",
+      "size_bytes": 34895
     },
     {
       "exists": true,
