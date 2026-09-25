@@ -358,3 +358,86 @@ workflow changes.
   - 20 of 24 fixtures start on mid, so the cheap tier served only 4 requests.
     Sprint 7 must try cheap on everything, not only where policy prefers it.
   - Coverage is still 4 of the 30 fixtures targeted per task type.
+
+## 2026-09-25 -- market-sentiment-analysis-part-1 promoted to RUNNABLE-SAMPLE (steps 1-6)
+
+- **Recipe:** market-sentiment-analysis-part-1, v0.2.0, `status: RUNNABLE-SAMPLE`, `todos_open: 2`.
+- **Inputs:** `recipes/market-sentiment-analysis-part-1.md`, `conductor/market-sentiment-analysis-part-1.md`,
+  `docs/architecture.md` 5.2 (script-layer contract), `SNICKERDOODLE.md` (lifecycle + verification
+  stack), `data/raw/market-sentiment-analysis-part-1/sample/fixture-manifest.json` (the only
+  declared schema for this recipe), and the named source workflow
+  `data/mycroft-main/n8n-workflows/originals/n8n_Workflows/Market_Monitoring_Agent/market_sentiment.json`
+  (read for the Aggregate node's arithmetic only).
+- **Commands:** full pipeline, both fixture sets, all six steps:
+  - `scripts/tools/...-verify-provenance.py` -> exit 0
+  - `scripts/ingest/...-ingest-inputs.py --fixture-set {clean,defective}` -> exit 0
+  - `scripts/gigo/...-validate-data-shape.py --fixture-set {clean,defective}` -> exit 0 / **1**
+  - `scripts/gigo/...-transform-quality-check.py --fixture-set {clean,defective}` -> exit 0 / **1**
+  - `scripts/tools/...-run-approved-tools.py --fixture-set {clean,defective}` -> exit 0
+  - `scripts/tools/...-produce-human-report.py --fixture-set {clean,defective}` -> exit 0
+  - Nonzero on the defective set is the designed behaviour: report every finding, then halt.
+  - `node scripts/conformance.mjs` -> 187 files, all conform.
+  - Gate-3 test as literally written -> all 26 JSON artifacts parse.
+- **Outputs:**
+  - `reports/generated/market-sentiment-analysis-part-1-2026-08-27-{clean,defective}.md` (15/15 sections)
+  - `logs/market-sentiment-analysis-part-1-2026-08-27-{clean,defective}.json` (16/16 contract fields)
+  - `data/verified/.../runs/sample-001-{clean,defective}/sample-001-{clean,defective}-audit.md`
+  - `logs/gate-decisions/market-sentiment-analysis-part-1-gate-{1,2,3,4}.json`
+  - This entry.
+- **Result:** **18/18 catalogued corpus defects detected at their exact manifest locators**, split
+  8 to step 3 and 10 to step 4, with every declared total in `expected_totals` matching --
+  including `news_by_headline: 2`, which a short-circuiting dedupe reports as 1. Each step was also
+  tested for what it must NOT catch: step 3 leaks none of step 4's ten. Clean set: 10 rows, zero
+  findings. Defective set: 19 rows seen, 13 promoted, 6 withheld, 5 duplicates, 6 quality flags.
+  Both sets score 64/100 SLIGHTLY BULLISH -- the same headline number, with four flagged rows
+  feeding one of them, which is the argument for the flags existing.
+- **Promotion evidence (SPECIFIED -> RUNNABLE-SAMPLE):** full sample run completes; conformance
+  passes; audits generated and read. Gates 1-4 carry logged decisions naming a human.
+  `RUNNABLE-LIVE` is not claimed and `attestation` stays null.
+- **Changes made this session:**
+  - Closed the six canonical-step `[TODO: DEV]` markers with their evidence. Resolved the six
+    legacy n8n node markers as **mappings, not code**: four were absorbed by canonical steps, and
+    two (`Parse Question & Extract Tickers`, `Webhook Response`) were **never built** and now say so.
+  - Added lifecycle frontmatter. `todos_open: 2` -- one DEFINE on step 5's scoring constants, one
+    APPROVE on gate 5. Both markers now sit in the recipe body so the count is greppable; note the
+    same strings also appear inside the gate 1 and gate 5 test commands, where they are the test.
+  - **Contract fix 1:** step 3 gained `type_errors`. A wrong-typed value was none of its five
+    declared fields, so D02/D11/D17 had to be reported only in step 4 `flags`. Step 3 now reports
+    them against a declared TYPE_CONTRACT; rows are still promoted (a wrong value is not a wrong
+    shape), and step 4 still flags them for its quality assessment -- the same carry-forward
+    pattern it already uses for step 3's rejects. Verified: 18/18 unchanged, step 4 totals unchanged.
+  - **Contract fix 2:** the report Reader is now the compliance/audit reviewer the artifact actually
+    serves. The report already carried source hashes, reproduced scoring parameters and a per-score
+    trace chain; the declared reader now matches.
+  - **Contract fix 3:** `reports/templates/market-sentiment-analysis-part-1.md` cited
+    `logs/.../[RUN_ID].json` against the recipe's `logs/...-[DATE].json`. Recipe governs; template
+    corrected.
+  - **Gate 4's test was amended.** It previously passed if the script existed OR if a DEV-TODO
+    marker was still present in the recipe -- satisfiable by doing nothing. It now compiles all six.
+- **Design decisions worth recording:**
+  - **Gates 5 and 6 were deliberately not written.** Gate 5 would be a false clearance: no live,
+    external, or model call has ever run, and all three step-5 handoffs carry
+    `approved_for_live_action: false`. Gate 6 is step 6's own output, not yet a human decision.
+  - **Each gate record carries `residual_risk` and `voids_if`.** An audit reports what it found;
+    it does not say pass. Gate 3's record states plainly that shape validation cannot catch a
+    wrong-entity row.
+  - **The legacy node section was relabelled historical, not closed as done.** Claiming six more
+    scripts were written would have been false -- two of those nodes have no implementation at all.
+- **Open issues:**
+  - [DEFECT] **Gate 5's test is still self-satisfying** -- `test -f <approval>.json || rg "[TODO:
+    APPROVE]"`. Now that `logs/gate-decisions/` exists, the approval file is absent, so the test
+    falls through to the marker and reports a pass for a gate that has never been cleared. Same
+    class as the gate-4 defect fixed above; left alone because it was not in scope, but it is now
+    actively misleading and should be the next fix.
+  - [OPEN] `[TODO: DEFINE]` scoring constants: the weights, thresholds and both keyword lists are
+    ported verbatim from a source workflow that records no derivation, backtest or author.
+    Reproduced so a historical score can be recomputed, not endorsed. Needs a named human.
+  - [OPEN] `[TODO: APPROVE]` gate 5: live and model execution remain blocked.
+  - [OPEN] Live mode is unimplemented. Needs real fetchers, credentials from the environment, and
+    401/403/429/timeout/empty-200 handling the fixture corpus explicitly does not cover.
+  - [OPEN] The step-scoped `TYPE_CONTRACT` is not a promoted schema. If accepted it belongs in
+    `DATA_CONTRACT.md` with a named owner.
+  - [NOT COVERED] Wrong-entity signals, upstream HTTP failure modes, encoding defects, and
+    volume/pagination. The first of these is the class that reached a finished brief on 2026-08-26.
+  - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's 72
+    existing Python test files.
