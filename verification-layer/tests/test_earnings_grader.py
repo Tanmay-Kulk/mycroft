@@ -1,17 +1,17 @@
 """
-Financial grader tests — Week 9/10 analyst skeleton.
+Earnings grader tests — Producer B, real-source counterpart to test_financial_grader.py.
 No network: fetch_fn/call_agent_fn are always injected fakes.
-LangFuse tracing itself is not asserted on here (the SDK degrades
-gracefully without configured credentials — see pipeline/observability.py);
-this only verifies the accountability-mesh behavior is unchanged.
+LangFuse tracing itself is not asserted on here (the SDK degrades gracefully without
+configured credentials — see pipeline/observability.py); this only verifies the
+accountability-mesh behavior is unchanged for the earnings concept slice.
 """
 
 import unittest
 import uuid
 
 from tests.support import make_scripted_adapter
-from datasources.edgar import EdgarFetchError, fetch_company_facts, lookup_cik
-from producers.financial import analyze_ticker, summarize_facts
+from datasources.edgar import EdgarFetchError, lookup_cik
+from producers.earnings import analyze_earnings, summarize_earnings_facts
 from pipeline.middleware import HaltError, ValidationLoopResult
 from core.schemas import AgentID, ParseStatus
 
@@ -22,22 +22,22 @@ _TICKER_MAP = {
 _FACTS = {
     "facts": {
         "us-gaap": {
-            "Assets": {
+            "EarningsPerShareDiluted": {
                 "units": {
-                    "USD": [
-                        {"end": "2025-09-30", "val": 350000000000},
-                        {"end": "2026-03-31", "val": 365000000000},
+                    "USD/shares": [
+                        {"end": "2025-09-30", "val": 6.10},
+                        {"end": "2026-03-31", "val": 6.45},
                     ]
                 }
             },
-            "Revenues": {
+            "OperatingIncomeLoss": {
                 "units": {
                     "USD": [
-                        {"end": "2026-03-31", "val": 90000000000},
+                        {"end": "2026-03-31", "val": 120000000000},
                     ]
                 }
             },
-            # NetIncomeLoss deliberately absent to test the "not reported" path
+            # EarningsPerShareBasic deliberately absent to test the "not reported" path
         }
     }
 }
@@ -51,56 +51,39 @@ def _fake_facts_fetch(url: str) -> dict:
     return _FACTS
 
 
-class TestLookupCik(unittest.TestCase):
-
-    def test_finds_known_ticker(self):
-        cik = lookup_cik("AAPL", fetch_fn=_fake_ticker_map_fetch)
-        self.assertEqual(cik, "0000320193")
-
-    def test_case_insensitive(self):
-        cik = lookup_cik("aapl", fetch_fn=_fake_ticker_map_fetch)
-        self.assertEqual(cik, "0000320193")
-
-    def test_unknown_ticker_raises(self):
-        with self.assertRaises(EdgarFetchError):
-            lookup_cik("ZZZZ", fetch_fn=_fake_ticker_map_fetch)
-
-
-class TestFetchCompanyFacts(unittest.TestCase):
-
-    def test_returns_injected_facts(self):
-        facts = fetch_company_facts("AAPL", "0000320193", fetch_fn=_fake_facts_fetch)
-        self.assertEqual(facts, _FACTS)
-
-
-class TestSummarizeFacts(unittest.TestCase):
+class TestSummarizeEarningsFacts(unittest.TestCase):
 
     def test_includes_ticker(self):
-        summary = summarize_facts("AAPL", _FACTS)
+        summary = summarize_earnings_facts("AAPL", _FACTS)
         self.assertIn("Ticker: AAPL", summary)
 
-    def test_picks_latest_assets_value(self):
-        summary = summarize_facts("AAPL", _FACTS)
-        self.assertIn("Assets: 365000000000.0", summary)
+    def test_picks_latest_diluted_eps_value(self):
+        summary = summarize_earnings_facts("AAPL", _FACTS)
+        self.assertIn("EarningsPerShareDiluted: 6.45", summary)
 
     def test_missing_concept_reported_as_not_reported(self):
-        summary = summarize_facts("AAPL", _FACTS)
-        self.assertIn("NetIncomeLoss: not reported", summary)
+        summary = summarize_earnings_facts("AAPL", _FACTS)
+        self.assertIn("EarningsPerShareBasic: not reported", summary)
 
     def test_empty_facts_all_not_reported(self):
-        summary = summarize_facts("AAPL", {"facts": {}})
-        self.assertIn("Assets: not reported", summary)
-        self.assertIn("Revenues: not reported", summary)
-        self.assertIn("NetIncomeLoss: not reported", summary)
+        summary = summarize_earnings_facts("AAPL", {"facts": {}})
+        self.assertIn("EarningsPerShareDiluted: not reported", summary)
+        self.assertIn("OperatingIncomeLoss: not reported", summary)
+
+    def test_different_concepts_than_financial_grader(self):
+        # The whole point of a second producer: different evidence, same company.
+        summary = summarize_earnings_facts("AAPL", _FACTS)
+        self.assertNotIn("Assets:", summary)
+        self.assertNotIn("Revenues:", summary)
 
 
-class TestAnalyzeTicker(unittest.TestCase):
+class TestAnalyzeEarnings(unittest.TestCase):
 
     def setUp(self):
         self.run_id = uuid.uuid4()
 
     def test_happy_path_returns_validation_loop_result(self):
-        result = analyze_ticker(
+        result = analyze_earnings(
             "AAPL",
             "0000320193",
             make_scripted_adapter("none"),
@@ -109,8 +92,8 @@ class TestAnalyzeTicker(unittest.TestCase):
         )
         self.assertIsInstance(result, ValidationLoopResult)
 
-    def test_happy_path_reasoning_object_for_financial_agent(self):
-        result = analyze_ticker(
+    def test_happy_path_reasoning_object_for_earnings_agent(self):
+        result = analyze_earnings(
             "AAPL",
             "0000320193",
             make_scripted_adapter("none"),
@@ -118,24 +101,24 @@ class TestAnalyzeTicker(unittest.TestCase):
             fetch_fn=_fake_facts_fetch,
         )
         obj = result.reasoning_objects[0]
-        self.assertEqual(obj.agent_id, AgentID.FINANCIAL)
+        self.assertEqual(obj.agent_id, AgentID.EARNINGS)
         self.assertEqual(obj.parse_status, ParseStatus.SUCCESS)
         self.assertEqual(obj.run_id, self.run_id)
 
-    def test_context_passed_to_agent_includes_facts(self):
-        # mock_adapter echoes the context into thought_log — confirms EDGAR
-        # facts actually flowed into the LLM call, not just a placeholder.
-        result = analyze_ticker(
+    def test_context_passed_to_agent_includes_earnings_facts(self):
+        # mock_adapter echoes the context into thought_log — confirms the earnings
+        # concept slice actually flowed into the LLM call, not just a placeholder.
+        result = analyze_earnings(
             "AAPL",
             "0000320193",
             make_scripted_adapter("none"),
             run_id=self.run_id,
             fetch_fn=_fake_facts_fetch,
         )
-        self.assertIn("Assets: 365000000000.0", result.reasoning_objects[0].thought_log)
+        self.assertIn("EarningsPerShareDiluted: 6.45", result.reasoning_objects[0].thought_log)
 
     def test_retry_success_still_reaches_success(self):
-        result = analyze_ticker(
+        result = analyze_earnings(
             "AAPL",
             "0000320193",
             make_scripted_adapter("retry_success"),
@@ -147,7 +130,7 @@ class TestAnalyzeTicker(unittest.TestCase):
 
     def test_halt_mode_raises_halt_error(self):
         with self.assertRaises(HaltError) as ctx:
-            analyze_ticker(
+            analyze_earnings(
                 "AAPL",
                 "0000320193",
                 make_scripted_adapter("halt"),
@@ -161,13 +144,19 @@ class TestAnalyzeTicker(unittest.TestCase):
             raise EdgarFetchError("simulated network failure")
 
         with self.assertRaises(EdgarFetchError):
-            analyze_ticker(
+            analyze_earnings(
                 "AAPL",
                 "0000320193",
                 make_scripted_adapter("none"),
                 run_id=self.run_id,
                 fetch_fn=_broken_fetch,
             )
+
+    def test_reuses_financial_grader_lookup_cik(self):
+        # Both producers share one CIK-resolution path — there is no separate
+        # "earnings" ticker map, because it's the same company, same SEC filer.
+        cik = lookup_cik("AAPL", fetch_fn=_fake_ticker_map_fetch)
+        self.assertEqual(cik, "0000320193")
 
 
 if __name__ == "__main__":
