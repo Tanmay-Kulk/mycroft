@@ -142,7 +142,9 @@ anything downstream.
 | `claims_parser.py` split/classify | 7 real patents, 82 claims total, verified by hand | High — every claim correct, including a real formatting-variant fix |
 | `flag_multi_dependency` | Original 4 patents; one confirmed false-positive found and fixed | High, after the fix |
 | `claim_classifier.py` scope reading | 8 real independent claims across 4 patents, 4 domains (semiconductor, mechanical, robotics, medical device) | Moderate — every result was well-reasoned with specific, checkable caveats, but the "always narrow/defensive" pattern is an open question |
-| `lineage_agent.py` backward citations | 3 real patents, citation counts from 3 to 20, including 2 non-US formats, verified by hand | Moderate-high — the field-access pattern, the empty-string fix, and international format handling are all confirmed correct across a real range; a genuine zero-citation case is still untested |
+| `lineage_agent.py` backward citations | 4 real patents, citation counts from 3 to 242, including 7 distinct jurisdiction formats, verified by hand | High — the field-access pattern, the empty-string fix, and international format handling are all confirmed correct across a genuinely wide real range; a zero-citation case is still untested |
+| `patent_reader.py` combined CLI | 2 real patents, both structural-only and full-pipeline modes | Moderate-high — the wiring is confirmed correct and matches independently-verified agent output exactly |
+| `api.py` FastAPI backend | 2 real patents, both classify=false and classify=true modes | Moderate-high — matches the already-verified CLI output exactly; not yet tested with a real frontend or under concurrent load |
 
 ## Files
 
@@ -161,6 +163,8 @@ anything downstream.
 - `test_lineage_agent.py` — first real test of `LineageAgent`, including the field-access verification that found the empty-string bug
 - `inspect_all_citations.py` — the investigation that confirmed the empty-string fix was correct, not just coincidentally unchanged
 - `test_lineage_broader.py` — broadened `LineageAgent` testing to 2 more real patents with different citation profiles and international formats
+- `patent_reader.py` — the real, callable CLI wiring `ClaimsAgent` and `LineageAgent` together
+- `api.py` — the real FastAPI backend wrapping both agents behind an HTTP endpoint
 
 ## Not built yet
 
@@ -168,3 +172,40 @@ anything downstream.
 - Forward citations in the Lineage Agent (who cites this patent) — deliberately deferred, real query cost untested
 - Explaining the "always narrow/defensive" pattern in classifier results — more real patents needed before concluding whether it's a real signal or a classifier bias
 - A genuine zero-citation patent — not yet found and tested, so `LineageAgent`'s behavior on an empty citation list is unverified
+
+## FastAPI backend — a real HTTP interface
+
+`api.py` wraps the exact same logic as `patent_reader.py` behind a real
+HTTP endpoint, so a frontend (or any other client) can call it instead
+of shelling out to a CLI.
+
+```bash
+pip install fastapi uvicorn
+export ANTHROPIC_API_KEY="your-key-here"
+.venv/bin/uvicorn api:app --reload --port 8000
+```
+
+```
+GET /patent/{publication_number}?classify=true|false
+```
+
+`classify` defaults to `true` and mirrors the CLI's `--no-classify`
+flag for the same reason: it lets a caller skip the real, fresh
+Claude API cost when only the free structural and lineage reading is
+needed.
+
+Verified against the same two real patents used to verify the CLI
+itself: `US-10822628-B2` with `classify=false` (matched the
+independently-verified 7/2/5 claim split and 12-citation lineage
+exactly, zero new cost) and `US-11197952-B2` with classification on
+(matched the same real 17/1/16 claim split and a real, well-reasoned
+classification, at the real small Claude API cost).
+
+**A real setup detail worth knowing**: `uvicorn --reload` runs as its
+own process with its own environment — exporting `ANTHROPIC_API_KEY`
+in a different terminal tab does nothing for it. The key has to be
+set in the exact terminal session running `uvicorn` before it starts.
+
+CORS is currently configured for `localhost:5173` and `localhost:3000`
+(common Vite/React dev server ports), anticipating a real frontend
+being built against this API next.
