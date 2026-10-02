@@ -1,7 +1,7 @@
 ---
 status: RUNNABLE-SAMPLE
-todos_open: 2
-last_gate: "sample-run, 2026-09-25, logs/RUN_LOG.md#2026-09-25"
+todos_open: 0
+last_gate: "gate-5 deny, 2026-10-02, logs/RUN_LOG.md#2026-10-02"
 attestation: null
 recipe_version: 0.2.0
 ---
@@ -17,7 +17,7 @@ recipe_version: 0.2.0
 > record, and no live, external, or model call has ever been made by this recipe.
 > `attestation: null` because no human has recorded one — that is what `VERIFIED` requires.
 >
-> `todos_open: 2` counts real open items: the DEFINE on step 5's scoring constants and the
+> `todos_open: 0` counts real open items: the DEFINE on step 5's scoring constants and the
 > APPROVE on gate 5. Both need a named human, not more code. Note when counting by grep that
 > these marker strings also appear inside the gate 1 and gate 5 **test commands**, where they
 > are part of the test, not open work.
@@ -65,9 +65,10 @@ Market Sentiment Analysis - Part 1 defines a Mycroft pipeline for collecting, tr
 3. Data-shape gate: Every raw and verified JSON output parses before downstream scripts run. Test: `find data/raw/market-sentiment-analysis-part-1 data/verified/market-sentiment-analysis-part-1 -name "*.json" -print -exec python3 -m json.tool {} \;`. Human capacity: [PA].
 4. Script-readiness gate: Every one of the six step scripts exists and compiles. Test: `for s in tools/verify-provenance ingest/ingest-inputs gigo/validate-data-shape gigo/transform-quality-check tools/run-approved-tools tools/produce-human-report; do python3 -m py_compile "scripts/${s%%/*}/market-sentiment-analysis-part-1-${s##*/}.py" || exit 1; done`. Human capacity: [IJ].
    Amended 2026-09-25: the original test passed if the script existed **or** if a DEV-TODO marker was still present anywhere in this recipe, so it could be satisfied by doing nothing. A gate with no failure path is not a gate. Uses `python3` for parity with CI and the repo's other tooling.
-5. Approval gate: Live network calls, external writes, credentials, production databases, emails, dashboards, publishing, or model calls with sensitive data require an approval record. Test: `test -f logs/gate-decisions/market-sentiment-analysis-part-1-gate-5.json || ! grep -rqs '"live_call_performed": true' logs/market-sentiment-analysis-part-1/ data/raw/market-sentiment-analysis-part-1/runs/`. Human capacity: [EI].
+5. Approval gate: Live network calls, external writes, credentials, production databases, emails, dashboards, publishing, or model calls with sensitive data require an approval record. Test: `! grep -rqs '"live_call_performed": true' logs/market-sentiment-analysis-part-1/ data/raw/market-sentiment-analysis-part-1/runs/ || python3 -c "import json,sys; sys.exit(0 if json.load(open('logs/gate-decisions/market-sentiment-analysis-part-1-gate-5.json'))['approved_for_live_action'] else 1)"`. Human capacity: [EI].
    Amended 2026-09-25: the original test passed if an approval record existed **or** if an APPROVE-TODO marker was still in this recipe -- and the marker is always there, so the gate reported a pass for a clearance that had never happened. Creating `logs/gate-decisions/` made that actively misleading. The test now reads the run's own artifacts: it passes while nothing has performed a live call, and **fails** the moment one is recorded without an approval record naming a human. In sample mode it passes because no live call is possible, not because a gate was cleared.
-   [TODO: APPROVE] No approval record exists. Step 5 renders three live-call handoffs -- the Anthropic model call, Slack, and email -- all with `approved_for_live_action: false`, and none has ever run. Closure is a logged gate decision naming the approver, not a checkbox.
+   Amended again 2026-10-02: the previous form passed on the mere **existence** of a gate-5 record. Writing the deny decision that day would have cleared the gate exactly as an approval does -- the same defect, one layer along. The test now reads `approved_for_live_action` out of the record, so a logged **deny** closes the TODO without ever clearing the gate for live action.
+   DECIDED 2026-10-02 by Uday Sonawane: **not approved; deferred.** Recorded in `logs/gate-decisions/market-sentiment-analysis-part-1-gate-5.json`. Live execution is declined, not pending: step 2 hard-stops in live mode, no credentials are configured, and the frozen corpus explicitly does not cover 401/403/429/timeout/empty-200 behaviour, so approving would authorise outward-facing actions -- a model call, a Slack message, an email -- whose failure modes have never been exercised. The gate is closed by a logged decision, which is what its closure rule requires; the decision is deny. Reopening it needs the four preconditions named in the record.
 6. Report gate: Agent log and human report are written with the required fields and sections. Test: `test -f logs/market-sentiment-analysis-part-1-[DATE].json && test -f reports/generated/market-sentiment-analysis-part-1-[DATE].md`. Human capacity: [TO].
 
 ## Steps
@@ -102,7 +103,8 @@ Market Sentiment Analysis - Part 1 defines a Mycroft pipeline for collecting, tr
    Status: Built and exercised. Input: step-4 quality-checked output. Output: the fields below, per tool. Errors: a missing or unparseable input stops the run. Faithful port of the source workflow's scoring as `scoring_params v1.0.0`, emitting a named flag for every substitution it makes; model, Slack and email calls are rendered as handoffs and never executed. Evidence: `logs/RUN_LOG.md#2026-09-25`.
    Input: declared recipe inputs, prior step outputs, and gate decisions for `market-sentiment-analysis-part-1`.
    Output: tool_name, input_path, output_path, action_taken, approval_id, no_write_mode.
-   [TODO: DEFINE] `scoring_params v1.0.0` -- the weights (price .4 / news .3 / social .3), the label thresholds (65/55/45/35) and both keyword lists are ported verbatim from the source workflow, which records no derivation, backtest, or author for any of them. They are reproduced so a historical score can be recomputed, NOT endorsed. Closure needs the values restated here with one sentence of reasoning, by a named human.
+   DEFINED 2026-10-02 by Uday Sonawane. `scoring_params v1.0.0` is **inherited, not derived**. Weights: price 0.40, news 0.30, social 0.30. Label thresholds: BULLISH >= 65, SLIGHTLY BULLISH >= 55, SLIGHTLY BEARISH <= 45, BEARISH <= 35, NEUTRAL otherwise. Price score: +75 above 3% change, +60 above 0%, 25 below -3%, else 40. News keywords positive: surge, gain, bull, upgrade, beat, strong, growth, profit, rise; negative: drop, fall, bear, downgrade, miss, weak, loss, decline, crash. Social bullish: calls, moon, rocket, bullish, buy, long, rocket-emoji, to the moon; bearish: puts, crash, bearish, sell, short, dump.
+   **Reasoning:** these are reproduced byte-for-byte from the `Aggregate & Calculate Sentiment` node of the named source workflow so that any score it ever produced can be recomputed and audited; they are a record of what the original did, and carry no claim that the weighting or the word lists are analytically sound. Treating them as validated is the error this definition exists to prevent -- step 5 raises `scoring_params_unattributed` on every run to keep that visible, and the report files every score under inferred findings. Changing any value requires a new `scoring_params` version, because a score is only reconstructable against the parameter set that produced it.
    Where output goes: `logs/`
 6. Step name: Produce human report. Labor: AI with Human gate.
    Script called: `scripts/tools/market-sentiment-analysis-part-1-produce-human-report.py`

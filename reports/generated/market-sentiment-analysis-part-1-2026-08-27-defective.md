@@ -24,7 +24,7 @@ Every file this run rests on, with the hash a reviewer can re-verify.
 
 | Path | Role | Present | SHA-256 (first 16) |
 |---|---|---|---|
-| `recipes/market-sentiment-analysis-part-1.md` | recipe under test - authoritative for intent (P6) | yes | f3089417ec0fb40e… |
+| `recipes/market-sentiment-analysis-part-1.md` | recipe under test - authoritative for intent (P6) | yes | 184906b7b5a856a2… |
 | `conductor/market-sentiment-analysis-part-1.md` | conductor flow | yes | 02681428081972d1… |
 | `data/raw/market-sentiment-analysis-part-1/run-envelope.json` | run control file - declares mode and the frozen clock | yes | 33828ed47a8c38fc… |
 | `data/raw/market-sentiment-analysis-part-1/sample/fixture-manifest.json` | fixture manifest - schema and defect catalogue | yes | 7ee88528523d5780… |

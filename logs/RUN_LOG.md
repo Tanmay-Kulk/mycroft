@@ -441,3 +441,67 @@ workflow changes.
     volume/pagination. The first of these is the class that reached a finished brief on 2026-08-26.
   - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's 72
     existing Python test files.
+
+## 2026-10-02 -- market-sentiment-analysis-part-1: both open TODOs closed, todos_open 0
+
+- **Recipe:** market-sentiment-analysis-part-1, v0.2.0, `status: RUNNABLE-SAMPLE`, `todos_open: 0`.
+  The steps 1-6 run itself is logged at `logs/RUN_LOG.md#2026-09-25`; this entry records the two
+  typed-TODO closures, the gate-4/5 test fixes, and the rebase onto the current `origin/main`.
+- **Inputs:** `recipes/market-sentiment-analysis-part-1.md`, `SNICKERDOODLE.md` (TODO closure table
+  and the verification stack), `logs/gate-decisions/`, and the step-5 scoring parameters as ported
+  from the named source workflow.
+- **Commands:**
+  - Full pipeline re-run, both fixture sets, after the rebase -> step 1 exit 0; clean set all exit 0;
+    defective set steps 3 and 4 exit 1 by design, steps 2/5/6 exit 0.
+  - All six gate tests as literally written -> all pass.
+  - Gate-5 test break-tested across four cases (see below).
+  - `node scripts/conformance.mjs` -> all conform.
+- **Outputs:**
+  - `logs/gate-decisions/market-sentiment-analysis-part-1-gate-5.json` -- **decision: deny**
+  - Recipe: both typed TODOs closed in place; `todos_open` 2 -> 0; gate-5 test amended twice.
+  - This entry.
+- **Result:** `todos_open: 0`. Neither closure loosened anything -- one defines what the numbers are,
+  the other refuses to switch anything on.
+- **TODO closures:**
+  - **[DEFINE] step 5 scoring constants -- closed by definition, not by endorsement.** The weights
+    (price 0.40 / news 0.30 / social 0.30), the label thresholds (65/55/45/35), the price score map
+    and both keyword lists are now restated in the recipe with their reasoning: they are inherited
+    byte-for-byte from the `Aggregate & Calculate Sentiment` node so any score the original ever
+    produced can be recomputed and audited. They carry **no claim** that the weighting or the word
+    lists are analytically sound. Step 5 continues to raise `scoring_params_unattributed` on every
+    run, and the report continues to file every score under inferred findings. Changing any value
+    requires a new `scoring_params` version, because a score is only reconstructable against the
+    parameter set that produced it.
+  - **[APPROVE] gate 5 -- closed by a logged decision, and the decision is DENY.** The closure rule
+    is "a logged gate decision", not "an approval", so a recorded refusal closes it honestly. Live
+    execution was declined on four grounds: step 2 hard-stops in live mode, so approval would
+    authorise a capability that does not exist; no credentials are configured, making approval a
+    statement of intent rather than a decision; the frozen corpus explicitly does not cover
+    401/403/429/timeout/empty-200, so live failure behaviour has never been exercised; and two of
+    the three declined actions are outward-facing and irreversible once sent. Four preconditions to
+    reopen are named in the record.
+- **Design decisions worth recording:**
+  - **Writing the deny record immediately re-created the defect it was meant to close.** The gate-5
+    test at that moment read `test -f <record>.json || ...`, so the presence of a *refusal* cleared
+    the gate exactly as an approval would. Caught on the same turn it was introduced. The test now
+    reads `approved_for_live_action` out of the record instead of checking that the file exists.
+    Break-tested four ways: no-call/no-record PASS; no-call/deny PASS; **live-call/deny FAIL**;
+    live-call/approve PASS.
+  - **A deny is a closure, not a loophole.** Recording "no" is what turns an unexamined gate into a
+    decided one. The alternative -- leaving the TODO open indefinitely -- is how a gate quietly
+    becomes decoration.
+  - **The branch was rebased onto `origin/main` by cherry-pick, not by `git rebase`.** `origin/main`
+    had moved to a lineage missing steps 4, 5 and 6, so replaying only the newer commits would have
+    produced a branch whose recipe claims six working steps and whose gate-4 record asserts all six
+    compile, while two scripts did not exist. Steps 4-5 were carried along deliberately.
+- **Open issues:**
+  - [OPEN] Live mode remains unimplemented, and is now explicitly declined rather than merely
+    pending. Reopening requires the four preconditions in the gate-5 record.
+  - [OPEN] The step-scoped `TYPE_CONTRACT` in steps 3 and 4 is still not a promoted schema. If
+    accepted it belongs in `DATA_CONTRACT.md` with a named owner.
+  - [OPEN] `attestation` stays null. `VERIFIED` needs an attestation bound to this recipe version,
+    and the SNICKERDOODLE format requires a mandatory "Did not test" section.
+  - [NOT COVERED] Wrong-entity signals, upstream HTTP failure modes, encoding defects, and
+    volume/pagination. The first is the class that reached a finished brief on 2026-08-26.
+  - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's existing
+    Python test files.
