@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
     "data/verified/market-sentiment-analysis-part-1/runs/sample-001-clean/sample-001-clean-audit.md": "615bd9e49bb2b23209d0b6d9b3d34098f69d10b2200557c3c8d2ed516c568414",
-    "reports/generated/market-sentiment-analysis-part-1-2026-08-27-clean.md": "3da4f340c671666de95bc84a6d95bb00f55cd735f6a13281d51397db8b7c7324"
+    "reports/generated/market-sentiment-analysis-part-1-2026-08-27-clean.md": "6608a22b58273687a277ee7b6da4b2dee8833b290de07050ff4d71264ae9c4ac"
   },
   "duplicates": [],
   "flags": {
@@ -105,7 +105,7 @@
       "status": "evidence recorded; awaiting a named human"
     }
   ],
-  "generated_at": "2026-10-02T16:20:57.561097+00:00",
+  "generated_at": "2026-10-02T16:32:21.958067+00:00",
   "mode": "sample",
   "raw_output_paths": [
     "data/raw/market-sentiment-analysis-part-1/runs/sample-001-clean/news-finnhub.json",
@@ -129,8 +129,8 @@
       "exists": true,
       "path": "recipes/market-sentiment-analysis-part-1.md",
       "role": "recipe under test - authoritative for intent (P6)",
-      "sha256": "184906b7b5a856a2cd5b221ef3bb5a10385ac5a31f0167d4ddb71990fa0cee0b",
-      "size_bytes": 25565
+      "sha256": "a4e379c6ccb325ba0ef2b1ac2d8eefb1d3a22f056b2fe7752b63ee16d356c8c5",
+      "size_bytes": 25677
     },
     {
       "exists": true,

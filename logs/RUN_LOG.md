@@ -505,3 +505,43 @@ workflow changes.
     volume/pagination. The first is the class that reached a finished brief on 2026-08-26.
   - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's existing
     Python test files.
+
+## 2026-10-02 -- attestation recorded for market-sentiment-analysis-part-1 v0.2.0 (status unchanged)
+
+- **Recipe:** market-sentiment-analysis-part-1 v0.2.0, `status: RUNNABLE-SAMPLE` (**unchanged**),
+  `attestation: logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md`.
+- **Inputs:** `SNICKERDOODLE.md` (attestation format + lifecycle table), the two prior RUN_LOG
+  entries for this recipe, `logs/gate-decisions/` (5 records), the generated audits and reports.
+- **Commands:** branch rebased onto the current `origin/main`; full pipeline re-run on both fixture
+  sets -> step 1 exit 0, clean all exit 0, defective steps 3/4 exit 1 by design; all six gate tests
+  pass; `node scripts/conformance.mjs` -> all conform.
+- **Outputs:** `logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md`; `attestation:` path
+  recorded in the recipe frontmatter; this entry.
+- **Result:** An attestation exists, bound to v0.2.0, in the SNICKERDOODLE format: 17 tested rows --
+  of which **7 are deliberate attempts to break the thing** -- a mandatory Did-not-test section with
+  10 entries, and 9 defects that broke during testing and were fixed.
+- **Status NOT promoted to VERIFIED, deliberately.** The lifecycle is
+  DRAFT -> SPECIFIED -> RUNNABLE-SAMPLE -> RUNNABLE-LIVE -> VERIFIED. Reaching VERIFIED requires
+  passing through RUNNABLE-LIVE, whose gate test is "live run with a human clearing every gate".
+  Neither condition holds: **no live run has ever happened** (live mode is unimplemented and step 2
+  hard-stops before any fetch), and **not every gate is cleared** -- gate 5 is recorded
+  `decision: deny` with `approved_for_live_action: false`. Setting the status today would assert a
+  live run that never occurred and a clearance that was explicitly refused. Per the constitution,
+  "editing the status field without the evidence is a violation, not a promotion."
+- **What VERIFIED would require, in order:** implement live mode in step 2; add a second fixture set
+  covering 401/403/429/timeout/empty-200 with declared expected detections; reopen gate 5 against
+  the four preconditions in its record and log an approval naming the approver; perform a live run
+  with every gate cleared, logged (that earns RUNNABLE-LIVE); then record a **fresh** attestation
+  bound to the version that ran live, since any edit to the recipe or its scripts voids this one.
+- **Design decisions worth recording:**
+  - **The Did-not-test section is the load-bearing half.** It names live execution, whether the
+    score is correct, wrong-entity signals, HTTP failure modes, encoding defects, volume, the
+    untestable `redditMentions > 20` branch, the absence of any unit tests, cross-platform
+    behaviour, and interrupted runs. An empty one would have been the new "it works".
+  - **An attestation that cannot promote is still worth recording.** It fixes what was exercised, at
+    which version, with its boundary stated -- which is what makes the next one comparable.
+- **Open issues:**
+  - [OPEN] Live mode unimplemented and explicitly declined; see the gate-5 record.
+  - [OPEN] `TYPE_CONTRACT` in steps 3 and 4 is still step-scoped, not promoted to `DATA_CONTRACT.md`.
+  - [OPEN] No unit tests for the six scripts; CI runs none of the repo's existing Python tests.
+  - [NOT COVERED] Wrong-entity signals, HTTP failure modes, encoding defects, volume/pagination.

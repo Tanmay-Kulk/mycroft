@@ -2,7 +2,7 @@
 status: RUNNABLE-SAMPLE
 todos_open: 0
 last_gate: "gate-5 deny, 2026-10-02, logs/RUN_LOG.md#2026-10-02"
-attestation: null
+attestation: logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md
 recipe_version: 0.2.0
 ---
 
@@ -15,7 +15,7 @@ recipe_version: 0.2.0
 >
 > `RUNNABLE-LIVE` is **not** claimed: live mode is unimplemented, gate 5 has no approval
 > record, and no live, external, or model call has ever been made by this recipe.
-> `attestation: null` because no human has recorded one — that is what `VERIFIED` requires.
+> `attestation: logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md` because no human has recorded one — that is what `VERIFIED` requires.
 >
 > `todos_open: 0` counts real open items: the DEFINE on step 5's scoring constants and the
 > APPROVE on gate 5. Both need a named human, not more code. Note when counting by grep that
