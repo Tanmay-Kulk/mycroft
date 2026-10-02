@@ -358,3 +358,190 @@ workflow changes.
   - 20 of 24 fixtures start on mid, so the cheap tier served only 4 requests.
     Sprint 7 must try cheap on everything, not only where policy prefers it.
   - Coverage is still 4 of the 30 fixtures targeted per task type.
+
+## 2026-09-25 -- market-sentiment-analysis-part-1 promoted to RUNNABLE-SAMPLE (steps 1-6)
+
+- **Recipe:** market-sentiment-analysis-part-1, v0.2.0, `status: RUNNABLE-SAMPLE`, `todos_open: 2`.
+- **Inputs:** `recipes/market-sentiment-analysis-part-1.md`, `conductor/market-sentiment-analysis-part-1.md`,
+  `docs/architecture.md` 5.2 (script-layer contract), `SNICKERDOODLE.md` (lifecycle + verification
+  stack), `data/raw/market-sentiment-analysis-part-1/sample/fixture-manifest.json` (the only
+  declared schema for this recipe), and the named source workflow
+  `data/mycroft-main/n8n-workflows/originals/n8n_Workflows/Market_Monitoring_Agent/market_sentiment.json`
+  (read for the Aggregate node's arithmetic only).
+- **Commands:** full pipeline, both fixture sets, all six steps:
+  - `scripts/tools/...-verify-provenance.py` -> exit 0
+  - `scripts/ingest/...-ingest-inputs.py --fixture-set {clean,defective}` -> exit 0
+  - `scripts/gigo/...-validate-data-shape.py --fixture-set {clean,defective}` -> exit 0 / **1**
+  - `scripts/gigo/...-transform-quality-check.py --fixture-set {clean,defective}` -> exit 0 / **1**
+  - `scripts/tools/...-run-approved-tools.py --fixture-set {clean,defective}` -> exit 0
+  - `scripts/tools/...-produce-human-report.py --fixture-set {clean,defective}` -> exit 0
+  - Nonzero on the defective set is the designed behaviour: report every finding, then halt.
+  - `node scripts/conformance.mjs` -> 187 files, all conform.
+  - Gate-3 test as literally written -> all 26 JSON artifacts parse.
+- **Outputs:**
+  - `reports/generated/market-sentiment-analysis-part-1-2026-08-27-{clean,defective}.md` (15/15 sections)
+  - `logs/market-sentiment-analysis-part-1-2026-08-27-{clean,defective}.json` (16/16 contract fields)
+  - `data/verified/.../runs/sample-001-{clean,defective}/sample-001-{clean,defective}-audit.md`
+  - `logs/gate-decisions/market-sentiment-analysis-part-1-gate-{1,2,3,4}.json`
+  - This entry.
+- **Result:** **18/18 catalogued corpus defects detected at their exact manifest locators**, split
+  8 to step 3 and 10 to step 4, with every declared total in `expected_totals` matching --
+  including `news_by_headline: 2`, which a short-circuiting dedupe reports as 1. Each step was also
+  tested for what it must NOT catch: step 3 leaks none of step 4's ten. Clean set: 10 rows, zero
+  findings. Defective set: 19 rows seen, 13 promoted, 6 withheld, 5 duplicates, 6 quality flags.
+  Both sets score 64/100 SLIGHTLY BULLISH -- the same headline number, with four flagged rows
+  feeding one of them, which is the argument for the flags existing.
+- **Promotion evidence (SPECIFIED -> RUNNABLE-SAMPLE):** full sample run completes; conformance
+  passes; audits generated and read. Gates 1-4 carry logged decisions naming a human.
+  `RUNNABLE-LIVE` is not claimed and `attestation` stays null.
+- **Changes made this session:**
+  - Closed the six canonical-step `[TODO: DEV]` markers with their evidence. Resolved the six
+    legacy n8n node markers as **mappings, not code**: four were absorbed by canonical steps, and
+    two (`Parse Question & Extract Tickers`, `Webhook Response`) were **never built** and now say so.
+  - Added lifecycle frontmatter. `todos_open: 2` -- one DEFINE on step 5's scoring constants, one
+    APPROVE on gate 5. Both markers now sit in the recipe body so the count is greppable; note the
+    same strings also appear inside the gate 1 and gate 5 test commands, where they are the test.
+  - **Contract fix 1:** step 3 gained `type_errors`. A wrong-typed value was none of its five
+    declared fields, so D02/D11/D17 had to be reported only in step 4 `flags`. Step 3 now reports
+    them against a declared TYPE_CONTRACT; rows are still promoted (a wrong value is not a wrong
+    shape), and step 4 still flags them for its quality assessment -- the same carry-forward
+    pattern it already uses for step 3's rejects. Verified: 18/18 unchanged, step 4 totals unchanged.
+  - **Contract fix 2:** the report Reader is now the compliance/audit reviewer the artifact actually
+    serves. The report already carried source hashes, reproduced scoring parameters and a per-score
+    trace chain; the declared reader now matches.
+  - **Contract fix 3:** `reports/templates/market-sentiment-analysis-part-1.md` cited
+    `logs/.../[RUN_ID].json` against the recipe's `logs/...-[DATE].json`. Recipe governs; template
+    corrected.
+  - **Gate 4's test was amended.** It previously passed if the script existed OR if a DEV-TODO
+    marker was still present in the recipe -- satisfiable by doing nothing. It now compiles all six.
+- **Design decisions worth recording:**
+  - **Gates 5 and 6 were deliberately not written.** Gate 5 would be a false clearance: no live,
+    external, or model call has ever run, and all three step-5 handoffs carry
+    `approved_for_live_action: false`. Gate 6 is step 6's own output, not yet a human decision.
+  - **Each gate record carries `residual_risk` and `voids_if`.** An audit reports what it found;
+    it does not say pass. Gate 3's record states plainly that shape validation cannot catch a
+    wrong-entity row.
+  - **The legacy node section was relabelled historical, not closed as done.** Claiming six more
+    scripts were written would have been false -- two of those nodes have no implementation at all.
+- **Open issues:**
+  - [DEFECT] **Gate 5's test is still self-satisfying** -- `test -f <approval>.json || rg "[TODO:
+    APPROVE]"`. Now that `logs/gate-decisions/` exists, the approval file is absent, so the test
+    falls through to the marker and reports a pass for a gate that has never been cleared. Same
+    class as the gate-4 defect fixed above; left alone because it was not in scope, but it is now
+    actively misleading and should be the next fix.
+  - [OPEN] `[TODO: DEFINE]` scoring constants: the weights, thresholds and both keyword lists are
+    ported verbatim from a source workflow that records no derivation, backtest or author.
+    Reproduced so a historical score can be recomputed, not endorsed. Needs a named human.
+  - [OPEN] `[TODO: APPROVE]` gate 5: live and model execution remain blocked.
+  - [OPEN] Live mode is unimplemented. Needs real fetchers, credentials from the environment, and
+    401/403/429/timeout/empty-200 handling the fixture corpus explicitly does not cover.
+  - [OPEN] The step-scoped `TYPE_CONTRACT` is not a promoted schema. If accepted it belongs in
+    `DATA_CONTRACT.md` with a named owner.
+  - [NOT COVERED] Wrong-entity signals, upstream HTTP failure modes, encoding defects, and
+    volume/pagination. The first of these is the class that reached a finished brief on 2026-08-26.
+  - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's 72
+    existing Python test files.
+
+## 2026-10-02 -- market-sentiment-analysis-part-1: both open TODOs closed, todos_open 0
+
+- **Recipe:** market-sentiment-analysis-part-1, v0.2.0, `status: RUNNABLE-SAMPLE`, `todos_open: 0`.
+  The steps 1-6 run itself is logged at `logs/RUN_LOG.md#2026-09-25`; this entry records the two
+  typed-TODO closures, the gate-4/5 test fixes, and the rebase onto the current `origin/main`.
+- **Inputs:** `recipes/market-sentiment-analysis-part-1.md`, `SNICKERDOODLE.md` (TODO closure table
+  and the verification stack), `logs/gate-decisions/`, and the step-5 scoring parameters as ported
+  from the named source workflow.
+- **Commands:**
+  - Full pipeline re-run, both fixture sets, after the rebase -> step 1 exit 0; clean set all exit 0;
+    defective set steps 3 and 4 exit 1 by design, steps 2/5/6 exit 0.
+  - All six gate tests as literally written -> all pass.
+  - Gate-5 test break-tested across four cases (see below).
+  - `node scripts/conformance.mjs` -> all conform.
+- **Outputs:**
+  - `logs/gate-decisions/market-sentiment-analysis-part-1-gate-5.json` -- **decision: deny**
+  - Recipe: both typed TODOs closed in place; `todos_open` 2 -> 0; gate-5 test amended twice.
+  - This entry.
+- **Result:** `todos_open: 0`. Neither closure loosened anything -- one defines what the numbers are,
+  the other refuses to switch anything on.
+- **TODO closures:**
+  - **[DEFINE] step 5 scoring constants -- closed by definition, not by endorsement.** The weights
+    (price 0.40 / news 0.30 / social 0.30), the label thresholds (65/55/45/35), the price score map
+    and both keyword lists are now restated in the recipe with their reasoning: they are inherited
+    byte-for-byte from the `Aggregate & Calculate Sentiment` node so any score the original ever
+    produced can be recomputed and audited. They carry **no claim** that the weighting or the word
+    lists are analytically sound. Step 5 continues to raise `scoring_params_unattributed` on every
+    run, and the report continues to file every score under inferred findings. Changing any value
+    requires a new `scoring_params` version, because a score is only reconstructable against the
+    parameter set that produced it.
+  - **[APPROVE] gate 5 -- closed by a logged decision, and the decision is DENY.** The closure rule
+    is "a logged gate decision", not "an approval", so a recorded refusal closes it honestly. Live
+    execution was declined on four grounds: step 2 hard-stops in live mode, so approval would
+    authorise a capability that does not exist; no credentials are configured, making approval a
+    statement of intent rather than a decision; the frozen corpus explicitly does not cover
+    401/403/429/timeout/empty-200, so live failure behaviour has never been exercised; and two of
+    the three declined actions are outward-facing and irreversible once sent. Four preconditions to
+    reopen are named in the record.
+- **Design decisions worth recording:**
+  - **Writing the deny record immediately re-created the defect it was meant to close.** The gate-5
+    test at that moment read `test -f <record>.json || ...`, so the presence of a *refusal* cleared
+    the gate exactly as an approval would. Caught on the same turn it was introduced. The test now
+    reads `approved_for_live_action` out of the record instead of checking that the file exists.
+    Break-tested four ways: no-call/no-record PASS; no-call/deny PASS; **live-call/deny FAIL**;
+    live-call/approve PASS.
+  - **A deny is a closure, not a loophole.** Recording "no" is what turns an unexamined gate into a
+    decided one. The alternative -- leaving the TODO open indefinitely -- is how a gate quietly
+    becomes decoration.
+  - **The branch was rebased onto `origin/main` by cherry-pick, not by `git rebase`.** `origin/main`
+    had moved to a lineage missing steps 4, 5 and 6, so replaying only the newer commits would have
+    produced a branch whose recipe claims six working steps and whose gate-4 record asserts all six
+    compile, while two scripts did not exist. Steps 4-5 were carried along deliberately.
+- **Open issues:**
+  - [OPEN] Live mode remains unimplemented, and is now explicitly declined rather than merely
+    pending. Reopening requires the four preconditions in the gate-5 record.
+  - [OPEN] The step-scoped `TYPE_CONTRACT` in steps 3 and 4 is still not a promoted schema. If
+    accepted it belongs in `DATA_CONTRACT.md` with a named owner.
+  - [OPEN] `attestation` stays null. `VERIFIED` needs an attestation bound to this recipe version,
+    and the SNICKERDOODLE format requires a mandatory "Did not test" section.
+  - [NOT COVERED] Wrong-entity signals, upstream HTTP failure modes, encoding defects, and
+    volume/pagination. The first is the class that reached a finished brief on 2026-08-26.
+  - [OPEN] No independent test suite covers the six scripts, and CI runs none of the repo's existing
+    Python test files.
+
+## 2026-10-02 -- attestation recorded for market-sentiment-analysis-part-1 v0.2.0 (status unchanged)
+
+- **Recipe:** market-sentiment-analysis-part-1 v0.2.0, `status: RUNNABLE-SAMPLE` (**unchanged**),
+  `attestation: logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md`.
+- **Inputs:** `SNICKERDOODLE.md` (attestation format + lifecycle table), the two prior RUN_LOG
+  entries for this recipe, `logs/gate-decisions/` (5 records), the generated audits and reports.
+- **Commands:** branch rebased onto the current `origin/main`; full pipeline re-run on both fixture
+  sets -> step 1 exit 0, clean all exit 0, defective steps 3/4 exit 1 by design; all six gate tests
+  pass; `node scripts/conformance.mjs` -> all conform.
+- **Outputs:** `logs/attestations/market-sentiment-analysis-part-1-v0.2.0.md`; `attestation:` path
+  recorded in the recipe frontmatter; this entry.
+- **Result:** An attestation exists, bound to v0.2.0, in the SNICKERDOODLE format: 17 tested rows --
+  of which **7 are deliberate attempts to break the thing** -- a mandatory Did-not-test section with
+  10 entries, and 9 defects that broke during testing and were fixed.
+- **Status NOT promoted to VERIFIED, deliberately.** The lifecycle is
+  DRAFT -> SPECIFIED -> RUNNABLE-SAMPLE -> RUNNABLE-LIVE -> VERIFIED. Reaching VERIFIED requires
+  passing through RUNNABLE-LIVE, whose gate test is "live run with a human clearing every gate".
+  Neither condition holds: **no live run has ever happened** (live mode is unimplemented and step 2
+  hard-stops before any fetch), and **not every gate is cleared** -- gate 5 is recorded
+  `decision: deny` with `approved_for_live_action: false`. Setting the status today would assert a
+  live run that never occurred and a clearance that was explicitly refused. Per the constitution,
+  "editing the status field without the evidence is a violation, not a promotion."
+- **What VERIFIED would require, in order:** implement live mode in step 2; add a second fixture set
+  covering 401/403/429/timeout/empty-200 with declared expected detections; reopen gate 5 against
+  the four preconditions in its record and log an approval naming the approver; perform a live run
+  with every gate cleared, logged (that earns RUNNABLE-LIVE); then record a **fresh** attestation
+  bound to the version that ran live, since any edit to the recipe or its scripts voids this one.
+- **Design decisions worth recording:**
+  - **The Did-not-test section is the load-bearing half.** It names live execution, whether the
+    score is correct, wrong-entity signals, HTTP failure modes, encoding defects, volume, the
+    untestable `redditMentions > 20` branch, the absence of any unit tests, cross-platform
+    behaviour, and interrupted runs. An empty one would have been the new "it works".
+  - **An attestation that cannot promote is still worth recording.** It fixes what was exercised, at
+    which version, with its boundary stated -- which is what makes the next one comparable.
+- **Open issues:**
+  - [OPEN] Live mode unimplemented and explicitly declined; see the gate-5 record.
+  - [OPEN] `TYPE_CONTRACT` in steps 3 and 4 is still step-scoped, not promoted to `DATA_CONTRACT.md`.
+  - [OPEN] No unit tests for the six scripts; CI runs none of the repo's existing Python tests.
+  - [NOT COVERED] Wrong-entity signals, HTTP failure modes, encoding defects, volume/pagination.
