@@ -20,7 +20,8 @@ from google.cloud import bigquery
 
 from claims_agent import ClaimsAgent
 from lineage_agent import LineageAgent
-
+from dotenv import load_dotenv
+load_dotenv()
 app = FastAPI(title="Patent Intelligence API")
 
 app.add_middleware(
