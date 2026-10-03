@@ -6,13 +6,13 @@ router = APIRouter()
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def view_dashboard():
-    # Connect to the persistent tracker built in Week 4
+    # Connect to the persistent tracker
     conn = sqlite3.connect("gatekeeper_logs.db")
     cursor = conn.cursor()
     
-    # Retrieve the latest 50 AI evaluations
+    # Query matching the EXACT columns defined in main.py's init_db()
     cursor.execute("""
-        SELECT id, timestamp, ai_claim, ground_truth, variance, verdict 
+        SELECT id, timestamp, claim_id, generated_claim, variance_type, verdict 
         FROM evaluation_logs 
         ORDER BY id DESC LIMIT 50
     """)
@@ -47,7 +47,7 @@ async def view_dashboard():
             <h1>Provenance Gatekeeper: Live Evaluation Ledger</h1>
             <table>
                 <tr>
-                    <th>ID</th><th>Timestamp</th><th>AI Claim</th><th>Ground Truth</th><th>Variance</th><th>Verdict</th>
+                    <th>ID</th><th>Timestamp</th><th>Claim ID</th><th>Generated Claim</th><th>Variance Type</th><th>Verdict</th>
                 </tr>
                 {rows}
             </table>

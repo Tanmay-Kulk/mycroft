@@ -1,15 +1,16 @@
 import requests
 
-API_URL = "http://localhost:8000/evaluate"
+# 1. FIXED: Point to the actual endpoint defined in main.py
+API_URL = "http://localhost:8000/verify"
 
-# Edge-case payloads designed to break the Gatekeeper's math logic
+# 2. FIXED: Match the keys expected by your ClaimRequest schema
 adversarial_payloads = [
-    {"claim": "$4,500,000.00", "truth": "4500000"},       # Commas and decimals
-    {"claim": "4.5M", "truth": "4500000"},                # Financial abbreviations
-    {"claim": "approx five million", "truth": "5000000"}, # Text-based numbers
-    {"claim": "N/A", "truth": "1000"},                    # Non-numeric text
-    {"claim": "null", "truth": "50"},                     # Null strings
-    {"claim": "DROP TABLE logs;", "truth": "100"},        # SQL injection attempt
+    {"claim_id": "STRESS-01", "generated_claim": "$4,500,000.00"},       
+    {"claim_id": "STRESS-02", "generated_claim": "4.5M"},                
+    {"claim_id": "STRESS-03", "generated_claim": "approx five million"}, 
+    {"claim_id": "STRESS-04", "generated_claim": "N/A"},                    
+    {"claim_id": "STRESS-05", "generated_claim": "null"},                     
+    {"claim_id": "STRESS-06", "generated_claim": "DROP TABLE logs;"}        
 ]
 
 print("COMMENCING ADVERSARIAL STRESS TEST...\n")
@@ -18,9 +19,14 @@ for i, payload in enumerate(adversarial_payloads):
     try:
         response = requests.post(API_URL, json=payload)
         status = response.status_code
-        result = response.json().get("verdict", "ERROR")
         
-        print(f"Test {i+1} | Claim: {payload['claim']:<20} | Status: {status} | Verdict: {result}")
+        # Extract the specific verdict or error message
+        if status == 200:
+            result = response.json().get("verdict", "UNKNOWN")
+        else:
+            result = response.json().get("detail", "HTTP ERROR")
+            
+        print(f"Test {i+1} | Claim: {payload['generated_claim']:<20} | Status: {status} | Result: {result}")
         
     except Exception as e:
-        print(f"Test {i+1} | Claim: {payload['claim']:<20} | FATAL CRASH: {e}")
+        print(f"Test {i+1} | Claim: {payload['generated_claim']:<20} | FATAL CRASH: {e}")

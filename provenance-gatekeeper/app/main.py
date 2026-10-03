@@ -5,8 +5,13 @@ from sentence_transformers import SentenceTransformer
 import sqlite3
 import requests
 import os
+# WEEK 5: Import the newly created dashboard module
+from . import dashboard
 
 app = FastAPI(title="Provenance Gatekeeper")
+
+# WEEK 5: Mount the dashboard router to the main app
+app.include_router(dashboard.router)
 
 # --- WEEK 1 & 2: Infrastructure & Data ---
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -83,7 +88,7 @@ def trigger_alert(claim_id: str, variance_type: str, explanation: str):
 
 # --- THE N8N WEBHOOK ---
 @app.post("/verify", response_model=VerificationVerdict)
-async def verify_claim(request: ClaimRequest):
+def verify_claim(request: ClaimRequest):
     try:
         # 1. Retrieve
         claim_embedding = model.encode(request.generated_claim).tolist()
