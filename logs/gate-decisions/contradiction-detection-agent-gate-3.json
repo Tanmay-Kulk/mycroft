@@ -1,0 +1,38 @@
+{
+  "decided_at": "2026-10-04",
+  "decided_by": {
+    "name": "Tanmay Kulkarni",
+    "role": "recipe contributor (Humanitarians AI fellow)"
+  },
+  "decision": "approve",
+  "decision_words": "D1 clear, D2 deny, D3 keep, D4 log",
+  "evidence_files": [
+    {
+      "path": "logs/contradiction-detection-agent/runs/sample-001-clean/step-3-validate-data-shape.json",
+      "sha256": "6eed8713e0376f20cf0d1a97949c2bd79a7182ae1adc4f0b82fc80c0ae61eb5d"
+    },
+    {
+      "path": "data/verified/contradiction-detection-agent/runs/sample-001-clean/sample-001-clean-audit.md",
+      "sha256": "816bfaea1ab519054dea512c84ac4c031fb434ca4e3cfc163ebc96c411fa71d7"
+    },
+    {
+      "path": "data/verified/contradiction-detection-agent/runs/sample-001-defective/sample-001-defective-audit.md",
+      "sha256": "725d778ccd43acaf70044761a368e4a88dde73de752a4f294e35da58ac89277e"
+    }
+  ],
+  "evidence_observed": "Clean run: 0 shape findings. Defective run: all 13 shape defects reported at their rows, the run halted; self-test 17/17 catalogued defects.",
+  "gate": 3,
+  "gate_name": "Data-shape gate",
+  "handoff_condition": "Every raw and verified output of the run parses, and step 3 reports ok.",
+  "human_capacity": "[PA]",
+  "mode": "sample",
+  "recipe": "recipes/contradiction-detection-agent.md",
+  "recipe_version": "0.2.0",
+  "reconfirmed": "2026-10-04 by Tanmay Kulkarni, same words, after wording-only edits to the recipe, scripts and corpus descriptions (detector behaviour, flags and fixture rows unchanged); evidence re-hashed",
+  "residual_risk": "Shape and listed quality checks only; it says nothing about whether the signals are true.",
+  "run": "sample-001-clean (and sample-001-defective, read for gate 3)",
+  "run_log": "logs/RUN_LOG.md#2026-10-04",
+  "scope": "This decision covers sample mode over the frozen synthetic corpus only.",
+  "voids_if": "Any edit to the recipe or its step, gate or parity scripts, any change to the fixture corpus, or a switch out of sample mode.",
+  "workflow": "Contradiction_detection_agent"
+}

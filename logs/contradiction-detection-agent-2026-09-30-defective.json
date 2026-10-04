@@ -1,0 +1,86 @@
+{
+  "duplicates": [],
+  "flags": [],
+  "gate_decisions": [
+    {
+      "approved_for_live_action": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
+      "gate": 1,
+      "name": "Source gate"
+    },
+    {
+      "approved_for_live_action": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
+      "gate": 2,
+      "name": "Scope gate"
+    },
+    {
+      "approved_for_live_action": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
+      "gate": 3,
+      "name": "Data-shape gate"
+    },
+    {
+      "approved_for_live_action": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
+      "gate": 4,
+      "name": "Script-readiness gate"
+    },
+    {
+      "approved_for_live_action": false,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "deny",
+      "gate": 5,
+      "name": "Approval gate"
+    },
+    {
+      "approved_for_live_action": null,
+      "decided_at": null,
+      "decided_by": null,
+      "decision": null,
+      "gate": 6,
+      "name": "Report gate"
+    }
+  ],
+  "generated_at": "2026-09-30T00:00:00+00:00",
+  "mode": "sample",
+  "raw_output_paths": [
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/"
+  ],
+  "records_seen": 65,
+  "rejects": [],
+  "report_path": "reports/generated/contradiction-detection-agent-2026-09-30-defective.md",
+  "run_id": "sample-001-defective",
+  "source_files": [
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/guidance-signals.json",
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/risk-admissions.json",
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/qa-pressure-map.json",
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/news-signals.json",
+    "data/raw/contradiction-detection-agent/runs/sample-001-defective/tech-stack-signals.json"
+  ],
+  "steps_completed": [
+    "verify-provenance",
+    "ingest-inputs"
+  ],
+  "stop_conditions": [
+    "guidance-signals: 0 parse error(s), 5 row(s) with shape findings",
+    "risk-admissions: 0 parse error(s), 2 row(s) with shape findings",
+    "qa-pressure-map: 1 parse error(s), 0 row(s) with shape findings",
+    "news-signals: 0 parse error(s), 3 row(s) with shape findings",
+    "tech-stack-signals: 0 parse error(s), 2 row(s) with shape findings"
+  ],
+  "todo_items": [],
+  "verified_output_paths": [
+    "data/verified/contradiction-detection-agent/runs/sample-001-defective/"
+  ],
+  "workflow": "contradiction-detection-agent"
+}
