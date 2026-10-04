@@ -1,7 +1,7 @@
 ---
 status: RUNNABLE-SAMPLE
 todos_open: 0
-last_gate: "gate-5 deny, 2026-10-04, logs/RUN_LOG.md#2026-10-04"
+last_gate: "gate-6 approve, 2026-10-04, logs/RUN_LOG.md#2026-10-04"
 attestation: null
 recipe_version: 0.2.0
 ---
@@ -19,7 +19,7 @@ recipe_version: 0.2.0
 > judgment (P1). Details worth knowing when reading the flags are under *Notes from porting*.
 >
 > **Why RUNNABLE-SAMPLE, and no further (2026-10-04).** The full sample run completes, conformance passes,
-> and the audits were generated and read. Gates 1-4 were cleared and gate 5 was denied by Tanmay Kulkarni,
+> and the audits were generated and read. Gates 1-4 and 6 were cleared and gate 5 was denied by Tanmay Kulkarni,
 > recorded in `logs/gate-decisions/` and `logs/RUN_LOG.md#2026-10-04`. Both typed TODOs are closed by those
 > decisions (`todos_open: 0`). RUNNABLE-LIVE is **not** claimed: live mode is denied, with the preconditions to
 > reopen it in the gate-5 record. `attestation: null` because VERIFIED needs live runs first.
@@ -94,6 +94,8 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
    ever clearing the gate for live action.
 6. Report gate: Agent log and human report are written with the required fields and sections. Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 6`. Human capacity: [TO].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now checks the run's dated report for every contract section and its agent log for every contract field. Previous test, kept for the record: `test -f logs/contradiction-detection-agent-[DATE].json && test -f reports/generated/contradiction-detection-agent-[DATE].md`.
+   DECIDED 2026-10-04 by Tanmay Kulkarni ("D5 approve"): the reports and agent logs of both sample runs were read and
+   approved. Recorded in `logs/gate-decisions/contradiction-detection-agent-gate-6.json`, which hashes the four files.
 
 ## Steps
 

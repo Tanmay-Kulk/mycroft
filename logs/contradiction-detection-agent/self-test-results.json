@@ -1,6 +1,6 @@
 {
-  "as_expected": 38,
-  "checks": 38,
+  "as_expected": 42,
+  "checks": 42,
   "live_call_performed": false,
   "network_access": "none",
   "results": [
@@ -260,7 +260,7 @@
       "as_expected": true,
       "expected": "byte-identical outputs",
       "ran": "the full clean run, twice, in two fresh trees",
-      "saw": "62 files, digests b3978fca8620710a / b3978fca8620710a",
+      "saw": "62 files, digests 864b914eb171bc9e / 864b914eb171bc9e",
       "section": "E"
     },
     {
@@ -269,6 +269,34 @@
       "ran": "frontmatter todos_open against the open typed TODOs in the recipe",
       "saw": "declared 0, found 0: []",
       "section": "F"
+    },
+    {
+      "as_expected": true,
+      "expected": "equal",
+      "ran": "clean run: rejects in the report against rejects in the agent log",
+      "saw": "report 0, log 0",
+      "section": "G"
+    },
+    {
+      "as_expected": true,
+      "expected": "exactly the gates with no decision record: []",
+      "ran": "clean run: gates the recommendation asks a human to decide",
+      "saw": "[] (All six gates are decided for this sample run; nothing furth...)",
+      "section": "G"
+    },
+    {
+      "as_expected": true,
+      "expected": "equal",
+      "ran": "defective run: rejects in the report against rejects in the agent log",
+      "saw": "report 13, log 13",
+      "section": "G"
+    },
+    {
+      "as_expected": true,
+      "expected": "'Not checked' in the report and listed in the log, not reported as 0",
+      "ran": "defective run (stopped at step 3): what the report and log say about step-4 checks",
+      "saw": "duplicates: 'Not checked: step 4 (quality) did not ru'; log not_checked: ['duplicates', 'rows older than the declared lookback', 'quality rejects']",
+      "section": "G"
     }
   ],
   "unexpected": 0,

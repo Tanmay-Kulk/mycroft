@@ -52,9 +52,9 @@
     },
     {
       "approved_for_live_action": null,
-      "decided_at": null,
-      "decided_by": null,
-      "decision": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
       "gate": 6,
       "name": "Report gate"
     }
@@ -67,7 +67,7 @@
   },
   "live_call_performed": false,
   "network_access": "none",
-  "next_decision": "Read the flags and the audit, then decide gates 1-4 for this sample run; gate 5 (live) is a separate decision.",
+  "next_decision": "All six gates are decided for this sample run; nothing further is pending in sample mode. Live mode is denied (gate 5); reopening it is a separate decision.",
   "node": "Produce human report",
   "node_type": "recipe-step",
   "outputs": {

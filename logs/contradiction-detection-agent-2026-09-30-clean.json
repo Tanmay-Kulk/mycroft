@@ -136,15 +136,16 @@
     },
     {
       "approved_for_live_action": null,
-      "decided_at": null,
-      "decided_by": null,
-      "decision": null,
+      "decided_at": "2026-10-04",
+      "decided_by": "Tanmay Kulkarni",
+      "decision": "approve",
       "gate": 6,
       "name": "Report gate"
     }
   ],
   "generated_at": "2026-09-30T00:00:00+00:00",
   "mode": "sample",
+  "not_checked": [],
   "raw_output_paths": [
     "data/raw/contradiction-detection-agent/runs/sample-001-clean/"
   ],

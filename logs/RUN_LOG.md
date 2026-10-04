@@ -580,3 +580,24 @@ workflow changes.
   - [OPEN] Gate 6 decision.
   - [OPEN] Live mode: the four preconditions in the gate-5 record.
   - [NOT COVERED] Live behaviour, LLM output, and live failure modes.
+
+## 2026-10-04 -- contradiction-detection-agent: report step fixed during gate-6 review; gate 6 approved
+
+- **Recipe:** `recipes/contradiction-detection-agent.md` v0.2.0, status RUNNABLE-SAMPLE (unchanged), `last_gate` now gate 6.
+- **Found while reviewing the reports for gate 6** (in this recipe's own report step, `scripts/tools/contradiction-detection-agent-produce-human-report.py`):
+  - on the stopped (defective) run the report counted 13 rejects and the agent log 0, because the log counted step-4 rejects only;
+  - checks a stopped run never reached (duplicates, the lookback) were shown as 0 instead of "not checked";
+  - the clean report's recommendation still named gates 1-4, which were already decided.
+- **Changes:** one reject list now feeds both the report and the log; unchecked items say "not checked" (and the log lists them in `not_checked`); the recommendation is built from the gate records. New self-test section G checks all three and was confirmed to fail on the previous version (3 unexpected).
+- **Commands:**
+  - `python3 scripts/tools/contradiction-detection-agent-run-sample.py --fixture-set clean` and `--fixture-set defective`: as before (clean exit 0, 13 flags; defective stops at step 3 by design)
+  - `python3 scripts/tools/contradiction-detection-agent-parity-check.py`: exit 0, 16/16
+  - `python3 scripts/tools/contradiction-detection-agent-self-test.py`: exit 0, 42/42 checks as expected
+  - `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 1` … `--gate 6`: all six pass
+  - `node scripts/conformance.mjs`: all conform; `node scripts/manifest-check.mjs`: passed
+- **Gate decisions:** Tanmay Kulkarni, 2026-10-04.
+  - "D1 clear" reconfirmed after the fix; gate 3 and 4 evidence re-hashed.
+  - Gate 6 **approved** ("D5 approve"): `logs/gate-decisions/contradiction-detection-agent-gate-6.json`, hashing both reports and both agent logs.
+- **Open issues:**
+  - [OPEN] Live mode: the four preconditions in the gate-5 record (needs live data access and a new decision by a named human).
+  - [NOT COVERED] Live behaviour, LLM output, and live failure modes.

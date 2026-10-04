@@ -44,8 +44,8 @@ def reading_note(f: dict, flags: list) -> str:
         out.append("This pattern's input is a repeated topic or a pressure score of 7 or more, so 'evaded' "
                    "reads best as 'asked repeatedly or under pressure'.")
     if f["pattern_name"] == "Risk Admission vs News Coverage Gap":
-        out.append("News is matched to a risk by comparing tag text, so tags written differently "
-                   "('supply chain', 'supply_chain') don't match. Worth checking the coverage by hand.")
+        out.append("News is matched to a risk by comparing tag text, so the same topic written differently "
+                   "(with a space instead of an underscore, say) doesn't match. Worth checking the coverage by hand.")
     if f["pattern_id"] == 6 and any(g["pattern_id"] == 1 and g["ticker"] == f["ticker"] and g["claim_a_id"] == f["claim_a_id"]
                                      for g in flags):
         out.append("The same guidance claim also raised a Pattern 1 flag, so these two flags describe one "
@@ -105,6 +105,14 @@ def main() -> int:
     shape = [(src["source_name"], rf) for src in s3.get("sources", []) for rf in src.get("row_findings", [])]
     parse = [(src["source_name"], e) for src in s3.get("sources", []) for e in src.get("parse_errors", [])]
     flags = [f for d in dets for f in d["contradiction_flags"]]
+    # One list of everything withheld, used by both the report and the agent log, so the two can't disagree.
+    all_rejects = ([{"step": 3, "source": src, "id": None, "reason": f"unparseable source: {e}"} for src, e in parse]
+                   + [{"step": 3, "source": src, "id": rf.get("id"),
+                       "reason": "; ".join(x["problem"] + (f" on {x['field']}" if x.get("field") else "") for x in rf["findings"])}
+                      for src, rf in shape]
+                   + [{"step": 4, "source": r["source"], "id": r["id"], "reason": r["reason"]} for r in rejects])
+    # What a stopped run never examined, said plainly rather than reported as zero.
+    not_checked = [] if s4 else ["duplicates", "rows older than the declared lookback", "quality rejects"]
 
     # expected vs actual (sample corpus only)
     comparison = []
@@ -129,12 +137,20 @@ def main() -> int:
     report_path = ROOT / f"reports/generated/{WORKFLOW_SLUG}-{date}-{fset}.md"
     log_path = ROOT / f"logs/{WORKFLOW_SLUG}-{date}-{fset}.json"
     audit_path = ROOT / f"data/verified/{WORKFLOW_SLUG}/runs/{run}/{run}-audit.md"
-    next_decision = ("Read the shape findings and fix the sources; detection did not run on this set." if stopped
-                     else "Read the flags and the audit, then decide gates 1-4 for this sample run; gate 5 (live) is a separate decision.")
+    pending = [f"{g['gate']} ({g['name']})" for g in gate_results if not g["decision"]]
+    if stopped:
+        next_decision = "Read the shape findings and fix the sources; detection did not run on this set."
+    elif pending:
+        next_decision = f"Read the flags and the audit, then decide gate(s) {', '.join(pending)} for this sample run."
+    else:
+        next_decision = "All six gates are decided for this sample run; nothing further is pending in sample mode."
+    if gate_results[4]["decision"] == "deny":
+        next_decision += " Live mode is denied (gate 5); reopening it is a separate decision."
+
 
     # ── agent log (contract fields) ───────────────────────────────────────────────────────────────────
     agent_log = {"workflow": WORKFLOW_SLUG, "run_id": run, "mode": env["mode"], "steps_completed": completed,
-                 "records_seen": records_seen, "rejects": rejects, "duplicates": duplicates,
+                 "records_seen": records_seen, "rejects": all_rejects, "duplicates": duplicates, "not_checked": not_checked,
                  "flags": [{"flag_id": f["flag_id"], "pattern_id": f["pattern_id"], "severity": f["severity"],
                             "ticker": f["ticker"], "requires_human_review": f["requires_human_review"]} for f in flags],
                  "stop_conditions": [c for _, cs in stopped for c in (cs or [])], "todo_items": todos,
@@ -173,7 +189,8 @@ def main() -> int:
     for r in rejects:
         A.append(f"- **{r['source']}** `{r['id']}`: {r['reason']}")
     A += ["", "## Kept, but worth a human look", ""]
-    A += [f"- **{r['source']}** `{r['id']}` dated {r['date']}: {r['note']}" for r in stale] or ["Nothing."]
+    A += ([f"- **{r['source']}** `{r['id']}` dated {r['date']}: {r['note']}" for r in stale] or ["Nothing."]) if s4 else \
+         ["Not checked: step 4 (quality) did not run, so duplicates and rows older than the lookback were not looked for."]
     if manifest and fset == "defective":
         n3 = sum(1 for d in manifest["defects"] if d["expected_detection"]["step"] == 3)
         n4 = len(manifest["defects"]) - n3
@@ -214,9 +231,11 @@ def main() -> int:
     R += ["", "## Steps completed", ""] + [f"- {i + 1}. {s}: {'completed' if s in completed else 'STOPPED' if any(s == x for x, _ in stopped) else 'not run'}"
                                            for i, s in enumerate(STEPS[:5])]
     R += ["", "## Records seen", "", f"{records_seen} rows across {len(s2.get('sources', []))} sources (details in the audit).",
-          "", "## Rejects", "", f"{len(rejects) + len(shape) + len(parse)} (shape findings {len(shape)}, unparseable sources {len(parse)}, "
-          f"quality rejects {len(rejects)}). Each is listed with its reason in the audit.", "",
-          "## Duplicates", "", f"{len(duplicates)} (the later copy withheld in each case).", "", "## Flags", ""]
+          "", "## Rejects", "", f"{len(all_rejects)} (shape findings {len(shape)}, unparseable sources {len(parse)}, "
+          + (f"quality rejects {len(rejects)})." if s4 else "quality rejects not checked: step 4 did not run).")
+          + " Each is listed with its reason in the audit and the agent log.", "",
+          "## Duplicates", "", f"{len(duplicates)} (the later copy withheld in each case)." if s4 else
+          "Not checked: step 4 (quality) did not run, so duplicates were not looked for.", "", "## Flags", ""]
     if flags:
         R += ["| Company | Pattern | Severity | What disagrees | Reading note |", "|---|---|---|---|---|"]
         R += [f"| {f['ticker']} | {f['pattern_id']}. {f['pattern_name']} | {f['severity']} | {f['conflict_description']} | "
@@ -227,9 +246,11 @@ def main() -> int:
     R += ["", "## Human approvals", "", "Recorded gate decisions are listed above. Nothing in this run was approved by a machine.",
           "", "## Verified findings", "",
           "- Each flag is a **detected disagreement between two named sources**, computed by the ported detector, "
-          "whose output matches the original workflow's JavaScript on every sample company (parity check).",
-          f"- {len(stale)} row(s) older than the declared lookback were used, as the original queries select without a date filter." if stale else
-          "- No evidence older than the declared lookback was used.", "", "## Inferred findings", "",
+          "whose output matches the original workflow's JavaScript on every sample company (parity check)." if dets else
+          "- None: detection did not run on this set.",
+          ("- Not checked: step 4 did not run, so the age of the evidence was not examined." if not s4 else
+           f"- {len(stale)} row(s) older than the declared lookback were used, as the original queries select without a date filter." if stale else
+           "- No evidence older than the declared lookback was used."), "", "## Inferred findings", "",
           "None. The optional LLM review (the original's analyst memo, plausibility and relevance scores) was prepared "
           "as a handoff and **not sent**; it needs a gate-5 approval naming a human.", "", "## Decision recommendation", "",
           next_decision, ""]

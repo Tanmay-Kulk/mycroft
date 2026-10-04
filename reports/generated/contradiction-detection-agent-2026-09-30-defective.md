@@ -37,7 +37,7 @@ Find places where a company's own statements and the outside signals about it di
 | 3. Data-shape gate | approve | Tanmay Kulkarni | 2026-10-04 |
 | 4. Script-readiness gate | approve | Tanmay Kulkarni | 2026-10-04 |
 | 5. Approval gate | deny | Tanmay Kulkarni | 2026-10-04 |
-| 6. Report gate | not yet decided | — | — |
+| 6. Report gate | approve | Tanmay Kulkarni | 2026-10-04 |
 
 ## Steps completed
 
@@ -53,11 +53,11 @@ Find places where a company's own statements and the outside signals about it di
 
 ## Rejects
 
-13 (shape findings 12, unparseable sources 1, quality rejects 0). Each is listed with its reason in the audit.
+13 (shape findings 12, unparseable sources 1, quality rejects not checked: step 4 did not run). Each is listed with its reason in the audit and the agent log.
 
 ## Duplicates
 
-0 (the later copy withheld in each case).
+Not checked: step 4 (quality) did not run, so duplicates were not looked for.
 
 ## Flags
 
@@ -73,8 +73,8 @@ Recorded gate decisions are listed above. Nothing in this run was approved by a 
 
 ## Verified findings
 
-- Each flag is a **detected disagreement between two named sources**, computed by the ported detector, whose output matches the original workflow's JavaScript on every sample company (parity check).
-- No evidence older than the declared lookback was used.
+- None: detection did not run on this set.
+- Not checked: step 4 did not run, so the age of the evidence was not examined.
 
 ## Inferred findings
 
@@ -82,4 +82,4 @@ None. The optional LLM review (the original's analyst memo, plausibility and rel
 
 ## Decision recommendation
 
-Read the shape findings and fix the sources; detection did not run on this set.
+Read the shape findings and fix the sources; detection did not run on this set. Live mode is denied (gate 5); reopening it is a separate decision.

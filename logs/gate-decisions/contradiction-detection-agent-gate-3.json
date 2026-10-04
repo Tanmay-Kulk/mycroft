@@ -17,7 +17,7 @@
     },
     {
       "path": "data/verified/contradiction-detection-agent/runs/sample-001-defective/sample-001-defective-audit.md",
-      "sha256": "725d778ccd43acaf70044761a368e4a88dde73de752a4f294e35da58ac89277e"
+      "sha256": "6182350207324dc9f57784aa1fedfb97f7bada04e2c472708c004139d36521d3"
     }
   ],
   "evidence_observed": "Clean run: 0 shape findings. Defective run: all 13 shape defects reported at their rows, the run halted; self-test 17/17 catalogued defects.",
@@ -28,7 +28,7 @@
   "mode": "sample",
   "recipe": "recipes/contradiction-detection-agent.md",
   "recipe_version": "0.2.0",
-  "reconfirmed": "2026-10-04 by Tanmay Kulkarni, same words, after wording-only edits to the recipe, scripts and corpus descriptions (detector behaviour, flags and fixture rows unchanged); evidence re-hashed",
+  "reconfirmed": "2026-10-04 by Tanmay Kulkarni (\"D1 clear\"), after the report step was fixed during the gate-6 review (report and agent log now agree on rejects; unchecked items say 'not checked'; recommendation built from the gate records); evidence re-hashed",
   "residual_risk": "Shape and listed quality checks only; it says nothing about whether the signals are true.",
   "run": "sample-001-clean (and sample-001-defective, read for gate 3)",
   "run_log": "logs/RUN_LOG.md#2026-10-04",

@@ -29,7 +29,7 @@
     },
     {
       "path": "scripts/tools/contradiction-detection-agent-produce-human-report.py",
-      "sha256": "9bacc174db1f8f9a0f95e66a25ec328b0e1ada8d0351a905f526daada8593269"
+      "sha256": "3923f149a5b0062b6b9fac253c240794559c434b566ab7db84aabdd1cb6191fa"
     },
     {
       "path": "scripts/tools/contradiction-detection-agent-run-approved-tools.py",
@@ -48,7 +48,7 @@
   "mode": "sample",
   "recipe": "recipes/contradiction-detection-agent.md",
   "recipe_version": "0.2.0",
-  "reconfirmed": "2026-10-04 by Tanmay Kulkarni, same words, after wording-only edits to the recipe, scripts and corpus descriptions (detector behaviour, flags and fixture rows unchanged); evidence re-hashed",
+  "reconfirmed": "2026-10-04 by Tanmay Kulkarni (\"D1 clear\"), after the report step was fixed during the gate-6 review (report and agent log now agree on rejects; unchecked items say 'not checked'; recommendation built from the gate records); evidence re-hashed",
   "residual_risk": "Existence, compilation and matching the original only; it says nothing about whether the six patterns are good signals (see the recipe's Notes from porting).",
   "run": "sample-001-clean (and sample-001-defective, read for gate 3)",
   "run_log": "logs/RUN_LOG.md#2026-10-04",

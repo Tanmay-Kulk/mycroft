@@ -18,6 +18,8 @@ Sections:
   D. Gates: every gate test of this recipe fails on an empty tree.
   E. Determinism: two clean runs produce byte-identical outputs.
   F. The recipe's frontmatter todos_open equals its open typed TODOs.
+  G. Report and agent log agree: same reject count, nothing unchecked reported as zero, and the
+     recommendation names exactly the gates that have no decision record.
 """
 
 from __future__ import annotations
@@ -207,6 +209,34 @@ def section_g() -> None:
            "equal", bool(declared) and int(declared.group(1)) == len(open_items))
 
 
+def section_h() -> None:
+    t = tree()
+    shutil.copytree(ROOT / "logs/gate-decisions", t / "logs/gate-decisions", dirs_exist_ok=True)
+    undecided = [g for g in range(1, 7) if not (t / f"logs/gate-decisions/{WORKFLOW_SLUG}-gate-{g}.json").exists()]
+    date = json.loads((t / ENVELOPE).read_text(encoding="utf-8"))["frozen_clock"][:10]
+    for fset in ("clean", "defective"):
+        subprocess.run([sys.executable, str(t / f"scripts/tools/{WORKFLOW_SLUG}-run-sample.py"), "--fixture-set", fset],
+                       capture_output=True, text=True, cwd=t)
+        rep_text = (t / f"reports/generated/{WORKFLOW_SLUG}-{date}-{fset}.md").read_text(encoding="utf-8")
+        log = json.loads((t / f"logs/{WORKFLOW_SLUG}-{date}-{fset}.json").read_text(encoding="utf-8"))
+        m = re.search(r"## Rejects\n\n(\d+) ", rep_text)
+        n_report = int(m.group(1)) if m else None
+        record("G", f"{fset} run: rejects in the report against rejects in the agent log",
+               f"report {n_report}, log {len(log['rejects'])}", "equal", n_report == len(log["rejects"]))
+        rec = re.search(r"## Decision recommendation\n\n(.*)", rep_text).group(1)
+        if fset == "defective":
+            dup = re.search(r"## Duplicates\n\n(.*)", rep_text).group(1)
+            record("G", "defective run (stopped at step 3): what the report and log say about step-4 checks",
+                   f"duplicates: {dup[:40]!r}; log not_checked: {log.get('not_checked')}",
+                   "'Not checked' in the report and listed in the log, not reported as 0",
+                   dup.startswith("Not checked") and bool(log.get("not_checked")))
+        else:
+            named = sorted(int(x) for x in re.findall(r"(\d) \(", rec))
+            record("G", "clean run: gates the recommendation asks a human to decide", f"{named} ({rec[:60]}...)",
+                   f"exactly the gates with no decision record: {undecided}", named == undecided)
+    shutil.rmtree(t)
+
+
 def section_f() -> None:
     hashes = []
     for _ in range(2):
@@ -234,6 +264,7 @@ def main() -> int:
     section_d()
     section_f()
     section_g()
+    section_h()
     bad = [r for r in RESULTS if not r["as_expected"]]
     summary = {"workflow": WORKFLOW_SLUG, "checks": len(RESULTS), "as_expected": len(RESULTS) - len(bad),
                "unexpected": len(bad), "results": RESULTS, "network_access": "none", "live_call_performed": False}

@@ -37,7 +37,7 @@ Find places where a company's own statements and the outside signals about it di
 | 3. Data-shape gate | approve | Tanmay Kulkarni | 2026-10-04 |
 | 4. Script-readiness gate | approve | Tanmay Kulkarni | 2026-10-04 |
 | 5. Approval gate | deny | Tanmay Kulkarni | 2026-10-04 |
-| 6. Report gate | not yet decided | — | — |
+| 6. Report gate | approve | Tanmay Kulkarni | 2026-10-04 |
 
 ## Steps completed
 
@@ -53,7 +53,7 @@ Find places where a company's own statements and the outside signals about it di
 
 ## Rejects
 
-0 (shape findings 0, unparseable sources 0, quality rejects 0). Each is listed with its reason in the audit.
+0 (shape findings 0, unparseable sources 0, quality rejects 0). Each is listed with its reason in the audit and the agent log.
 
 ## Duplicates
 
@@ -68,11 +68,11 @@ Find places where a company's own statements and the outside signals about it di
 | FXC | 6. Guidance Optimism vs Negative News Momentum | HIGH | Management projects high-confidence strengthened guidance against sustained negative news momentum | The same guidance claim also raised a Pattern 1 flag, so these two flags describe one disagreement. |
 | FXD | 1. Sentiment vs Guidance Direction | HIGH | Guidance STRENGTHENED on call but news sentiment is NEGATIVE |  |
 | FXE | 2. Risk Admission vs Coverage Tone | HIGH | High-severity risk "regulation" admitted on call; matching news has POSITIVE sentiment |  |
-| FXF | 2. Risk Admission vs News Coverage Gap | MEDIUM | High-severity risk "supply chain" admitted on call but absent from news coverage | News is matched to a risk by comparing tag text, so tags written differently ('supply chain', 'supply_chain') don't match. Worth checking the coverage by hand. |
+| FXF | 2. Risk Admission vs News Coverage Gap | MEDIUM | High-severity risk "supply chain" admitted on call but absent from news coverage | News is matched to a risk by comparing tag text, so the same topic written differently (with a space instead of an underscore, say) doesn't match. Worth checking the coverage by hand. |
 | FXG | 3. QA Evasion vs Analyst Confidence | MEDIUM | Management evaded 2 high-pressure Q&A topics but analyst coverage is positive | This pattern's input is a repeated topic or a pressure score of 7 or more, so 'evaded' reads best as 'asked repeatedly or under pressure'. |
 | FXJ | 4. Tech Stack Decline vs Positive Guidance | HIGH | Management projects strengthened guidance but engineering footprint shows decline |  |
 | FXL | 5. Engineering Burst vs Undisclosed Pivot | HIGH | Significant engineering burst detected but no corresponding management disclosure on earnings call |  |
-| FXP | 2. Risk Admission vs News Coverage Gap | MEDIUM | High-severity risk "cybersecurity" admitted on call but absent from news coverage | News is matched to a risk by comparing tag text, so tags written differently ('supply chain', 'supply_chain') don't match. Worth checking the coverage by hand. |
+| FXP | 2. Risk Admission vs News Coverage Gap | MEDIUM | High-severity risk "cybersecurity" admitted on call but absent from news coverage | News is matched to a risk by comparing tag text, so the same topic written differently (with a space instead of an underscore, say) doesn't match. Worth checking the coverage by hand. |
 | FXP | 3. QA Evasion vs Analyst Confidence | MEDIUM | Management evaded 2 high-pressure Q&A topics but analyst coverage is positive | This pattern's input is a repeated topic or a pressure score of 7 or more, so 'evaded' reads best as 'asked repeatedly or under pressure'. |
 | FXQ | 1. Sentiment vs Guidance Direction | HIGH | Guidance for "unit volumes" marked WEAKENED but news sentiment is POSITIVE |  |
 | FXR | 1. Sentiment vs Guidance Direction | HIGH | Guidance for "subscription margin" marked WEAKENED but news sentiment is POSITIVE |  |
@@ -96,4 +96,4 @@ None. The optional LLM review (the original's analyst memo, plausibility and rel
 
 ## Decision recommendation
 
-Read the flags and the audit, then decide gates 1-4 for this sample run; gate 5 (live) is a separate decision.
+All six gates are decided for this sample run; nothing further is pending in sample mode. Live mode is denied (gate 5); reopening it is a separate decision.

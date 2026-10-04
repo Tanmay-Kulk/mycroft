@@ -35,7 +35,7 @@
 
 ## Kept, but worth a human look
 
-Nothing.
+Not checked: step 4 (quality) did not run, so duplicates and rows older than the lookback were not looked for.
 
 ## Catalogued defects in this corpus
 
