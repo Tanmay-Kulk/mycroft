@@ -32,6 +32,7 @@
   "mode": "sample",
   "recipe": "recipes/contradiction-detection-agent.md",
   "recipe_version": "0.2.0",
+  "reconfirmed": "2026-10-04 by Tanmay Kulkarni (\"D1–D5 confirmed\"), after an additive edit to the recipe that keeps the original recipe's wording for the record (gates 1 and 4, the six closed [TODO: DEV] notes); evidence files unchanged",
   "residual_risk": "Covers the report and log for the two sample runs only; it says nothing about live runs or about whether the flags are right about any real company.",
   "run": "sample-001-clean and sample-001-defective",
   "run_log": "logs/RUN_LOG.md#2026-10-04",

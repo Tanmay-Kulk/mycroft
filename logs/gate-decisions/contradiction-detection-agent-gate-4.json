@@ -48,7 +48,10 @@
   "mode": "sample",
   "recipe": "recipes/contradiction-detection-agent.md",
   "recipe_version": "0.2.0",
-  "reconfirmed": "2026-10-04 by Tanmay Kulkarni (\"D1 clear\"), after the report step was fixed during the gate-6 review (report and agent log now agree on rejects; unchecked items say 'not checked'; recommendation built from the gate records); evidence re-hashed",
+  "reconfirmed": [
+    "2026-10-04 by Tanmay Kulkarni (\"D1 clear\"), after the report step was fixed during the gate-6 review (report and agent log now agree on rejects; unchecked items say 'not checked'; recommendation built from the gate records); evidence re-hashed",
+    "2026-10-04 by Tanmay Kulkarni (\"D1–D5 confirmed\"), after an additive edit to the recipe that keeps the original recipe's wording for the record (gates 1 and 4, the six closed [TODO: DEV] notes); evidence files unchanged"
+  ],
   "residual_risk": "Existence, compilation and matching the original only; it says nothing about whether the six patterns are good signals (see the recipe's Notes from porting).",
   "run": "sample-001-clean (and sample-001-defective, read for gate 3)",
   "run_log": "logs/RUN_LOG.md#2026-10-04",

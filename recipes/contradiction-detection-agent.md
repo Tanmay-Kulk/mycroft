@@ -79,12 +79,14 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
 
 1. Source gate: Every declared source is present, parses, and is the one this recipe describes (the node table matches the workflow; every fixture matches its frozen SHA-256). Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 1`. Human capacity: [TO].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now requires step 1's report for the run to say ok and a fresh provenance check to find no drift since. Previous test, kept for the record: `test -f "recipes/contradiction-detection-agent.md" && rg -n "\[TODO: DEFINE]" "recipes/contradiction-detection-agent.md" || true`.
+   Previous condition, kept for the record: All required source paths are present or explicitly marked with a typed TODO.
 2. Scope gate: The run declares `sample` mode or an approved live mode before ingest begins. Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 2`. Human capacity: [PF].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now checks that the envelope declares sample mode, or live mode with a gate-5 approval, as well as parsing. Previous test, kept for the record: `python3 -m json.tool data/raw/contradiction-detection-agent/run-envelope.json`.
 3. Data-shape gate: Every raw and verified JSON output parses before downstream scripts run. Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 3`. Human capacity: [PA].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now requires every output of the run to parse and step 3 to report ok. Previous test, kept for the record: `find data/raw/contradiction-detection-agent data/verified/contradiction-detection-agent -name "*.json" -print -exec python3 -m json.tool {} \;`.
 4. Script-readiness gate: Every one of the six step scripts exists and compiles, and the detector matches the original workflow's JavaScript. Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 4`. Human capacity: [IJ].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now requires all six step scripts to exist and compile, and the detector to match the original JavaScript (parity check). Previous test, kept for the record: `test -f scripts/ingest/contradiction-detection-agent-ingest-inputs.py || rg --fixed-strings "[TODO: DEV]" "recipes/contradiction-detection-agent.md"`.
+   Previous condition, kept for the record: Every step script exists or is represented by a typed development TODO.
 5. Approval gate: Live network calls, external writes, credentials, production databases, emails, dashboards, publishing, or model calls with sensitive data require an approval record. Test: `python3 scripts/tools/contradiction-detection-agent-gate-check.py --gate 5`. Human capacity: [EI].
    Updated 2026-10-04 so the test checks this gate's condition directly and can fail. The test now requires a decision record naming a human, and fails if any artifact records a live call that decision did not approve. Previous test, kept for the record: `test -f logs/gate-decisions/contradiction-detection-agent-approval.json || rg --fixed-strings "[TODO: APPROVE]" "recipes/contradiction-detection-agent.md"`.
    DECIDED 2026-10-04 by Tanmay Kulkarni ("D2 deny"): **not approved.** Recorded in
@@ -101,30 +103,35 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
 
 1. Step name: Verify provenance. Labor: AI with Human gate.
    Script called: `scripts/tools/contradiction-detection-agent-verify-provenance.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: the recipe, the original workflow JSON, the run envelope, the fixture manifest (with a SHA-256 per fixture) and the gate-5 record. Output: the fields below plus `findings_digest`. Errors: a missing or unparseable source, a node-table mismatch between this recipe and the workflow, or a fixture changed since the manifest froze it stops the run (exit 1). Evidence: self-test section C.
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: workflow, source_paths, exists, parsed_ok, approval_state, checked_at.
    Where output goes: `logs/`
 2. Step name: Ingest declared inputs. Labor: AI with Human gate.
    Script called: `scripts/ingest/contradiction-detection-agent-ingest-inputs.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: `run-envelope.json` and the fixture set it names. Output: one raw envelope per source (records carried verbatim, SHA-256, `fetched_at` from the frozen clock). Errors: missing envelope or source, or live mode, stop with exit 1; live mode is unimplemented by design and names the credentials it would need. An unparseable file is carried through, not dropped. Evidence: self-test section C.
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: records, source_name, source_type, fetched_at, sample_mode, rejects.
    Where output goes: `data/raw/contradiction-detection-agent/`
 3. Step name: Validate data shape. Labor: AI with Human gate.
    Script called: `scripts/gigo/contradiction-detection-agent-validate-data-shape.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: step 2's raw envelopes. Output: shape-clean rows promoted per source, every finding listed (missing or null required field, type error, value outside its allowed set or bounds, row not an object, unparseable source). Errors: all findings are reported first, clean rows still promoted, then status stop (exit 1). Field contracts are the original SQL SELECT lists. Evidence: self-test section A (13 shape defects, 0 false findings).
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: record_count, required_fields_present, missing_fields, parse_errors, schema_version.
    Where output goes: `data/verified/contradiction-detection-agent/`
 4. Step name: Transform and quality check. Labor: AI with Human gate.
    Script called: `scripts/gigo/contradiction-detection-agent-transform-quality-check.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: step 3's verified rows and the envelope. Output: one bundle per declared company holding exactly what the original queries return (same WHERE, ORDER BY, LIMIT). Withheld with reasons: duplicates, `schema_valid` not true, undeclared tickers. Reported but kept, as the original keeps them: rows older than the declared lookback and rows cut by a LIMIT. Errors: a missing source stops the step, and it writes no bundles. Evidence: self-test sections A and C.
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: verified_records, record_count, duplicates, rejects, flags, quality_notes.
    Where output goes: `data/verified/contradiction-detection-agent/`
 5. Step name: Run approved tools. Labor: AI with Human gate.
    Script called: `scripts/tools/contradiction-detection-agent-run-approved-tools.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: step 4's bundles. Output: per company, the six-pattern detection (flags, pattern results, skipped patterns, overall confidence level) and the original's LLM prompt as an approval-required handoff (`approved_for_live_action: false`), never sent. Errors: no bundles, or any mode but sample, stop with exit 1. Evidence: parity check (every company matches the original JS) and self-test section B (three deliberately broken ports are caught).
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: tool_name, input_path, output_path, action_taken, approval_id, no_write_mode.
@@ -140,6 +147,7 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
    Where output goes: `logs/`
 6. Step name: Produce human report. Labor: AI with Human gate.
    Script called: `scripts/tools/contradiction-detection-agent-produce-human-report.py`
+   Closed 2026-10-04 (the script above is built and exercised). Original note, kept for the record: `[TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.`
    Status: Built and exercised. Input: the run's step reports, detections, envelope, manifest, expected flags and gate records. Output: the human report (all contract sections), the agent log (all contract fields) and the audit beside the verified data. Flags are reported as detected disagreements, with a short reading note beside the flags whose wording is easy to over-read. Evidence: gate 6 test; self-test section E (byte-identical reruns).
    Input: declared recipe inputs, prior step outputs, and gate decisions for `contradiction-detection-agent`.
    Output: summary, sources_checked, gate_results, findings, typed_todos, next_decision.
@@ -347,7 +355,7 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
    Output: verified JSON fields: record_count, records, rejects, duplicates, missing_fields, validation_flags.
    Where output goes: data/verified/contradiction-detection-agent/.
 10. Step name: DB: Insert Contradiction Report. Labor: AI with Human gate.
-   Script called: closed 2026-10-04, not carried forward: sample mode writes no database rows; the report is step 6. Original note: "Create or map script path: scripts/tools/contradiction-detection-agent-db-insert-contradiction-report.py"
+   Script called: closed 2026-10-04, not carried forward: sample mode writes no database rows; the report is step 6. Original note, kept for the record: `[TODO: DEV] Create or map script path: scripts/tools/contradiction-detection-agent-db-insert-contradiction-report.py`
    Input: approved upstream output or sample fixture.
    Output: markdown report sections: run summary, source status, validation results, flags, typed TODOs, decision recommendation.
    Where output goes: reports/generated/.
@@ -357,7 +365,7 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
    Output: verified JSON fields: record_count, records, rejects, duplicates, missing_fields, validation_flags.
    Where output goes: data/verified/contradiction-detection-agent/.
 12. Step name: Build Final Report. Labor: AI with Human gate.
-   Script called: closed 2026-10-04, absorbed by step 6 (produce human report). Original note: "Create or map script path: scripts/tools/contradiction-detection-agent-build-final-report.py"
+   Script called: closed 2026-10-04, absorbed by step 6 (produce human report). Original note, kept for the record: `[TODO: DEV] Create or map script path: scripts/tools/contradiction-detection-agent-build-final-report.py`
    Input: approved upstream output or sample fixture.
    Output: markdown report sections: run summary, source status, validation results, flags, typed TODOs, decision recommendation.
    Where output goes: reports/generated/.
@@ -397,7 +405,7 @@ Contradiction_detection_agent defines a Mycroft pipeline for collecting, transfo
    Output: verified JSON fields: record_count, records, rejects, duplicates, missing_fields, validation_flags.
    Where output goes: data/verified/contradiction-detection-agent/.
 20. Step name: Produce human report. Labor: AI with Human review.
-   Script called: closed 2026-10-04, absorbed by step 6 (produce human report). Original note: "Create or map script path: scripts/tools/contradiction-detection-agent-produce-human-report.py"
+   Script called: closed 2026-10-04, absorbed by step 6 (produce human report). Original note, kept for the record: `[TODO: DEV] Create or map script path: scripts/tools/contradiction-detection-agent-produce-human-report.py`
    Input: agent log plus raw and verified outputs.
    Output: markdown report sections: run summary, source inventory, inputs used, validation results, flags, typed TODOs, decision recommendation.
    Where output goes: reports/generated/.

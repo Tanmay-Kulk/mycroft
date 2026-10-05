@@ -28,7 +28,10 @@
   "mode": "sample",
   "recipe": "recipes/contradiction-detection-agent.md",
   "recipe_version": "0.2.0",
-  "reconfirmed": "2026-10-04 by Tanmay Kulkarni, same words, after wording-only edits to the recipe, scripts and corpus descriptions (detector behaviour, flags and fixture rows unchanged); evidence re-hashed",
+  "reconfirmed": [
+    "2026-10-04 by Tanmay Kulkarni, same words, after wording-only edits to the recipe, scripts and corpus descriptions (detector behaviour, flags and fixture rows unchanged); evidence re-hashed",
+    "2026-10-04 by Tanmay Kulkarni (\"D1–D5 confirmed\"), after an additive edit to the recipe that keeps the original recipe's wording for the record (gates 1 and 4, the six closed [TODO: DEV] notes); evidence files unchanged"
+  ],
   "residual_risk": "Covers the sample corpus and the pinned original JSON only, not any live table.",
   "run": "sample-001-clean (and sample-001-defective, read for gate 3)",
   "run_log": "logs/RUN_LOG.md#2026-10-04",
